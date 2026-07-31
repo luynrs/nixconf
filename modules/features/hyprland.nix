@@ -118,6 +118,7 @@ in
               col.inactive_border = "rgba(${lib.removePrefix "#" theme.borderInactive}aa)";
               allow_tearing = false;
               layout = "dwindle";
+              resize_on_border = true;
             };
 
             decoration = {

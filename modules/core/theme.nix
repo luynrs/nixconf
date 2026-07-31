@@ -1,7 +1,5 @@
 { inputs, lib, ... }:
 let
-  # Single source of truth: read the real Catppuccin palette instead of
-  # hand-copied hex, so every module below stays in sync with one flavor/accent.
   mocha =
     (builtins.fromJSON (
       builtins.readFile "${inputs.catppuccin.packages.x86_64-linux.palette}/palette.json"

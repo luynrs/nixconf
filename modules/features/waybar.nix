@@ -8,7 +8,6 @@ in
   flake.modules.homeManager.waybar =
     { pkgs, ... }:
     let
-      # Reports whether workspace $1 is active, for hyprland.nix's hypr-workspace-watch to signal.
       hyprWorkspaceStatus = pkgs.writeShellScriptBin "hypr-workspace-status" ''
         n="$1"
         active=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq -r '.id')

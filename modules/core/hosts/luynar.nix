@@ -29,23 +29,28 @@
           self.modules.homeManager.dunst
           self.modules.homeManager.fastfetch
           self.modules.homeManager.zed
-          {
-            home.username = "luynar";
-            home.homeDirectory = "/home/luynar";
-            home.stateVersion = "26.05";
-            home.file."Pictures/Wallpapers".source = ../../../Wallpapers;
+          (
+            { lib, ... }:
+            {
+              home.username = "luynar";
+              home.homeDirectory = "/home/luynar";
+              home.stateVersion = "26.05";
 
-            # Single toggle for every app with a Catppuccin integration below;
-            # theme.nix reads the same palette for the hand-rolled configs (waybar/rofi/etc).
-            catppuccin = {
-              enable = true;
-              autoEnable = true;
-              flavor = "mocha";
-              accent = "lavender";
-              cursors.enable = false; # keep the Bibata cursor theme instead
-              dunst.enable = false; # dunstrc is already themed via theme.nix
-            };
-          }
+              home.activation.seedWallpapers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+                mkdir -p "$HOME/Pictures/Wallpapers"
+                cp -n ${../../../Wallpapers}/* "$HOME/Pictures/Wallpapers/" 2>/dev/null || true
+              '';
+
+              catppuccin = {
+                enable = true;
+                autoEnable = true;
+                flavor = "mocha";
+                accent = "lavender";
+                cursors.enable = false; # keep the Bibata cursor theme instead
+                dunst.enable = false; # dunstrc is already themed via theme.nix
+              };
+            }
+          )
         ];
       }
     ];

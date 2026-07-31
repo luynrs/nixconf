@@ -35,10 +35,7 @@
 
     programs.btop.enable = true;
 
-    programs.vesktop = {
-      enable = true;
-      settings.hardwareAcceleration = false; # screen-share video decode was broken
-    };
+    programs.vesktop.enable = true;
 
     home.pointerCursor = {
       enable = true;
