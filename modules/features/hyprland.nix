@@ -378,26 +378,39 @@ in
 
           # Pin apps to their workspace by class, so windows don't scatter
           # regardless of how the process forks/launches (e.g. vesktop, steam games).
+          # no_initial_focus keeps these from hijacking the active workspace on
+          # autostart (focus_on_activate is on so e.g. link clicks still switch
+          # you to an already-running app); games are exempt, they should grab
+          # focus/fullscreen the moment you launch them.
           window_rule = [
             {
               match.class = "^google-chrome$";
               workspace = "1 silent";
+              no_initial_focus = true;
             }
             {
               match.class = "^vesktop$";
               workspace = "2 silent";
+              no_initial_focus = true;
             }
             {
               match.class = "^com\\.ayugram\\.desktop$";
               workspace = "2 silent";
+              no_initial_focus = true;
             }
             {
               match.class = "^dev\\.zed\\.Zed$";
               workspace = "3 silent";
+              no_initial_focus = true;
             }
             {
-              match.class = "^(steam|steam_app_.*)$";
+              match.class = "^steam$";
               workspace = "10 silent";
+              no_initial_focus = true;
+            }
+            {
+              match.class = "^steam_app_.*$";
+              workspace = "4 silent";
             }
           ];
 
@@ -652,26 +665,43 @@ in
             ]
           ) (lib.range 1 10));
 
-          on = {
-            _args = [
-              "hyprland.start"
-              (inline ''
-                function()
-                  hl.exec_cmd("waybar")
-                  hl.exec_cmd("awww-daemon")
-                  hl.exec_cmd(${toLua polkitAgent})
-                  hl.exec_cmd("dunst")
-                  hl.exec_cmd("hypr-workspace-watch")
+          on = [
+            {
+              _args = [
+                "hyprland.start"
+                (inline ''
+                  function()
+                    hl.exec_cmd("waybar")
+                    hl.exec_cmd("awww-daemon")
+                    hl.exec_cmd(${toLua polkitAgent})
+                    hl.exec_cmd("dunst")
+                    hl.exec_cmd("hypr-workspace-watch")
 
-                  hl.exec_cmd(browser)
-                  hl.exec_cmd("vesktop")
-                  hl.exec_cmd("AyuGram")
-                  hl.exec_cmd("zeditor")
-                  hl.exec_cmd("steam")
-                end
-              '')
-            ];
-          };
+                    hl.exec_cmd(browser)
+                    hl.exec_cmd("vesktop")
+                    hl.exec_cmd("AyuGram")
+                    hl.exec_cmd("zeditor")
+                    hl.exec_cmd("steam")
+                  end
+                '')
+              ];
+            }
+            {
+              # Static window_rule workspace-pinning is unreliable for Steam
+              # game windows (fullscreen-on-open games have landed elsewhere
+              # despite matching the rule) — enforce it dynamically instead.
+              _args = [
+                "window.open"
+                (inline ''
+                  function(w)
+                    if w ~= nil and w.class ~= nil and w.class:match("^steam_app_") then
+                      hl.dispatch(hl.dsp.window.move({ workspace = 4, follow = false, window = w }))
+                    end
+                  end
+                '')
+              ];
+            }
+          ];
         };
       };
     };
