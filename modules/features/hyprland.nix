@@ -138,6 +138,7 @@ in
                 size = 1;
                 passes = 4;
                 vibrancy = 0.1696;
+                ignore_opacity = 0.2;
               };
             };
 

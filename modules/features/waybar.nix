@@ -121,7 +121,7 @@ in
           };
           "clock#simple" = {
             format = "{:%H:%M:%S}";
-            tooltip = true;
+            tooltip = false;
             interval = 1;
           };
           clock = {
@@ -154,6 +154,7 @@ in
               "__RED__"
               "__ORANGE__"
               "__SELECTION__"
+              "__MUTED__"
             ]
             [
               theme.bg
@@ -163,6 +164,7 @@ in
               theme.red
               theme.orange
               theme.selection
+              theme.comment
             ]
             (builtins.readFile ./files/waybar/style.css);
       };

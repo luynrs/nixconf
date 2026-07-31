@@ -69,12 +69,12 @@
     fonts.fontconfig = {
       hinting = {
         enable = true;
-        style = "slight";
+        style = "full";
       };
       antialias = true;
       subpixel = {
         rgba = "rgb";
-        lcdfilter = "default";
+        lcdfilter = "light";
       };
     };
 

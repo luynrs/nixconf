@@ -5,6 +5,7 @@
 @define-color red __RED__;
 @define-color orange __ORANGE__;
 @define-color overlay __SELECTION__;
+@define-color muted __MUTED__;
 
 
 * {
@@ -13,7 +14,7 @@
 }
 
 window#waybar {
-  background-color: rgba(62, 62, 62, 0.27);
+  background-color: alpha(@muted, 0.1);
   border-radius: 0;
   transition-property: background-color;
   transition-duration: 0.5s;

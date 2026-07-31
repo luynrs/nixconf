@@ -35,6 +35,11 @@
 
     programs.btop.enable = true;
 
+    programs.nh = {
+      enable = true;
+      flake = "/home/luynar/nix-config";
+    };
+
     programs.vesktop.enable = true;
 
     home.pointerCursor = {
