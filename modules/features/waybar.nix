@@ -1,0 +1,175 @@
+{ config, lib, ... }:
+let
+  theme = config.theme;
+  accent = color: "<span color=\"${color}\">";
+  workspaceNumbers = lib.range 1 10;
+in
+{
+  flake.modules.homeManager.waybar =
+    { pkgs, ... }:
+    let
+      # Reports whether workspace $1 is active, for hyprland.nix's hypr-workspace-watch to signal.
+      hyprWorkspaceStatus = pkgs.writeShellScriptBin "hypr-workspace-status" ''
+        n="$1"
+        active=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq -r '.id')
+        class=""
+        [ "$active" = "$n" ] && class="active"
+        printf '{"text": "%s", "class": "%s"}\n' "$n" "$class"
+      '';
+      workspaceModules = builtins.listToAttrs (
+        map (n: {
+          name = "custom/ws${toString n}";
+          value = {
+            exec = "hypr-workspace-status ${toString n}";
+            return-type = "json";
+            signal = 8;
+            interval = 15;
+            on-click = "hyprctl dispatch 'hl.dsp.focus({ workspace = ${toString n} })'";
+          };
+        }) workspaceNumbers
+      );
+    in
+    {
+      home.packages = [ hyprWorkspaceStatus ];
+
+      programs.waybar = {
+        enable = true;
+
+        settings.mainBar = {
+          position = "top";
+          height = 40;
+
+          modules-left = [
+            "group/workspaces"
+            "hyprland/window"
+          ];
+          modules-center = [ "group/time" ];
+          modules-right = [
+            "privacy"
+            "hyprland/language"
+            "group/zvuk"
+            "group/hardware"
+            "tray"
+            "network"
+          ];
+
+          "hyprland/window" = {
+            format = "{initialTitle}";
+            max-length = 35;
+            rewrite = {
+              "" = "Hyprland";
+              "kitty" = "Terminal";
+            };
+            separate-outputs = false;
+          };
+
+          "hyprland/language" = {
+            format = "${accent theme.accent}</span>  {}";
+            format-en = "EN";
+            format-ru = "RU";
+          };
+
+          "group/workspaces" = {
+            orientation = "horizontal";
+            spacing = 0;
+            modules = map (n: "custom/ws${toString n}") workspaceNumbers;
+          };
+
+          "group/hardware" = {
+            orientation = "horizontal";
+            modules = [
+              "cpu"
+              "memory"
+            ];
+          };
+          cpu = {
+            format = "${accent theme.accent}</span>  {usage}%";
+            tooltip = false;
+          };
+          memory.format = "${accent theme.accent}</span>  {percentage}%";
+
+          "group/zvuk" = {
+            orientation = "horizontal";
+            modules = [
+              "pulseaudio#output"
+              "pulseaudio#input"
+            ];
+          };
+          "pulseaudio#output" = {
+            format = "${accent theme.accent}{icon}</span>  {volume}%";
+            format-muted = " ";
+            format-icons = {
+              headphone = "";
+              default = [
+                ""
+                ""
+                ""
+              ];
+            };
+            on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          };
+          "pulseaudio#input" = {
+            format = "{format_source}";
+            format-source = "${accent theme.accent}</span> {volume}%";
+            format-source-muted = "MIC ";
+            on-click = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+            on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+";
+            on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-";
+          };
+
+          "group/time" = {
+            modules = [
+              "clock"
+              "clock#simple"
+            ];
+            orientation = "horizontal";
+          };
+          "clock#simple" = {
+            format = "{:%H:%M:%S}";
+            tooltip = false;
+            interval = 1;
+          };
+          clock = {
+            format = "{:L%a %d, %b %Y}";
+            format-alt = "{:%d-%m-%Y}";
+            tooltip = false;
+          };
+
+          privacy = {
+            icon-size = 15;
+            icon-spacing = 8;
+          };
+          network = {
+            format-wifi = "${accent theme.accent} </span>";
+            format-ethernet = "${accent theme.accent} </span>";
+            format-disconnected = "${accent theme.accent}⚠</span>";
+            tooltip = false;
+          };
+          tray.spacing = 10;
+        }
+        // workspaceModules;
+
+        style =
+          lib.replaceStrings
+            [
+              "__BACKGROUND__"
+              "__FOREGROUND__"
+              "__FOREGROUND_ALT__"
+              "__ACCENT__"
+              "__RED__"
+              "__ORANGE__"
+              "__SELECTION__"
+            ]
+            [
+              theme.bg
+              theme.fg
+              theme.fgAlt
+              theme.accent
+              theme.red
+              theme.orange
+              theme.selection
+            ]
+            (builtins.readFile ./files/waybar/style.css);
+      };
+    };
+}
