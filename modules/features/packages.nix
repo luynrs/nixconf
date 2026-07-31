@@ -21,10 +21,8 @@
       mpv
 
       steam
-      btop
 
       ayugram-desktop
-      discord
 
       (pkgs.writeShellScriptBin "claude" ''
         export HTTP_PROXY="http://127.0.0.1:20171"
@@ -34,6 +32,13 @@
         exec "${pkgs.claude-code}/bin/claude" "$@"
       '')
     ];
+
+    programs.btop.enable = true;
+
+    programs.vesktop = {
+      enable = true;
+      settings.hardwareAcceleration = false; # screen-share video decode was broken
+    };
 
     home.pointerCursor = {
       enable = true;
@@ -53,13 +58,9 @@
       theme = {
         package = pkgs.catppuccin-gtk.override {
           variant = "mocha";
-          accents = [ "sapphire" ];
+          accents = [ "lavender" ];
         };
-        name = "catppuccin-mocha-sapphire-standard";
-      };
-      iconTheme = {
-        package = pkgs.adwaita-icon-theme;
-        name = "Adwaita";
+        name = "catppuccin-mocha-lavender-standard";
       };
       gtk3.extraConfig = {
         "gtk-application-prefer-dark-theme" = true;
@@ -72,10 +73,7 @@
     qt = {
       enable = true;
       platformTheme.name = "gtk3";
-      style = {
-        package = pkgs.adwaita-qt;
-        name = "adwaita-dark";
-      };
+      style.name = "kvantum";
     };
 
     dconf = {
@@ -83,11 +81,27 @@
       settings = {
         "org/gnome/desktop/interface" = {
           color-scheme = "prefer-dark";
-          gtk-theme = "catppuccin-mocha-sapphire-standard";
-          icon-theme = "Adwaita";
+          gtk-theme = "catppuccin-mocha-lavender-standard";
+          icon-theme = "Papirus-Dark";
           enable-animations = false;
         };
       };
+    };
+
+    xdg.desktopEntries.google-chrome = {
+      name = "Google Chrome";
+      genericName = "Web Browser";
+      icon = "google-chrome";
+      exec = "${pkgs.google-chrome}/bin/google-chrome-stable --force-dark-mode --enable-features=WebUIDarkMode %U";
+      categories = [
+        "Network"
+        "WebBrowser"
+      ];
+      mimeType = [
+        "text/html"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+      ];
     };
 
     xdg.mimeApps = {

@@ -18,6 +18,7 @@
         home-manager.backupFileExtension = "hm-bak";
 
         home-manager.users.luynar.imports = [
+          inputs.catppuccin.homeModules.catppuccin
           self.modules.homeManager.hyprland
           self.modules.homeManager.waybar
           self.modules.homeManager.kitty
@@ -33,6 +34,17 @@
             home.homeDirectory = "/home/luynar";
             home.stateVersion = "26.05";
             home.file."Pictures/Wallpapers".source = ../../../Wallpapers;
+
+            # Single toggle for every app with a Catppuccin integration below;
+            # theme.nix reads the same palette for the hand-rolled configs (waybar/rofi/etc).
+            catppuccin = {
+              enable = true;
+              autoEnable = true;
+              flavor = "mocha";
+              accent = "lavender";
+              cursors.enable = false; # keep the Bibata cursor theme instead
+              dunst.enable = false; # dunstrc is already themed via theme.nix
+            };
           }
         ];
       }

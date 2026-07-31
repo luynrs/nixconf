@@ -84,7 +84,7 @@ in
             _var = "nautilus";
           };
           browser = {
-            _var = "google-chrome-stable";
+            _var = "google-chrome-stable --force-dark-mode --enable-features=WebUIDarkMode";
           };
           wallpaper = {
             _var = "$HOME/.config/rofi/scripts/wallpapermenu.sh";

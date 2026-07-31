@@ -1,4 +1,13 @@
-{ lib, ... }:
+{ inputs, lib, ... }:
+let
+  # Single source of truth: read the real Catppuccin palette instead of
+  # hand-copied hex, so every module below stays in sync with one flavor/accent.
+  mocha =
+    (builtins.fromJSON (
+      builtins.readFile "${inputs.catppuccin.packages.x86_64-linux.palette}/palette.json"
+    )).mocha.colors;
+  hex = name: mocha.${name}.hex;
+in
 {
   options.theme = lib.mkOption {
     type = lib.types.attrsOf lib.types.str;
@@ -7,22 +16,22 @@
   };
 
   config.theme = {
-    bg = "#1e1e2e";
-    bgDark = "#181825";
-    fg = "#cdd6f4";
-    fgAlt = "#bac2de";
-    comment = "#585b70";
-    accent = "#b4befe";
-    red = "#f38ba8";
-    green = "#a6e3a1";
-    yellow = "#f9e2af";
-    blue = "#89b4fa";
-    magenta = "#cba6f7";
-    cyan = "#94e2d5";
-    orange = "#fab387";
-    selection = "#313244";
-    borderActive1 = "#b4befe";
-    borderActive2 = "#cba6f7";
-    borderInactive = "#45475a";
+    bg = hex "base";
+    bgDark = hex "mantle";
+    fg = hex "text";
+    fgAlt = hex "subtext1";
+    comment = hex "surface2";
+    accent = hex "lavender";
+    red = hex "red";
+    green = hex "green";
+    yellow = hex "yellow";
+    blue = hex "blue";
+    magenta = hex "mauve";
+    cyan = hex "teal";
+    orange = hex "peach";
+    selection = hex "surface0";
+    borderActive1 = hex "lavender";
+    borderActive2 = hex "mauve";
+    borderInactive = hex "surface1";
   };
 }

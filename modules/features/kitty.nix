@@ -1,7 +1,4 @@
-{ config, ... }:
-let
-  theme = config.theme;
-in
+{ ... }:
 {
   flake.modules.homeManager.kitty = { ... }: {
     programs.kitty = {
@@ -13,41 +10,15 @@ in
       };
 
       settings = {
-        cursor = theme.fgAlt;
         cursor_shape = "beam";
         cursor_trail = 1;
-        url_color = theme.accent;
         confirm_os_window_close = 0;
         shell = "fish";
 
         window_margin_width = "21.75";
 
-        background = theme.bg;
-        foreground = theme.fg;
         background_opacity = "0.9";
         background_blur = 1;
-
-        selection_background = theme.selection;
-        selection_foreground = theme.fgAlt;
-
-        color0 = theme.bg;
-        color1 = theme.red;
-        color2 = theme.green;
-        color3 = theme.yellow;
-        color4 = theme.blue;
-        color5 = theme.magenta;
-        color6 = theme.cyan;
-        color7 = theme.fgAlt;
-        color8 = theme.comment;
-        color9 = theme.red;
-        color10 = theme.green;
-        color11 = theme.yellow;
-        color12 = theme.blue;
-        color13 = theme.magenta;
-        color14 = theme.cyan;
-        color15 = theme.fg;
-        color16 = theme.orange;
-        color17 = theme.orange;
       };
 
       keybindings = {
