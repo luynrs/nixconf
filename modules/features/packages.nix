@@ -3,8 +3,10 @@
   flake.modules.homeManager.packages = { pkgs, lib, ... }: {
     home.packages = with pkgs; [
       git
+      gh
       wget
       eza
+      nodejs
       procps
       nixd
       nil
@@ -67,6 +69,15 @@
       };
     };
 
+    qt = {
+      enable = true;
+      platformTheme.name = "gtk3";
+      style = {
+        package = pkgs.adwaita-qt;
+        name = "adwaita-dark";
+      };
+    };
+
     dconf = {
       enable = true;
       settings = {
@@ -76,15 +87,6 @@
           icon-theme = "Adwaita";
           enable-animations = false;
         };
-      };
-    };
-
-    qt = {
-      enable = true;
-      platformTheme.name = "gtk3";
-      style = {
-        package = pkgs.adwaita-qt;
-        name = "adwaita-dark";
       };
     };
 

@@ -7,12 +7,11 @@ theme='powermenu'
 
 uptime="$(uptime -p | sed -e 's/up //g')"
 
-shutdown=''
-reboot=''
+shutdown=''
+reboot=''
 uefi=''
-logout='󰈆'
-yes=''
-no=''
+yes=''
+no=''
 
 rofi_cmd() {
 	rofi -dmenu \
@@ -38,7 +37,7 @@ confirm_exit() {
 }
 
 run_rofi() {
-	echo -e "$shutdown\n$reboot\n$uefi\n$logout" | rofi_cmd
+	echo -e "$shutdown\n$reboot\n$uefi" | rofi_cmd
 }
 
 run_cmd() {
@@ -48,7 +47,6 @@ run_cmd() {
 			--shutdown) systemctl poweroff ;;
 			--reboot) systemctl reboot ;;
 			--uefi) systemctl reboot --firmware-setup ;;
-			--logout) hyprctl dispatch 'hl.dsp.exit()' ;;
 		esac
 	fi
 }
@@ -58,5 +56,4 @@ case ${chosen} in
 	"$shutdown") run_cmd --shutdown ;;
 	"$reboot") run_cmd --reboot ;;
 	"$uefi") run_cmd --uefi ;;
-	"$logout") run_cmd --logout ;;
 esac

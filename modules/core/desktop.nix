@@ -23,6 +23,7 @@
     security.polkit.enable = true;
 
     services.gvfs.enable = true;
+    services.speechd.enable = false; # accessibility TTS, pulls in mbrola-voices (~1.3GB), unused
 
     users.users.luynar = {
       isNormalUser = true;

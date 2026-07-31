@@ -96,24 +96,20 @@ in
             ];
           };
           "pulseaudio#output" = {
-            format = "${accent theme.accent}{icon}</span>  {volume}%";
-            format-muted = " ";
+            format = "${accent theme.accent}{icon}</span> {volume}%";
+            format-muted = "${accent theme.red}󰕾</span> {volume}%";
             format-icons = {
               headphone = "";
-              default = [
-                ""
-                ""
-                ""
-              ];
+              default = "󰕾";
             };
             on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           };
           "pulseaudio#input" = {
             format = "{format_source}";
             format-source = "${accent theme.accent}</span> {volume}%";
-            format-source-muted = "MIC ";
+            format-source-muted = "${accent theme.red}</span> {volume}%";
             on-click = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
-            on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+";
+            on-scroll-up = "wpctl set-volume -l 2.0 @DEFAULT_AUDIO_SOURCE@ 5%+";
             on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-";
           };
 
@@ -126,7 +122,7 @@ in
           };
           "clock#simple" = {
             format = "{:%H:%M:%S}";
-            tooltip = false;
+            tooltip = true;
             interval = 1;
           };
           clock = {

@@ -8,38 +8,58 @@ in
       enable = true;
 
       settings = {
+        add_newline = false;
+
         format = ''
           $directory$git_branch$git_status$nix_shell$cmd_duration
-          $character'';
+          $character
+        '';
 
         directory = {
           style = "bold ${theme.blue}";
           format = "[$path]($style) ";
           truncation_length = 3;
           truncate_to_repo = true;
+          home_symbol = "~";
+          read_only = " ";
+          read_only_style = "bold ${theme.red}";
         };
 
         git_branch = {
-          symbol = " ";
+          symbol = " ";
           style = "bold ${theme.magenta}";
-          format = "on [$symbol$branch]($style) ";
+          format = "[$symbol$branch]($style) ";
         };
 
         git_status = {
           style = "bold ${theme.yellow}";
           format = "([$all_status$ahead_behind]($style) )";
+
+          conflicted = "=";
+          ahead = "⇡";
+          behind = "⇣";
+          diverged = "⇕";
+          untracked = "?";
+          stashed = "*";
+          modified = "!";
+          staged = "+";
+          renamed = "»";
+          deleted = "✕";
         };
 
         nix_shell = {
-          symbol = "❄ ";
+          symbol = " ";
           style = "bold ${theme.cyan}";
-          format = "via [$symbol$state( \\($name\\))]($style) ";
+          format = "[$symbol$name]($style) ";
+
+          impure_msg = "";
+          pure_msg = "";
         };
 
         cmd_duration = {
           min_time = 2000;
           style = theme.comment;
-          format = "took [$duration]($style) ";
+          format = "[$duration]($style) ";
         };
 
         character = {
