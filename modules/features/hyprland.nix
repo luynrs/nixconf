@@ -378,10 +378,7 @@ in
 
           # Pin apps to their workspace by class, so windows don't scatter
           # regardless of how the process forks/launches (e.g. vesktop, steam games).
-          # no_initial_focus keeps these from hijacking the active workspace on
-          # autostart (focus_on_activate is on so e.g. link clicks still switch
-          # you to an already-running app); games are exempt, they should grab
-          # focus/fullscreen the moment you launch them.
+
           window_rule = [
             {
               match.class = "^google-chrome$";
@@ -687,9 +684,6 @@ in
               ];
             }
             {
-              # Static window_rule workspace-pinning is unreliable for Steam
-              # game windows (fullscreen-on-open games have landed elsewhere
-              # despite matching the rule) — enforce it dynamically instead.
               _args = [
                 "window.open"
                 (inline ''
