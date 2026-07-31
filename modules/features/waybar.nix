@@ -58,6 +58,7 @@ in
             rewrite = {
               "" = "Hyprland";
               "kitty" = "Terminal";
+              ".*Discord.*" = "Discord";
             };
             separate-outputs = false;
           };

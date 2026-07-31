@@ -8,8 +8,6 @@
       eza
       nodejs
       procps
-      nixd
-      nil
       ruff
       brightnessctl
       playerctl
@@ -19,8 +17,6 @@
       loupe
       showtime
       mpv
-
-      steam
 
       ayugram-desktop
 

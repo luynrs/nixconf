@@ -7,10 +7,10 @@
 @define-color overlay __SELECTION__;
 @define-color muted __MUTED__;
 
-
 * {
   font-family: "JetBrainsMono Nerd Font", sans-serif;
   font-size: 12pt;
+  min-height: 0;
 }
 
 window#waybar {
@@ -44,6 +44,7 @@ button:hover {
   background-color: @background;
   color: @foreground;
   border-radius: 10px;
+  border: 1px solid alpha(@overlay, 0.6);
 }
 
 #custom-ws1,
@@ -116,7 +117,6 @@ button:hover {
   color: @background;
 }
 
-
 /* Hardware group styles */
 
 #hardware {
@@ -138,6 +138,7 @@ button:hover {
   color: @foreground;
   border-radius: 10px;
   margin-right: 5px;
+  border: 1px solid alpha(@overlay, 0.6);
 }
 
 #pulseaudio:hover {
@@ -146,7 +147,7 @@ button:hover {
 
 #pulseaudio {
   font-weight: 700;
-  padding: 6px 10px;
+  padding: 5px 10px;
   border-radius: 10px;
 }
 
@@ -162,8 +163,8 @@ button:hover {
 #privacy {
   background-color: @background;
   color: @power;
-  border: 1.5px solid @power;
-  padding: 6px 10px;
+  border: 1px solid @power;
+  padding: 5px 10px;
   border-radius: 10px;
   margin-right: 10px;
 }
@@ -185,7 +186,7 @@ button:hover {
 }
 
 #clock.simple {
-  padding: 6px 10px;
+  padding: 5px 10px;
   background-color: @foreground-dark;
   color: @background;
   border-radius: 0 10px 10px 0;
@@ -193,7 +194,7 @@ button:hover {
 }
 
 #clock {
-  padding: 6px 10px;
+  padding: 5px 10px;
   border-radius: 10px 0 0 10px;
 }
 
@@ -223,8 +224,9 @@ button:hover {
   font-weight: 700;
   background-color: @background;
   color: @foreground;
-  padding: 6px 10px;
+  padding: 5px 10px;
   border-radius: 10px;
+  border: 1px solid alpha(@overlay, 0.6);
 }
 
 .modules-right {
@@ -234,4 +236,3 @@ button:hover {
 .modules-left {
   padding: 0 10px;
 }
-

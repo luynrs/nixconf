@@ -107,7 +107,7 @@ in
             general = {
               gaps_in = 5;
               gaps_out = 5;
-              border_size = 2;
+              border_size = 1;
               col.active_border = {
                 colors = [
                   "rgba(${lib.removePrefix "#" theme.borderActive1}ee)"
@@ -126,12 +126,7 @@ in
               active_opacity = 1.0;
               inactive_opacity = 1.0;
 
-              shadow = {
-                enabled = true;
-                range = 4;
-                render_power = 3;
-                color = "rgba(1a1a1aee)";
-              };
+              shadow.enabled = false;
 
               blur = {
                 enabled = true;
@@ -145,7 +140,10 @@ in
 
             dwindle.preserve_split = true;
 
-            misc.force_default_wallpaper = -1;
+            misc = {
+              force_default_wallpaper = -1;
+              focus_on_activate = true;
+            };
 
             input = {
               kb_layout = "us,ru";
@@ -156,12 +154,23 @@ in
             };
           };
 
-          curve = [
-            {
-              _args = [
-                "easeOutQuint"
+          curve =
+            map
+              (
+                { name, points }:
                 {
-                  type = "bezier";
+                  _args = [
+                    name
+                    {
+                      type = "bezier";
+                      inherit points;
+                    }
+                  ];
+                }
+              )
+              [
+                {
+                  name = "easeOutQuint";
                   points = [
                     [
                       0.23
@@ -173,13 +182,8 @@ in
                     ]
                   ];
                 }
-              ];
-            }
-            {
-              _args = [
-                "easeInOutCubic"
                 {
-                  type = "bezier";
+                  name = "easeInOutCubic";
                   points = [
                     [
                       0.65
@@ -191,13 +195,8 @@ in
                     ]
                   ];
                 }
-              ];
-            }
-            {
-              _args = [
-                "linear"
                 {
-                  type = "bezier";
+                  name = "linear";
                   points = [
                     [
                       0
@@ -209,13 +208,8 @@ in
                     ]
                   ];
                 }
-              ];
-            }
-            {
-              _args = [
-                "almostLinear"
                 {
-                  type = "bezier";
+                  name = "almostLinear";
                   points = [
                     [
                       0.5
@@ -227,13 +221,8 @@ in
                     ]
                   ];
                 }
-              ];
-            }
-            {
-              _args = [
-                "quick"
                 {
-                  type = "bezier";
+                  name = "quick";
                   points = [
                     [
                       0.15
@@ -246,8 +235,6 @@ in
                   ];
                 }
               ];
-            }
-          ];
 
           animation = [
             {
@@ -355,37 +342,27 @@ in
             }
           ];
 
-          env = [
-            {
-              _args = [
-                "XCURSOR_SIZE"
-                "24"
-              ];
-            }
-            {
-              _args = [
-                "XCURSOR_THEME"
-                "Bibata-Modern-Classic"
-              ];
-            }
-            {
-              _args = [
-                "HYPRCURSOR_SIZE"
-                "24"
-              ];
-            }
-            {
-              _args = [
-                "HYPRCURSOR_THEME"
-                "Bibata-Modern-Classic"
-              ];
-            }
-            {
-              _args = [
-                "ELECTRON_OZONE_PLATFORM_HINT"
-                "auto"
-              ];
-            }
+          env = map (vars: { _args = vars; }) [
+            [
+              "XCURSOR_SIZE"
+              "24"
+            ]
+            [
+              "XCURSOR_THEME"
+              "Bibata-Modern-Classic"
+            ]
+            [
+              "HYPRCURSOR_SIZE"
+              "24"
+            ]
+            [
+              "HYPRCURSOR_THEME"
+              "Bibata-Modern-Classic"
+            ]
+            [
+              "ELECTRON_OZONE_PLATFORM_HINT"
+              "auto"
+            ]
           ];
 
           layer_rule = [
@@ -396,6 +373,31 @@ in
             {
               match.namespace = "rofi";
               blur = true;
+            }
+          ];
+
+          # Pin apps to their workspace by class, so windows don't scatter
+          # regardless of how the process forks/launches (e.g. vesktop, steam games).
+          window_rule = [
+            {
+              match.class = "^google-chrome$";
+              workspace = "1 silent";
+            }
+            {
+              match.class = "^vesktop$";
+              workspace = "2 silent";
+            }
+            {
+              match.class = "^com\\.ayugram\\.desktop$";
+              workspace = "2 silent";
+            }
+            {
+              match.class = "^dev\\.zed\\.Zed$";
+              workspace = "3 silent";
+            }
+            {
+              match.class = "^(steam|steam_app_.*)$";
+              workspace = "10 silent";
             }
           ];
 
@@ -629,32 +631,26 @@ in
               ];
             }
           ]
-          ++ (lib.genList (
-            i:
+          ++ (lib.concatMap (
+            ws:
             let
-              ws = i + 1;
               key = if ws == 10 then 0 else ws;
             in
-            {
-              _args = [
-                (inline "mainMod .. \" + \" .. ${toString key}")
-                (inline "hl.dsp.focus({ workspace = ${toString ws} })")
-              ];
-            }
-          ) 10)
-          ++ (lib.genList (
-            i:
-            let
-              ws = i + 1;
-              key = if ws == 10 then 0 else ws;
-            in
-            {
-              _args = [
-                (inline "mainMod .. \" + SHIFT + \" .. ${toString key}")
-                (inline "hl.dsp.window.move({ workspace = ${toString ws} })")
-              ];
-            }
-          ) 10);
+            [
+              {
+                _args = [
+                  (inline "mainMod .. \" + \" .. ${toString key}")
+                  (inline "hl.dsp.focus({ workspace = ${toString ws} })")
+                ];
+              }
+              {
+                _args = [
+                  (inline "mainMod .. \" + SHIFT + \" .. ${toString key}")
+                  (inline "hl.dsp.window.move({ workspace = ${toString ws} })")
+                ];
+              }
+            ]
+          ) (lib.range 1 10));
 
           on = {
             _args = [
@@ -666,6 +662,12 @@ in
                   hl.exec_cmd(${toLua polkitAgent})
                   hl.exec_cmd("dunst")
                   hl.exec_cmd("hypr-workspace-watch")
+
+                  hl.exec_cmd(browser)
+                  hl.exec_cmd("vesktop")
+                  hl.exec_cmd("AyuGram")
+                  hl.exec_cmd("zeditor")
+                  hl.exec_cmd("steam")
                 end
               '')
             ];

@@ -18,7 +18,10 @@
     ];
     nixpkgs.config.allowUnfree = true;
 
-    programs.steam.enable = true;
+    programs.steam = {
+      enable = true;
+      extraCompatPackages = [ pkgs.proton-ge-bin ];
+    };
 
     security.polkit.enable = true;
 
@@ -59,14 +62,13 @@
       noto-fonts-color-emoji
     ];
 
-    fonts.fontconfig.defaultFonts = {
-      sansSerif = [ "Noto Sans" ];
-      serif = [ "Noto Serif" ];
-      monospace = [ "JetBrainsMono Nerd Font" ];
-      emoji = [ "Noto Color Emoji" ];
-    };
-
     fonts.fontconfig = {
+      defaultFonts = {
+        sansSerif = [ "Noto Sans" ];
+        serif = [ "Noto Serif" ];
+        monospace = [ "JetBrainsMono Nerd Font" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
       hinting = {
         enable = true;
         style = "full";
