@@ -5,6 +5,8 @@
       enable = true;
 
       extraPackages = [
+        pkgs.go
+        pkgs.gopls
         pkgs.nixd
         pkgs.nil
         pkgs.ruff
