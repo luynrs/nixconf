@@ -384,6 +384,13 @@ in
             }
             {
               _args = [
+                "CTRL + SHIFT + ESC"
+                (inline ''hl.dsp.exec_cmd(terminal .. " btop")'')
+                { description = "Process monitor"; }
+              ];
+            }
+            {
+              _args = [
                 (inline ''mainMod .. " + Q"'')
                 (inline "hl.dsp.window.close()")
                 { description = "Close window"; }
