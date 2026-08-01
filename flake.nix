@@ -18,7 +18,15 @@
       perSystem =
         { pkgs, ... }:
         {
-          formatter = pkgs.nixfmt;
+          formatter = pkgs.writeShellScriptBin "nix-fmt" ''
+            if [ "$#" -eq 0 ]; then
+              files=$(${pkgs.git}/bin/git ls-files '*.nix' | ${pkgs.findutils}/bin/xargs -r -I{} sh -c '[ -f "$1" ] && echo "$1"' sh {})
+              files=$(printf '%s\n' "$files" | ${pkgs.ripgrep}/bin/rg -v '^hardware-configuration.nix$' || true)
+              ${pkgs.nixfmt}/bin/nixfmt $files
+            else
+              ${pkgs.nixfmt}/bin/nixfmt "$@"
+            fi
+          '';
         };
 
       imports = [
@@ -26,15 +34,17 @@
         ./modules/core/theme.nix
         ./modules/core/desktop.nix
         ./modules/core/hosts/luynar.nix
-        ./modules/features/hyprland.nix
+        ./modules/features/hyprland/default.nix
         ./modules/features/fish.nix
         ./modules/features/starship.nix
-        ./modules/features/kitty.nix
-        ./modules/features/waybar.nix
-        ./modules/features/rofi.nix
-        ./modules/features/dunst.nix
+        ./modules/features/kitty/default.nix
+        ./modules/features/waybar/default.nix
+        ./modules/features/rofi/default.nix
+        ./modules/features/dunst/default.nix
         ./modules/features/packages.nix
-        ./modules/features/fastfetch.nix
+        ./modules/features/appearance.nix
+        ./modules/features/xdg.nix
+        ./modules/features/fastfetch/default.nix
         ./modules/features/zed.nix
         ./modules/features/v2raya.nix
       ];

@@ -22,6 +22,6 @@ in
           theme.accent
           theme.red
         ]
-        (builtins.readFile ./files/dunst/dunstrc);
+        (builtins.readFile ./dunstrc);
   };
 }

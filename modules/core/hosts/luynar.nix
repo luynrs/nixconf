@@ -26,6 +26,8 @@
           self.modules.homeManager.starship
           self.modules.homeManager.rofi
           self.modules.homeManager.packages
+          self.modules.homeManager.appearance
+          self.modules.homeManager.xdg
           self.modules.homeManager.dunst
           self.modules.homeManager.fastfetch
           self.modules.homeManager.zed

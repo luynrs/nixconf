@@ -15,16 +15,19 @@ modules/
     desktop.nix                base NixOS system config (boot, users, audio, greetd)
     hosts/luynar.nix           wires everything into nixosConfigurations.luynar
   features/
-    <name>.nix                 one file per program/service (nixos + home-manager modules)
-    files/                     static configs shipped verbatim or templated with theme colors
+    <name>/default.nix         one branch per program/service (nixos + home-manager modules)
+    <name>/…                   static configs colocated with their module, themed via replaceStrings
 Wallpapers/                    images for the rofi wallpaper switcher
 ```
 
-Modules are exposed as flake outputs (`flake.modules.nixos.*` /
-`flake.modules.homeManager.*`, via `flake-parts.flakeModules.modules`) and
-composed in `modules/core/hosts/luynar.nix`. To add a feature: create
-`modules/features/<name>.nix`, define `flake.modules.{nixos,homeManager}.<name>`,
-import the file in `flake.nix`, and reference the module from the host file.
+Each feature is a self-contained branch: its module(s) in `default.nix` and its
+static config files next to it. Modules are exposed as flake outputs
+(`flake.modules.nixos.*` / `flake.modules.homeManager.*`, via
+`flake-parts.flakeModules.modules`) and composed in
+`modules/core/hosts/luynar.nix`. To add a feature: create
+`modules/features/<name>/default.nix`, define
+`flake.modules.{nixos,homeManager}.<name>`, import the file in `flake.nix`, and
+reference the module from the host file.
 
 ## Theming
 
@@ -35,12 +38,12 @@ waybar, rofi, hyprshot). Change a color once in `theme.nix`, rebuild, done.
 
 ## Vendored / patched tools
 
-A few third-party scripts are shipped under `modules/features/files/` instead
-of pulled straight from nixpkgs, because we need to tweak their behavior:
+A few third-party scripts are shipped inside their feature branch instead of
+pulled straight from nixpkgs, because we need to tweak their behavior:
 
-- `hyprshot/hyprshot` — nixpkgs' `hyprshot` (screenshot tool) with the
+- `hyprland/hyprshot` — nixpkgs' `hyprshot` (screenshot tool) with the
   `slurp` region-select call given a themed border/dim instead of upstream's
-  unstyled default. Built in `hyprland.nix` (`hyprshotScript`/`hyprshot`
+  unstyled default. Built in `hyprland/hyprshot.nix` (`hyprshot`
   derivation), mirroring nixpkgs' own package recipe.
 - `kitty/search.py` — kitty's scrollback search kitten (`ctrl+f`), not
   bundled with kitty itself.

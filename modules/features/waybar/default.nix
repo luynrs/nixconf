@@ -167,7 +167,7 @@ in
               theme.selection
               theme.comment
             ]
-            (builtins.readFile ./files/waybar/style.css);
+            (builtins.readFile ./style.css);
       };
     };
 }

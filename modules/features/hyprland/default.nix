@@ -13,52 +13,8 @@ in
       inline = lib.generators.mkLuaInline;
       toLua = lib.generators.toLua { };
       polkitAgent = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-
-      # Vendored hyprshot (files/hyprshot/hyprshot), patched for a styled slurp selection.
-      hyprshotScript = pkgs.writeText "hyprshot" (
-        lib.replaceStrings
-          [ "__BORDER__" "__BG__" ]
-          [
-            (lib.removePrefix "#" theme.accent)
-            (lib.removePrefix "#" theme.bgDark)
-          ]
-          (builtins.readFile ./files/hyprshot/hyprshot)
-      );
-      hyprshot = pkgs.stdenvNoCC.mkDerivation {
-        pname = "hyprshot";
-        version = "1.3.0-luynar";
-        dontUnpack = true;
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        installPhase = ''
-          install -Dm755 ${hyprshotScript} $out/bin/hyprshot
-          wrapProgram $out/bin/hyprshot --prefix PATH : ${
-            lib.makeBinPath (
-              with pkgs;
-              [
-                hyprland
-                jq
-                grim
-                slurp
-                wl-clipboard
-                libnotify
-                hyprpicker
-              ]
-            )
-          }
-        '';
-      };
-
-      # Signals waybar.nix's custom/wsN modules on workspace change (Waybar#5008 workaround).
-      hyprWorkspaceWatch = pkgs.writeShellScriptBin "hypr-workspace-watch" ''
-        socket="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
-        ${pkgs.socat}/bin/socat -U - "UNIX-CONNECT:$socket" | while IFS= read -r line; do
-          case "$line" in
-            workspace*|createworkspace*|destroyworkspace*|moveworkspace*)
-              ${pkgs.procps}/bin/pkill -RTMIN+8 waybar
-              ;;
-          esac
-        done
-      '';
+      hyprshot = import ./hyprshot.nix { inherit lib pkgs theme; };
+      hyprWorkspaceWatch = import ./workspace-watch.nix { inherit pkgs; };
     in
     {
       home.packages = [
@@ -378,7 +334,6 @@ in
 
           # Pin apps to their workspace by class, so windows don't scatter
           # regardless of how the process forks/launches (e.g. vesktop, steam games).
-
           window_rule = [
             {
               match.class = "^google-chrome$";
@@ -389,21 +344,25 @@ in
               match.class = "^vesktop$";
               workspace = "2 silent";
               no_initial_focus = true;
+              focus_on_activate = false;
             }
             {
               match.class = "^com\\.ayugram\\.desktop$";
               workspace = "2 silent";
               no_initial_focus = true;
+              focus_on_activate = false;
             }
             {
               match.class = "^dev\\.zed\\.Zed$";
               workspace = "3 silent";
               no_initial_focus = true;
+              focus_on_activate = false;
             }
             {
               match.class = "^steam$";
               workspace = "10 silent";
               no_initial_focus = true;
+              focus_on_activate = false;
             }
             {
               match.class = "^steam_app_.*$";
@@ -679,18 +638,6 @@ in
                     hl.exec_cmd("AyuGram")
                     hl.exec_cmd("zeditor")
                     hl.exec_cmd("steam")
-                  end
-                '')
-              ];
-            }
-            {
-              _args = [
-                "window.open"
-                (inline ''
-                  function(w)
-                    if w ~= nil and w.class ~= nil and w.class:match("^steam_app_") then
-                      hl.dispatch(hl.dsp.window.move({ workspace = 4, follow = false, window = w }))
-                    end
                   end
                 '')
               ];

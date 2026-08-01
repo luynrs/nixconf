@@ -8,10 +8,10 @@ in
     home.packages = [ pkgs.rofi ];
 
     xdg.configFile = {
-      "rofi/config.rasi".source = ./files/rofi/config.rasi;
-      "rofi/launcher.rasi".source = ./files/rofi/launcher.rasi;
-      "rofi/powermenu.rasi".source = ./files/rofi/powermenu.rasi;
-      "rofi/wallpaper-switcher.rasi".source = ./files/rofi/wallpaper-switcher.rasi;
+      "rofi/config.rasi".source = ./config.rasi;
+      "rofi/launcher.rasi".source = ./launcher.rasi;
+      "rofi/powermenu.rasi".source = ./powermenu.rasi;
+      "rofi/wallpaper-switcher.rasi".source = ./wallpaper-switcher.rasi;
       "rofi/shared/colors.rasi".text = ''
         * {
           background: ${withAlpha theme.bg "E6"};
@@ -25,11 +25,11 @@ in
         }
       '';
       "rofi/scripts/powermenu.sh" = {
-        source = ./files/rofi/scripts/powermenu.sh;
+        source = ./scripts/powermenu.sh;
         executable = true;
       };
       "rofi/scripts/wallpapermenu.sh" = {
-        source = ./files/rofi/scripts/wallpapermenu.sh;
+        source = ./scripts/wallpapermenu.sh;
         executable = true;
       };
     };

@@ -40,6 +40,6 @@
       };
     };
 
-    xdg.configFile."kitty/search.py".source = ./files/kitty/search.py;
+    xdg.configFile."kitty/search.py".source = ./search.py;
   };
 }
