@@ -1,6 +1,6 @@
 # nix-config
 
-Личный конфиг NixOS + Home Manager: Hyprland (lua), Catppuccin Mocha, fish + starship, kitty, waybar, rofi, dunst.
+Личный конфиг NixOS + Home Manager: Hyprland (lua), Catppuccin Mocha, fish + starship, foot, waybar, rofi, dunst, nvim (nixvim).
 
 ## Rebuild
 
@@ -42,16 +42,15 @@ modules/core/theme.nix           палитра — единый источни�
 modules/core/desktop.nix         базовый NixOS (boot, users, audio, greetd)
 modules/core/hosts/luynar.nix    сборка всего в nixosConfigurations
 modules/features/<name>/         каждая фича: default.nix + конфиги рядом
+modules/features/nvim/           nvim на nixvim (плагины из Nix, Lua-конфиг в lua/)
 Wallpapers/                      обои для рофл-свитчера
 ```
 
 ## Темизация
 
-Цвета задаются один раз в `theme.nix` → `config.theme.*`, дальше уходят в hyprland/kitty/starship нативно, а в waybar/dunst/rofi/hyprshot через `lib.replaceStrings` по плейсхолдерам.
+Цвета задаются один раз в `theme.nix` → `config.theme.*`, дальше уходят в hyprland/foot/starship нативно, а в waybar/dunst/rofi/hyprshot через `lib.replaceStrings` по плейсхолдерам.
 
 ## Запатчено
 
-- `kitty/disable-resize-text.patch` — убран оверлей «N by N cells» при ресайзе (опции в kitty больше нет).
 - `hyprland/hyprshot` — тематизированный регион slurp.
-- `kitty/search.py` — скроллбек-поиск (ctrl+f).
 - `rofi/scripts/*.sh` — powermenu и обои (из adi1090x).

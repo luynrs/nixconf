@@ -34,7 +34,7 @@ in
             _var = "SUPER";
           };
           terminal = {
-            _var = "kitty";
+            _var = "foot";
           };
           fileManager = {
             _var = "nautilus";
@@ -134,19 +134,6 @@ in
                     ]
                     [
                       0.32
-                      1
-                    ]
-                  ];
-                }
-                {
-                  name = "easeInOutCubic";
-                  points = [
-                    [
-                      0.65
-                      0.05
-                    ]
-                    [
-                      0.36
                       1
                     ]
                   ];

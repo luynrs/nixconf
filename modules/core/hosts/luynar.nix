@@ -21,7 +21,7 @@
           inputs.catppuccin.homeModules.catppuccin
           self.modules.homeManager.hyprland
           self.modules.homeManager.waybar
-          self.modules.homeManager.kitty
+          self.modules.homeManager.foot
           self.modules.homeManager.fish
           self.modules.homeManager.starship
           self.modules.homeManager.rofi
@@ -31,6 +31,7 @@
           self.modules.homeManager.dunst
           self.modules.homeManager.fastfetch
           self.modules.homeManager.zed
+          self.modules.homeManager.nvim
           (
             { lib, ... }:
             {

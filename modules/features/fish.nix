@@ -23,12 +23,10 @@ in
             starship module character
         end
 
-        # kitty doesn't clear scrollback properly with a plain `clear`
+        enable_transience
+
         alias clear "printf '\033[2J\033[3J\033[1;1H'"
         alias ls 'eza --icons=auto'
-        if test "$TERM" = "xterm-kitty"
-            alias ssh 'kitten ssh'
-        end
 
         set -l foreground ${c theme.fg} normal
         set -l selection ${c theme.selection} brcyan

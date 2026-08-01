@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 {
   flake.modules.homeManager.packages = { pkgs, ... }: {
     home.packages = with pkgs; [
@@ -13,11 +13,12 @@
       brightnessctl
       playerctl
       nautilus
-      pavucontrol
       google-chrome
       loupe
       showtime
       mpv
+
+      inputs.justssh.packages.${pkgs.system}.default
 
       ayugram-desktop
 

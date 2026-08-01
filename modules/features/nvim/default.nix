@@ -9,6 +9,8 @@
       viAlias = true;
       vimAlias = true;
 
+      nixpkgs.source = inputs.nixpkgs;
+
       extraPackages = with pkgs; [
         lua-language-server
         typescript-language-server
@@ -213,6 +215,15 @@
       ];
 
       extraConfigLua = builtins.readFile ./init.lua;
+
+      extraFiles = {
+        "lua/options.lua".source = ./lua/options.lua;
+        "lua/mappings.lua".source = ./lua/mappings.lua;
+        "lua/plugins/alpha.lua".source = ./lua/plugins/alpha.lua;
+        "lua/plugins/lsp.lua".source = ./lua/plugins/lsp.lua;
+        "lua/plugins/lualine.lua".source = ./lua/plugins/lualine.lua;
+        "lua/plugins/other.lua".source = ./lua/plugins/other.lua;
+      };
     };
   };
 }

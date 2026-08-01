@@ -8,6 +8,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin.url = "github:catppuccin/nix";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    justssh.url = "github:luynrs/justssh";
   };
 
   outputs =
@@ -37,7 +42,7 @@
         ./modules/features/hyprland/default.nix
         ./modules/features/fish.nix
         ./modules/features/starship.nix
-        ./modules/features/kitty/default.nix
+        ./modules/features/foot/default.nix
         ./modules/features/waybar/default.nix
         ./modules/features/rofi/default.nix
         ./modules/features/dunst/default.nix
@@ -46,6 +51,7 @@
         ./modules/features/xdg.nix
         ./modules/features/fastfetch/default.nix
         ./modules/features/zed.nix
+        ./modules/features/nvim/default.nix
         ./modules/features/v2raya.nix
       ];
     };

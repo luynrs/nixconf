@@ -56,7 +56,7 @@ in
             max-length = 35;
             rewrite = {
               "" = "Hyprland";
-              "kitty" = "Terminal";
+              "foot" = "Terminal";
               ".*Discord.*" = "Discord";
             };
             separate-outputs = false;
