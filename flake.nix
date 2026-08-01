@@ -17,42 +17,52 @@
 
   outputs =
     inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" ];
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
+      { config, ... }:
+      {
+        systems = [ "x86_64-linux" ];
 
-      perSystem =
-        { pkgs, ... }:
-        {
-          formatter = pkgs.writeShellScriptBin "nix-fmt" ''
-            if [ "$#" -eq 0 ]; then
-              files=$(${pkgs.git}/bin/git ls-files '*.nix' | ${pkgs.findutils}/bin/xargs -r -I{} sh -c '[ -f "$1" ] && echo "$1"' sh {})
-              files=$(printf '%s\n' "$files" | ${pkgs.ripgrep}/bin/rg -v '^hardware-configuration.nix$' || true)
-              ${pkgs.nixfmt}/bin/nixfmt $files
-            else
-              ${pkgs.nixfmt}/bin/nixfmt "$@"
-            fi
-          '';
-        };
+        # `flake.modules.*` is only an internal namespace for sharing modules
+        # between our own files (see luynar.nix, which reads `config.flake.modules`).
+        # It is not a standard flake output, so drop it from the published outputs
+        # to silence `nix flake check`'s "unknown flake output 'modules'" warning.
+        processedFlake = builtins.removeAttrs config.flake [ "modules" ];
 
-      imports = [
-        inputs.flake-parts.flakeModules.modules
-        ./modules/core/theme.nix
-        ./modules/core/desktop.nix
-        ./modules/core/hosts/luynar.nix
-        ./modules/features/hyprland/default.nix
-        ./modules/features/fish.nix
-        ./modules/features/starship.nix
-        ./modules/features/foot/default.nix
-        ./modules/features/waybar/default.nix
-        ./modules/features/rofi/default.nix
-        ./modules/features/dunst/default.nix
-        ./modules/features/packages.nix
-        ./modules/features/appearance.nix
-        ./modules/features/xdg.nix
-        ./modules/features/fastfetch/default.nix
-        ./modules/features/zed.nix
-        ./modules/features/nvim/default.nix
-        ./modules/features/v2raya.nix
-      ];
-    };
+        perSystem =
+          { pkgs, ... }:
+          {
+            formatter = pkgs.writeShellScriptBin "nix-fmt" ''
+              if [ "$#" -eq 0 ]; then
+                files=$(${pkgs.git}/bin/git ls-files '*.nix' | ${pkgs.findutils}/bin/xargs -r -I{} sh -c '[ -f "$1" ] && echo "$1"' sh {})
+                files=$(printf '%s\n' "$files" | ${pkgs.ripgrep}/bin/rg -v '^hardware-configuration.nix$' || true)
+                ${pkgs.nixfmt}/bin/nixfmt $files
+              else
+                ${pkgs.nixfmt}/bin/nixfmt "$@"
+              fi
+            '';
+          };
+
+        imports = [
+          inputs.flake-parts.flakeModules.modules
+          ./modules/core/theme.nix
+          ./modules/core/desktop.nix
+          ./modules/core/hosts/luynar.nix
+          ./modules/features/hyprland/default.nix
+          ./modules/features/fish.nix
+          ./modules/features/starship.nix
+          ./modules/features/foot/default.nix
+          ./modules/features/waybar/default.nix
+          ./modules/features/rofi/default.nix
+          ./modules/features/dunst/default.nix
+          ./modules/features/packages.nix
+          ./modules/features/appearance.nix
+          ./modules/features/xdg.nix
+          ./modules/features/fastfetch/default.nix
+          ./modules/features/zed.nix
+          ./modules/features/nvim/default.nix
+          ./modules/features/v2raya.nix
+          ./modules/features/openrgb.nix
+        ];
+      }
+    );
 }

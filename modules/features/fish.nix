@@ -23,7 +23,7 @@ in
             starship module character
         end
 
-        enable_transience
+        set -g fish_transient_prompt 1
 
         alias clear "printf '\033[2J\033[3J\033[1;1H'"
         alias ls 'eza --icons=auto'

@@ -1,4 +1,4 @@
-{ self, inputs, ... }:
+{ config, inputs, ... }:
 {
   flake.nixosConfigurations.luynar = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
@@ -6,10 +6,11 @@
     modules = [
       ../../../hardware-configuration.nix
 
-      self.modules.nixos.desktop
-      self.modules.nixos.hyprland
-      self.modules.nixos.fish
-      self.modules.nixos.v2raya
+      config.flake.modules.nixos.desktop
+      config.flake.modules.nixos.hyprland
+      config.flake.modules.nixos.fish
+      config.flake.modules.nixos.v2raya
+      config.flake.modules.nixos.openrgb
 
       inputs.home-manager.nixosModules.default
       {
@@ -19,19 +20,19 @@
 
         home-manager.users.luynar.imports = [
           inputs.catppuccin.homeModules.catppuccin
-          self.modules.homeManager.hyprland
-          self.modules.homeManager.waybar
-          self.modules.homeManager.foot
-          self.modules.homeManager.fish
-          self.modules.homeManager.starship
-          self.modules.homeManager.rofi
-          self.modules.homeManager.packages
-          self.modules.homeManager.appearance
-          self.modules.homeManager.xdg
-          self.modules.homeManager.dunst
-          self.modules.homeManager.fastfetch
-          self.modules.homeManager.zed
-          self.modules.homeManager.nvim
+          config.flake.modules.homeManager.hyprland
+          config.flake.modules.homeManager.waybar
+          config.flake.modules.homeManager.foot
+          config.flake.modules.homeManager.fish
+          config.flake.modules.homeManager.starship
+          config.flake.modules.homeManager.rofi
+          config.flake.modules.homeManager.packages
+          config.flake.modules.homeManager.appearance
+          config.flake.modules.homeManager.xdg
+          config.flake.modules.homeManager.dunst
+          config.flake.modules.homeManager.fastfetch
+          config.flake.modules.homeManager.zed
+          config.flake.modules.homeManager.nvim
           (
             { lib, ... }:
             {

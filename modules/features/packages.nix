@@ -18,7 +18,7 @@
       showtime
       mpv
 
-      inputs.justssh.packages.${pkgs.system}.default
+      inputs.justssh.packages.${pkgs.stdenv.hostPlatform.system}.default
 
       ayugram-desktop
 

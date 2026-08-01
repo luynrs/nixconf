@@ -355,6 +355,23 @@ in
               match.class = "^steam_app_.*$";
               workspace = "4 silent";
             }
+            # Float all dialogs/popups: modal windows, portal file pickers,
+            # and GNOME image/video viewers should pop up over the tiling layout.
+            {
+              match.modal = true;
+              float = true;
+              center = true;
+            }
+            {
+              match.initial_class = "^(xdg-desktop-portal.*)$";
+              float = true;
+              center = true;
+            }
+            {
+              match.class = "^(org\\.gnome\\.Loupe|org\\.gnome\\.Showtime)$";
+              float = true;
+              center = true;
+            }
           ];
 
           bind = [
