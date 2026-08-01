@@ -9,7 +9,6 @@
         pkgs.gopls
         pkgs.nixd
         pkgs.nil
-        pkgs.ruff
       ];
 
       userSettings = {

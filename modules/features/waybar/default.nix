@@ -22,7 +22,6 @@ in
             exec = "hypr-workspace-status ${toString n}";
             return-type = "json";
             signal = 8;
-            interval = 15;
             on-click = "hyprctl dispatch 'hl.dsp.focus({ workspace = ${toString n} })'";
           };
         }) workspaceNumbers

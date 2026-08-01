@@ -7,6 +7,7 @@
       wget
       eza
       nodejs
+      bun
       procps
       ruff
       brightnessctl
