@@ -11,6 +11,7 @@
       config.flake.modules.nixos.fish
       config.flake.modules.nixos.v2raya
       config.flake.modules.nixos.openrgb
+      config.flake.modules.nixos.gpu
 
       inputs.home-manager.nixosModules.default
       {

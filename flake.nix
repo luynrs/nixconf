@@ -21,12 +21,7 @@
       { config, ... }:
       {
         systems = [ "x86_64-linux" ];
-
-        # `flake.modules.*` is only an internal namespace for sharing modules
-        # between our own files (see luynar.nix, which reads `config.flake.modules`).
-        # It is not a standard flake output, so drop it from the published outputs
-        # to silence `nix flake check`'s "unknown flake output 'modules'" warning.
-        processedFlake = builtins.removeAttrs config.flake [ "modules" ];
+        processedFlake = removeAttrs config.flake [ "modules" ];
 
         perSystem =
           { pkgs, ... }:
@@ -62,6 +57,7 @@
           ./modules/features/nvim/default.nix
           ./modules/features/v2raya.nix
           ./modules/features/openrgb.nix
+          ./modules/features/gpu.nix
         ];
       }
     );

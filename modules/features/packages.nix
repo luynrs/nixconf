@@ -31,7 +31,13 @@
       '')
     ];
 
-    programs.btop.enable = true;
+    programs.btop = {
+      enable = true;
+      package = pkgs.writeShellScriptBin "btop" ''
+        export LD_LIBRARY_PATH="${pkgs.rocmPackages.rocm-smi}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+        exec "${pkgs.btop}/bin/btop" "$@"
+      '';
+    };
 
     programs.nh = {
       enable = true;

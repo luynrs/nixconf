@@ -384,7 +384,7 @@ in
             }
             {
               _args = [
-                "CTRL + SHIFT + ESC"
+                "CTRL + SHIFT + Escape"
                 (inline ''hl.dsp.exec_cmd(terminal .. " btop")'')
                 { description = "Process monitor"; }
               ];
