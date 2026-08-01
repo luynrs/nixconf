@@ -54,6 +54,13 @@
       focus_on_activate = false;
     }
     {
+      match.class = "^com\\.ayugram\\.desktop$";
+      match.title = "^Media viewer$";
+      float = true;
+      center = true;
+      no_initial_focus = false;
+    }
+    {
       match.class = "^dev\\.zed\\.Zed$";
       workspace = "3 silent";
       no_initial_focus = true;
