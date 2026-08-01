@@ -1,4 +1,7 @@
-{ ... }:
+{ config, lib, ... }:
+let
+  accent = lib.removePrefix "#" config.theme.accent;
+in
 {
   flake.modules.nixos.openrgb =
     { pkgs, ... }:
@@ -16,7 +19,7 @@
       environment.systemPackages = [ pkgs.i2c-tools ];
 
       systemd.services.openrgb-static-color = {
-        description = "Set static purple RGB on mainboard, leave RAM off";
+        description = "Set static accent-color RGB on mainboard, leave RAM off";
         after = [ "openrgb.service" ];
         wants = [ "openrgb.service" ];
         wantedBy = [ "multi-user.target" ];
@@ -32,9 +35,9 @@
             sleep 1
           done
 
-          "$OPENRGB" --device "B650" --zone 0 --size 16 --mode static --color 8A2BE2
-          "$OPENRGB" --device "B650" --zone 1 --size 16 --mode static --color 8A2BE2
-          "$OPENRGB" --mode static --color 8A2BE2
+          "$OPENRGB" --device "B650" --zone 0 --size 16 --mode static --color ${accent}
+          "$OPENRGB" --device "B650" --zone 1 --size 16 --mode static --color ${accent}
+          "$OPENRGB" --mode static --color ${accent}
 
           while read -r line; do
             if [[ "$line" =~ ^([0-9]+):\ ENE\ DRAM ]]; then

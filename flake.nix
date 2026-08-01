@@ -1,13 +1,16 @@
 {
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -15,30 +18,26 @@
     justssh.url = "github:luynrs/justssh";
   };
 
+  nixConfig = {
+    extra-substituters = [
+      "https://hyprland.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+
   outputs =
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } (
-      { config, ... }:
+      { ... }:
       {
         systems = [ "x86_64-linux" ];
-        processedFlake = removeAttrs config.flake [ "modules" ];
-
-        perSystem =
-          { pkgs, ... }:
-          {
-            formatter = pkgs.writeShellScriptBin "nix-fmt" ''
-              if [ "$#" -eq 0 ]; then
-                files=$(${pkgs.git}/bin/git ls-files '*.nix' | ${pkgs.findutils}/bin/xargs -r -I{} sh -c '[ -f "$1" ] && echo "$1"' sh {})
-                files=$(printf '%s\n' "$files" | ${pkgs.ripgrep}/bin/rg -v '^hardware-configuration.nix$' || true)
-                ${pkgs.nixfmt}/bin/nixfmt $files
-              else
-                ${pkgs.nixfmt}/bin/nixfmt "$@"
-              fi
-            '';
-          };
-
         imports = [
           inputs.flake-parts.flakeModules.modules
+          inputs.treefmt-nix.flakeModule
           ./modules/core/theme.nix
           ./modules/core/desktop.nix
           ./modules/core/hosts/luynar.nix
@@ -59,6 +58,13 @@
           ./modules/features/openrgb.nix
           ./modules/features/gpu.nix
         ];
+        perSystem = {
+          treefmt = {
+            projectRootFile = "flake.nix";
+            programs.nixfmt.enable = true;
+            settings.global.excludes = [ "hardware-configuration.nix" ];
+          };
+        };
       }
     );
 }

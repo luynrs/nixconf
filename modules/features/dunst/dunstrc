@@ -49,13 +49,12 @@
     icon_position = left
     min_icon_size = 32
     max_icon_size = 96
-    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
 
     sticky_history = yes
     history_length = 20
 
-    dmenu = /usr/bin/dmenu -p dunst:
-    browser = /usr/bin/xdg-open
+    dmenu = rofi -dmenu -p dunst:
+    browser = xdg-open
     always_run_script = true
     title = Dunst
     class = Dunst

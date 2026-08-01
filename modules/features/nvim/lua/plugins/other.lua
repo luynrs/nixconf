@@ -1,9 +1,3 @@
-require("onedark").setup({
-	style = "darker",
-	transparent = true,
-})
-require("onedark").load()
-
 local telescope = require("telescope")
 local actions = require("telescope.actions")
 

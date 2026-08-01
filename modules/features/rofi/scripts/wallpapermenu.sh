@@ -13,4 +13,3 @@ while IFS= read -r selected_wallpaper; do
   fi
 done
 
-

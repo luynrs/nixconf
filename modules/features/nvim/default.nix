@@ -11,6 +11,15 @@
 
       nixpkgs.source = inputs.nixpkgs;
 
+      colorschemes.catppuccin = {
+        enable = true;
+        settings = {
+          flavour = "mocha";
+          transparent_background = true;
+          integrations.cmp = true;
+        };
+      };
+
       extraPackages = with pkgs; [
         lua-language-server
         typescript-language-server
@@ -37,7 +46,6 @@
         nvim-treesitter
         telescope-nvim
         lualine-nvim
-        onedark-nvim
         alpha-nvim
         nvim-web-devicons
       ];

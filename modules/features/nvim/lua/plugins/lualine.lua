@@ -3,7 +3,7 @@ require("lualine").setup({
 		theme = "auto",
 		globalstatus = true,
 		section_separators = { left = "", right = "" },
-		component_separators = { left = "│", right = "│" },
+		component_separators = "",
 	},
 	sections = {
 		lualine_a = {

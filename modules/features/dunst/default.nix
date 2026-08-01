@@ -4,7 +4,10 @@ let
 in
 {
   flake.modules.homeManager.dunst = { pkgs, ... }: {
-    home.packages = [ pkgs.dunst ];
+    home.packages = [
+      pkgs.dunst
+      pkgs.xdg-utils
+    ];
 
     xdg.configFile."dunst/dunstrc".text =
       lib.replaceStrings
