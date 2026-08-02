@@ -5,6 +5,5 @@
       enable = true;
       cliPackage = pkgs.xray;
     };
-    environment.systemPackages = [ pkgs.v2raya ];
   };
 }

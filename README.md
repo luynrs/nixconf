@@ -49,7 +49,7 @@ Wallpapers/                      обои для рофл-свитчера
 
 ## Темизация
 
-Цвета задаются один раз в `theme.nix` → `config.theme.*` (палитра One Dark, те же цвета что у `onedark.nvim` в редакторе), дальше уходят в hyprland/foot/starship нативно, а в waybar/dunst/rofi/hyprshot через `lib.replaceStrings` по плейсхолдерам. GTK/Qt тему в цвет не красим — заметной nix-темы под One Dark нет, используется системный тёмный Adwaita + accent-color.
+Цвета задаются один раз в `theme.nix` → `config.theme.*` (палитра Catppuccin Mocha, тянется из `catppuccin/nix`), дальше уходят в hyprland/foot/starship нативно, а в waybar/dunst/rofi/hyprshot через `lib.replaceStrings` по плейсхолдерам. GTK/Qt Catppuccin Mocha (lavender), иконки Papirus.
 
 ## Запатчено
 
