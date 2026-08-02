@@ -39,7 +39,9 @@ in
 
           while read -r line; do
             if [[ "$line" =~ ^([0-9]+):\ ENE\ DRAM ]]; then
-              "$OPENRGB" --device "''${BASH_REMATCH[1]}" --mode static --color 000000
+              # "static --color 000000" doesn't reach the hardware on this
+              # ENE DRAM controller; "off" mode does.
+              "$OPENRGB" --device "''${BASH_REMATCH[1]}" --mode off
             fi
           done < <("$OPENRGB" --list-devices 2>/dev/null)
         '';
