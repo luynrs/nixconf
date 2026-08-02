@@ -16,44 +16,38 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     justssh.url = "github:luynrs/justssh";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    impermanence.url = "github:nix-community/impermanence";
   };
 
   outputs =
     inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
-      { ... }:
-      {
-        systems = [ "x86_64-linux" ];
-        imports = [
-          inputs.flake-parts.flakeModules.modules
-          inputs.treefmt-nix.flakeModule
-          ./modules/core/theme.nix
-          ./modules/core/desktop.nix
-          ./modules/core/hosts/luynar.nix
-          ./modules/features/hyprland/default.nix
-          ./modules/features/fish.nix
-          ./modules/features/starship.nix
-          ./modules/features/foot/default.nix
-          ./modules/features/waybar/default.nix
-          ./modules/features/rofi/default.nix
-          ./modules/features/dunst/default.nix
-          ./modules/features/packages.nix
-          ./modules/features/appearance.nix
-          ./modules/features/xdg.nix
-          ./modules/features/fastfetch/default.nix
-          ./modules/features/zed.nix
-          ./modules/features/nvim/default.nix
-          ./modules/features/v2raya.nix
-          ./modules/features/openrgb.nix
-          ./modules/features/gpu.nix
-        ];
-        perSystem = {
-          treefmt = {
-            projectRootFile = "flake.nix";
-            programs.nixfmt.enable = true;
-            settings.global.excludes = [ "hardware-configuration.nix" ];
-          };
+    let
+      inherit (inputs.nixpkgs) lib;
+      inherit (lib.fileset) toList fileFilter;
+
+      isNixModule = file: file.hasExt "nix" && file.name != "flake.nix" && !lib.hasPrefix "_" file.name;
+
+      importTree = path: toList (fileFilter isNixModule path);
+    in
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+
+      imports = [
+        inputs.treefmt-nix.flakeModule
+        inputs.home-manager.flakeModules.default
+      ]
+      ++ importTree ./.;
+
+      perSystem = {
+        treefmt = {
+          projectRootFile = "flake.nix";
+          programs.nixfmt.enable = true;
+          settings.global.excludes = [ "**/hardware-configuration.nix" ];
         };
-      }
-    );
+      };
+    };
 }

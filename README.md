@@ -1,6 +1,4 @@
-# nix-config
-
-Личный конфиг NixOS + Home Manager: Hyprland (lua), Catppuccin Mocha, fish + starship, foot, waybar, rofi, dunst, nvim (nixvim).
+# nixconf
 
 ## Rebuild
 
@@ -10,9 +8,7 @@ nh home switch                                # или home-manager
 nix fmt                                       # форматирование (nixfmt)
 ```
 
-Новые файлы перед сборкой: `git add` (flake видит только отслеживаемые).
-
-## Хоткеи (Hyprland)
+## Хоткеи
 
 | Клавиша                | Действие                          |
 | ---------------------- | --------------------------------- |
@@ -33,25 +29,53 @@ nix fmt                                       # форматирование (ni
 | `SUPER + стрелки`      | Фокус                            |
 | `XF86Audio*`           | Громкость/яркость/медиа           |
 
-Приложения закреплены по воркспейсам: chrome=1, vesktop/ayugram=2, zed=3, steam=10, игры=4.
+Приложения закреплены по воркспейсам: chrome=1, vesktop/ayugram=2, zed=3, steam=10, игры (стим)=4.
 
 ## Структура
 
 ```
-flake.nix                        входы + фичи (imports)
-modules/core/theme.nix           палитра — единый источник цветов
-modules/core/desktop.nix         базовый NixOS (boot, users, audio, greetd)
-modules/core/hosts/luynar.nix    сборка всего в nixosConfigurations
-modules/features/<name>/         каждая фича: default.nix + конфиги рядом
-modules/features/nvim/           nvim на nixvim (плагины из Nix, Lua-конфиг в lua/)
+flake.nix                        собирает *.nix во всём репо автоматически (кроме _префиксных)
+nixos/base/                      база: система, тема, пользователь, keymap, мониторы, persist
+nixos/extra/                     опциональное железо (gpu, openrgb, v2raya)
+nixos/features/<name>/           каждая фича: default.nix + конфиги рядом
+nixos/features/nvim/             nvim на nixvim (плагины из Nix, Lua-конфиг в lua/)
+nixos/hosts/main/                сборка nixosConfigurations.luynar + разметка диска (_disko.nix)
 Wallpapers/                      обои для рофл-свитчера
 ```
+
+Файлы с `_` в начале имени (`_disko.nix`, `_binds.nix`, ...) не импортируются автоматически —
+это не самостоятельные flake-модули, а куски, которые явно подключают другие файлы.
+
+## Переустановка (disko + impermanence)
+
+Разметка диска не делается руками — она описана в `nixos/hosts/main/_disko.nix`
+и накатывается одной командой через [disko](https://github.com/nix-community/disko).
+После установки `/` — это tmpfs (чистая система на каждой загрузке), `/nix` и `/home`
+живут на своих постоянных разделах, так что пакеты, доты через home-manager, ssh-ключи,
+браузер, Steam — всё, что лежит в `/home`, — переустановку переживает само. Отдельно
+персистится только горстка системных файлов (`/etc/machine-id`, коннекшены NetworkManager)
+через `environment.persistence."/persist"`.
+
+**⚠️ `_disko.nix` форматирует диск — необратимо. Перед запуском обязательно закоммить
+и запушь всё важное, и убедись что `device` в файле указывает на правильный диск.**
+
+С livecd-установщика NixOS (интернет и git должны быть доступны):
+
+```bash
+git clone https://github.com/luynrs/nixconf.git
+sudo nix run github:nix-community/disko -- --mode destroy,format,mount ./nixconf/nixos/hosts/main/_disko.nix
+sudo nixos-install --flake ./nixconf#luynar
+```
+
+После первой загрузки на новом разделе включи персист (он выключен по умолчанию,
+чтобы не сломать текущую ext4-систему): в `nixos/hosts/main/configuration.nix` добавь
+`persistance.enable = true;` рядом с блоком `preferences` (на одном уровне с ним,
+внутри `flake.nixosModules.hostMain`), закоммить и `sudo nixos-rebuild switch --flake .#luynar`.
+
+Данных, которых на диске никогда не было (например ты первый раз ставишь систему на новое
+железо), это не восстановит — ssh/gpg-ключи, сессии в мессенджерах и т.п. нужно занести
+в `/home` самому (бэкапом/rsync) до или после установки.
 
 ## Темизация
 
 Цвета задаются один раз в `theme.nix` → `config.theme.*` (палитра Catppuccin Mocha, тянется из `catppuccin/nix`), дальше уходят в hyprland/foot/starship нативно, а в waybar/dunst/rofi/hyprshot через `lib.replaceStrings` по плейсхолдерам. GTK/Qt Catppuccin Mocha (lavender), иконки Papirus.
-
-## Запатчено
-
-- `hyprland/hyprshot` — тематизированный регион slurp.
-- `rofi/scripts/*.sh` — powermenu и обои (из adi1090x).
