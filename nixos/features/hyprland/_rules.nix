@@ -22,16 +22,7 @@
     ]
   ];
 
-  layer_rule = [
-    {
-      match.namespace = "waybar";
-      blur = true;
-    }
-    {
-      match.namespace = "rofi";
-      blur = true;
-    }
-  ];
+  layer_rule = [ ];
 
   # Pin apps to their workspace by class, so windows don't scatter
   # regardless of how the process forks/launches (e.g. vesktop, steam games).

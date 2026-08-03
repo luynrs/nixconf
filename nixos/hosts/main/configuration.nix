@@ -21,6 +21,7 @@
         self.nixosModules.openrgb
         self.nixosModules.gpu
         self.nixosModules.gaming
+        self.nixosModules.bluetooth
 
         inputs.home-manager.nixosModules.default
         {
@@ -31,11 +32,10 @@
           home-manager.users.${config.preferences.user.name}.imports = [
             inputs.catppuccin.homeModules.catppuccin
             self.homeModules.hyprland
-            self.homeModules.waybar
+            self.homeModules.caelestia
             self.homeModules.foot
             self.homeModules.fish
             self.homeModules.starship
-            self.homeModules.rofi
             self.homeModules.tools
             self.homeModules.work
             self.homeModules.chrome
@@ -43,7 +43,6 @@
             self.homeModules.socials
             self.homeModules.btop
             self.homeModules.appearance
-            self.homeModules.dunst
             self.homeModules.fastfetch
             self.homeModules.nvim
             (
@@ -64,13 +63,8 @@
                   flavor = "mocha";
                   accent = "lavender";
                   cursors.enable = false; # keep the Bibata cursor theme instead
-                  dunst.enable = false; # dunstrc is already themed via theme.nix
 
-                  # components without manual theming in theme.nix
                   foot.enable = true;
-                  btop.enable = true;
-                  vesktop.enable = true;
-                  zed.enable = true;
                 };
               }
             )

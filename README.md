@@ -3,10 +3,13 @@
 ## Rebuild
 
 ```bash
-sudo nixos-rebuild switch --flake .#luynar   # система
-nh home switch                                # или home-manager
-nix fmt                                       # форматирование (nixfmt)
+sudo nixos-rebuild switch --flake .#luynar --impure   # система
+nh home switch                                         # или home-manager
+nix fmt                                                # форматирование (nixfmt)
 ```
+
+`--impure` обязателен: caelestia-shell собирается из локального чекаута
+`~/dev/caelestia-shell` (абсолютный путь вне флейка), см. «Структура» ниже.
 
 ## Хоткеи
 
@@ -17,9 +20,9 @@ nix fmt                                       # форматирование (ni
 | `SUPER + Q`            | Закрыть окно                      |
 | `SUPER + E`            | Файловый менеджер (nautilus)      |
 | `SUPER + W`            | Браузер (chrome)                  |
-| `SUPER + SHIFT + W`    | Смена обоев (rofi)                |
-| `SUPER + SHIFT + Q`    | Power menu (rofi)                 |
-| `SUPER + S`            | Ланчер (rofi drun)                |
+| `SUPER + SHIFT + W`    | Смена обоев (caelestia, `>wallpaper`) |
+| `SUPER + SHIFT + Q`    | Power menu (caelestia)             |
+| `SUPER + S`            | Ланчер (caelestia)                 |
 | `SUPER + D` / `F`      | Maximize / Fullscreen             |
 | `SUPER + V`            | Float toggle                      |
 | `SUPER + SHIFT + S`    | Скрин области (в буфер)           |
@@ -78,4 +81,11 @@ sudo nixos-install --flake ./nixconf#luynar
 
 ## Темизация
 
-Цвета задаются один раз в `theme.nix` → `config.theme.*` (палитра Catppuccin Mocha, тянется из `catppuccin/nix`), дальше уходят в hyprland/foot/starship нативно, а в waybar/dunst/rofi/hyprshot через `lib.replaceStrings` по плейсхолдерам. GTK/Qt Catppuccin Mocha (lavender), иконки Papirus.
+Цвета задаются один раз в `theme.nix` → `config.theme.*` (палитра Catppuccin Mocha, тянется из `catppuccin/nix`), дальше уходят в hyprland/foot/starship нативно, а в hyprshot через `lib.replaceStrings` по плейсхолдерам. GTK/Qt Catppuccin Mocha (lavender), иконки Papirus.
+
+Бар, ланчер, powermenu и уведомления — caelestia-shell (`nixos/features/caelestia/`),
+собирается из локального чекаута в `~/dev/caelestia-shell` (правь QML там, `home-manager
+switch` подхватит правки напрямую). Схема цветов у caelestia — не плоский hex, а полная
+палитра Material 3, поэтому вместо ручного маппинга из `theme.nix` используется встроенная
+схема `catppuccin/mocha` (её акцент `lavender` уже совпадает с этим репо), проставляется
+один раз через `caelestia scheme set` в `home.activation`.

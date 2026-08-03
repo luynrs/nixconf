@@ -10,10 +10,9 @@ in
       "hyprland.start"
       (inline ''
         function()
-          hl.exec_cmd("waybar")
+          hl.exec_cmd("caelestia-shell")
           hl.exec_cmd("awww-daemon")
           hl.exec_cmd(${toLua polkitAgent})
-          hl.exec_cmd("dunst")
 
           hl.exec_cmd(browser)
           hl.exec_cmd("vesktop")

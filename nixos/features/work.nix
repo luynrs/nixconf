@@ -20,6 +20,8 @@
       ];
 
       userSettings = {
+        theme = "Caelestia";
+
         lsp = {
           nix.binary.path_lookup = true;
           ruff.binary.path_lookup = true;

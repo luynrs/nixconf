@@ -41,14 +41,14 @@ in
   {
     _args = [
       (inline ''mainMod .. " + SHIFT + W"'')
-      (inline "hl.dsp.exec_cmd(wallpaper)")
-      { description = "Wallpaper switcher"; }
+      (inline ''hl.dsp.global("caelestia:launcher")'')
+      { description = "Wallpaper switcher (launcher, type >wallpaper)"; }
     ];
   }
   {
     _args = [
       (inline ''mainMod .. " + SHIFT + Q"'')
-      (inline "hl.dsp.exec_cmd(powermenu)")
+      (inline ''hl.dsp.global("caelestia:session")'')
       { description = "Power menu"; }
     ];
   }
@@ -76,7 +76,7 @@ in
   {
     _args = [
       (inline ''mainMod .. " + S"'')
-      (inline ''hl.dsp.exec_cmd("rofi -show drun")'')
+      (inline ''hl.dsp.global("caelestia:launcher")'')
       { description = "App launcher"; }
     ];
   }

@@ -17,11 +17,12 @@
         size = 12;
       };
       theme = {
-        package = pkgs.catppuccin-gtk.override {
-          variant = "mocha";
-          accents = [ "lavender" ];
-        };
-        name = "catppuccin-mocha-lavender-standard";
+        package = pkgs.adw-gtk3;
+        name = "adw-gtk3-dark";
+      };
+      iconTheme = {
+        package = pkgs.papirus-icon-theme;
+        name = "Papirus-Dark";
       };
       gtk3.extraConfig = {
         "gtk-application-prefer-dark-theme" = true;
@@ -33,7 +34,10 @@
 
     qt = {
       enable = true;
-      platformTheme.name = "gtk3";
+      platformTheme = {
+        name = "qtengine";
+        package = pkgs.qtengine;
+      };
       style.name = "kvantum";
     };
 
@@ -42,7 +46,7 @@
       settings = {
         "org/gnome/desktop/interface" = {
           color-scheme = "prefer-dark";
-          gtk-theme = "catppuccin-mocha-lavender-standard";
+          gtk-theme = "adw-gtk3-dark";
           icon-theme = "Papirus-Dark";
           enable-animations = false;
         };

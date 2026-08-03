@@ -8,6 +8,7 @@
         exec "${pkgs.btop}/bin/btop" "$@"
       '';
       settings = {
+        color_theme = "caelestia";
         theme_background = false;
         shown_boxes = "cpu gpu0 mem net proc";
         show_gpu_info = "Off";

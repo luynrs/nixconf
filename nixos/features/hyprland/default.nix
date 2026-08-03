@@ -34,6 +34,7 @@ in
   flake.homeModules.hyprland =
     { pkgs, lib, ... }:
     let
+      inline = lib.generators.mkLuaInline;
       hyprshot = import ./_hyprshot.nix { inherit lib pkgs theme; };
       animations = import ./_animations.nix;
       rules = import ./_rules.nix;
@@ -65,12 +66,6 @@ in
           browser = {
             _var = "google-chrome-stable --force-dark-mode --enable-features=WebUIDarkMode";
           };
-          wallpaper = {
-            _var = "$HOME/.config/rofi/scripts/wallpapermenu.sh";
-          };
-          powermenu = {
-            _var = "$HOME/.config/rofi/scripts/powermenu.sh";
-          };
           picker = {
             _var = "hyprpicker -a";
           };
@@ -78,16 +73,29 @@ in
           config = {
             general = {
               gaps_in = 5;
-              gaps_out = 5;
+              gaps_out = 8;
               border_size = 1;
               col.active_border = {
-                colors = [
-                  "rgba(${lib.removePrefix "#" theme.borderActive1}ee)"
-                  "rgba(${lib.removePrefix "#" theme.borderActive2}ee)"
-                ];
+                colors = inline ''
+                  (function()
+                    local ok, s = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/scheme/current.lua")
+                    if ok and s and s.primary and s.secondary then
+                      return { "rgba(" .. s.primary .. "ee)", "rgba(" .. s.secondary .. "ee)" }
+                    end
+                    return { "rgba(${lib.removePrefix "#" theme.borderActive1}ee)", "rgba(${lib.removePrefix "#" theme.borderActive2}ee)" }
+                  end)()
+                '';
                 angle = 45;
               };
-              col.inactive_border = "rgba(${lib.removePrefix "#" theme.borderInactive}aa)";
+              col.inactive_border = inline ''
+                (function()
+                  local ok, s = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/scheme/current.lua")
+                  if ok and s and s.outlineVariant then
+                    return "rgba(" .. s.outlineVariant .. "aa)"
+                  end
+                  return "rgba(${lib.removePrefix "#" theme.borderInactive}aa)"
+                end)()
+              '';
               allow_tearing = false;
               layout = "dwindle";
               resize_on_border = true;
