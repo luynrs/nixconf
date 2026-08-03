@@ -55,6 +55,10 @@
                   tray = true;
                 };
                 showOnHover = false;
+                status = {
+                  showBattery = false;
+                  showKbLayout = true;
+                };
                 tray = {
                   background = true;
                   compact = false;
@@ -64,6 +68,7 @@
                   activeIndicator = true;
                   activeTrail = true;
                   occupiedBg = false;
+                  shown = 5;
                 };
               };
               dashboard.performance.showBattery = false;
@@ -73,6 +78,7 @@
                 useFahrenheit = false;
                 useTwelveHourClock = false;
               };
+              utilities.toasts.kbLayoutChanged = false;
             }
           );
         in
@@ -85,8 +91,6 @@
 
       xdg.configFile."caelestia/shell-tokens.json".text =
         let
-          # Plain Material "standard" ease (cubic-bezier(0.4, 0, 0.2, 1)) — no overshoot,
-          # no multi-segment "expressive" pacing, applied uniformly so nothing feels springy.
           simpleCurve = [
             0.4
             0

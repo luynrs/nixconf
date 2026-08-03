@@ -89,7 +89,7 @@ StackView {
                 Loader {
                     id: children
 
-                    asynchronous: false
+                    asynchronous: true
                     anchors.left: parent.left
                     anchors.right: parent.right
 
@@ -123,7 +123,7 @@ StackView {
                         Loader {
                             id: icon
 
-                            asynchronous: false
+                            asynchronous: true
                             anchors.left: parent.left
 
                             active: item.modelData.icon !== ""
@@ -159,7 +159,7 @@ StackView {
                         Loader {
                             id: expand
 
-                            asynchronous: false
+                            asynchronous: true
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.right: parent.right
 
@@ -176,7 +176,7 @@ StackView {
         }
 
         Loader {
-            asynchronous: false
+            asynchronous: true
             active: menu.isSubMenu
 
             sourceComponent: Item {

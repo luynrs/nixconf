@@ -156,21 +156,21 @@ let
       enabled = true;
       speed = 3.8;
       bezier = "easeOutQuint";
-      style = "slide";
+      style = "slidevert";
     }
     {
       leaf = "workspacesIn";
       enabled = true;
       speed = 3.8;
       bezier = "easeOutQuint";
-      style = "slide";
+      style = "slidevert";
     }
     {
       leaf = "workspacesOut";
       enabled = true;
       speed = 3.8;
       bezier = "easeOutQuint";
-      style = "slide";
+      style = "slidevert";
     }
   ];
 in
