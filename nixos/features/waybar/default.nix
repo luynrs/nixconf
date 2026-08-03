@@ -29,6 +29,7 @@ in
         "hyprland/workspaces" = {
           format = "{id}";
           on-click = "hyprctl dispatch workspace {id}";
+          persistent-workspaces."*" = lib.range 1 10;
         };
 
         "hyprland/window" = {
