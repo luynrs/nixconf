@@ -44,7 +44,7 @@
         inputs.treefmt-nix.flakeModule
         inputs.home-manager.flakeModules.default
       ]
-      ++ importTree ./.;
+      ++ importTree ./nixos;
 
       perSystem = {
         treefmt = {
