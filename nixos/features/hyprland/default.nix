@@ -12,7 +12,7 @@ in
       monitors = lib.mapAttrsToList (name: m: {
         output = name;
         mode = "${toString m.width}x${toString m.height}@${toString m.refreshRate}";
-        position = "auto";
+        position = "${toString m.x},${toString m.y}";
         scale = 1;
       }) (lib.filterAttrs (_: m: m.enabled) config.preferences.monitors);
       layouts = lib.concatStringsSep "," config.preferences.keymap.layouts;

@@ -6,10 +6,6 @@
         type = lib.types.attrsOf (
           lib.types.submodule {
             options = {
-              primary = lib.mkOption {
-                type = lib.types.bool;
-                default = false;
-              };
               width = lib.mkOption {
                 type = lib.types.int;
                 example = 1920;

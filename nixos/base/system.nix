@@ -9,6 +9,7 @@
 
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
+      boot.loader.timeout = 1;
       boot.kernelParams = [ "systemd.show_status=false" ];
 
       networking.hostName = user.name;

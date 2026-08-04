@@ -14,10 +14,8 @@ in
   };
 
   config.theme = {
-    bg = hex "base";
     bgDark = hex "mantle";
     fg = hex "text";
-    fgAlt = hex "subtext1";
     comment = hex "surface2";
     accent = hex "lavender";
     red = hex "red";

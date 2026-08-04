@@ -15,6 +15,7 @@ in
 
       environment.systemPackages = [ pkgs.i2c-tools ];
 
+      # RGB is cosmetic — apply it in the background so it never blocks boot.
       systemd.services.openrgb-static-color = {
         description = "Static purple mainboard, RAM off";
         after = [ "openrgb.service" ];
@@ -22,26 +23,30 @@ in
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
           Type = "oneshot";
+          RemainAfterExit = true;
+          KillMode = "process";
           StandardOutput = "null";
           StandardError = "null";
         };
         script = ''
           OPENRGB=${pkgs.openrgb}/bin/openrgb
 
-          attempts=0
-          until "$OPENRGB" --list-devices 2>&1 | grep -q "Connected to server"; do
-            attempts=$((attempts + 1))
-            [ "$attempts" -ge 30 ] && break
-            sleep 1
-          done
+          (
+            attempts=0
+            until "$OPENRGB" --list-devices 2>&1 | grep -q "Connected to server"; do
+              attempts=$((attempts + 1))
+              [ "$attempts" -ge 30 ] && break
+              sleep 1
+            done
 
-          "$OPENRGB" --device "B650" --mode static --color ${rgb}
+            "$OPENRGB" --device "B650" --mode static --color ${rgb}
 
-          while read -r line; do
-            if [[ "$line" =~ ^([0-9]+):\ ENE\ DRAM ]]; then
-              "$OPENRGB" --device "''${BASH_REMATCH[1]}" --mode off
-            fi
-          done < <("$OPENRGB" --list-devices 2>/dev/null)
+            while read -r line; do
+              if [[ "$line" =~ ^([0-9]+):\ ENE\ DRAM ]]; then
+                "$OPENRGB" --device "''${BASH_REMATCH[1]}" --mode off
+              fi
+            done < <("$OPENRGB" --list-devices 2>/dev/null)
+          ) &
         '';
       };
     };

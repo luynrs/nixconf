@@ -2,7 +2,6 @@
 {
   flake.homeModules.tools = { pkgs, ... }: {
     home.packages = with pkgs; [
-      git
       gh
       wget
       eza
