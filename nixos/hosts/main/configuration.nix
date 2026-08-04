@@ -59,7 +59,7 @@
 
                 catppuccin = {
                   enable = true;
-                  autoEnable = false; # manual theming via theme.nix is the single source of truth
+                  autoEnable = false; # manual theming via caelestia scheme is the single source of truth
                   flavor = "mocha";
                   accent = "lavender";
                   cursors.enable = false; # keep the Bibata cursor theme instead

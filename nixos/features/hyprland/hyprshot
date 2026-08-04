@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Vendored from https://github.com/Gustash/hyprshot (v1.3.0); grab_region() is patched
-# for a styled slurp selection. __BORDER__/__BG__ substituted from theme.nix.
+# for a styled slurp selection. Selection colors are read from the caelestia scheme.
 
 set -e
 
@@ -194,7 +194,16 @@ function grab_selected_output() {
 }
 
 function grab_region() {
-    slurp -d -w 2 -c "__BORDER__FF" -b "__BG__CC"
+    local scheme_json="$HOME/.local/state/caelestia/scheme.json"
+    if [ -f "$scheme_json" ]; then
+        local border=$(jq -r '.colours.primary // empty' "$scheme_json")
+        local bg=$(jq -r '.colours.surface // empty' "$scheme_json")
+        if [ -n "$border" ] && [ -n "$bg" ]; then
+            slurp -d -w 2 -c "${border}FF" -b "${bg}CC"
+            return
+        fi
+    fi
+    slurp -d -w 2
 }
 
 function grab_window() {

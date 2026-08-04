@@ -22,11 +22,7 @@
     ]
   ];
 
-  layer_rule = [ ];
-
-  # Pin apps to their workspace by class, so windows don't scatter
-  # regardless of how the process forks/launches (e.g. vesktop, steam games).
-  window_rule = [
+    window_rule = [
     {
       match.class = "^google-chrome$";
       workspace = "1 silent";
@@ -59,7 +55,7 @@
     }
     {
       match.class = "^steam$";
-      workspace = "10 silent";
+      workspace = "5 silent";
       no_initial_focus = true;
       focus_on_activate = false;
     }

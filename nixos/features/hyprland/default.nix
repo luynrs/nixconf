@@ -1,10 +1,4 @@
-{
-  config,
-  ...
-}:
-let
-  theme = config.theme;
-in
+{ ... }:
 {
   flake.nixosModules.hyprland =
     { config, lib, ... }:
@@ -35,7 +29,7 @@ in
     { pkgs, lib, ... }:
     let
       inline = lib.generators.mkLuaInline;
-      hyprshot = import ./_hyprshot.nix { inherit lib pkgs theme; };
+      hyprshot = import ./_hyprshot.nix { inherit lib pkgs; };
       animations = import ./_animations.nix;
       rules = import ./_rules.nix;
       binds = import ./_binds.nix { inherit lib; };
@@ -64,7 +58,7 @@ in
             _var = "nautilus";
           };
           browser = {
-            _var = "google-chrome-stable --force-dark-mode --enable-features=WebUIDarkMode";
+            _var = "google-chrome-stable --force-dark-mode --enable-features=WebUIDarkMode --disable-session-crashed-bubble";
           };
           picker = {
             _var = "hyprpicker -a";
@@ -82,7 +76,6 @@ in
                     if ok and s and s.primary and s.secondary then
                       return { "rgba(" .. s.primary .. "ee)", "rgba(" .. s.secondary .. "ee)" }
                     end
-                    return { "rgba(${lib.removePrefix "#" theme.borderActive1}ee)", "rgba(${lib.removePrefix "#" theme.borderActive2}ee)" }
                   end)()
                 '';
                 angle = 45;
@@ -93,7 +86,6 @@ in
                   if ok and s and s.outlineVariant then
                     return "rgba(" .. s.outlineVariant .. "aa)"
                   end
-                  return "rgba(${lib.removePrefix "#" theme.borderInactive}aa)"
                 end)()
               '';
               allow_tearing = false;
@@ -127,7 +119,7 @@ in
           };
 
           inherit (animations) curve animation;
-          inherit (rules) env layer_rule window_rule;
+          inherit (rules) env window_rule;
 
           bind = binds;
           on = autostart;

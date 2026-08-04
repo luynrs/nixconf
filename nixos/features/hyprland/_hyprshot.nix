@@ -1,19 +1,11 @@
 {
   lib,
   pkgs,
-  theme,
 }:
 let
   # Vendored hyprshot, patched for a styled slurp selection.
-  hyprshotScript = pkgs.writeText "hyprshot" (
-    lib.replaceStrings
-      [ "__BORDER__" "__BG__" ]
-      [
-        (lib.removePrefix "#" theme.accent)
-        (lib.removePrefix "#" theme.bgDark)
-      ]
-      (builtins.readFile ./hyprshot)
-  );
+
+  hyprshotScript = pkgs.writeText "hyprshot" (builtins.readFile ./hyprshot);
 in
 pkgs.stdenvNoCC.mkDerivation {
   pname = "hyprshot";

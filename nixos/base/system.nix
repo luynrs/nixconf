@@ -10,7 +10,18 @@
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
       boot.loader.timeout = 1;
-      boot.kernelParams = [ "systemd.show_status=false" ];
+      boot.kernelParams = [
+        "quiet"
+        "splash"
+      ];
+
+      # bgrt shows the motherboard's own UEFI boot logo (from the firmware's
+      # ACPI BGRT table) with a spinner underneath — the "like Windows" look.
+      # No themePackages needed: bgrt ships built into plymouth itself.
+      boot.plymouth = {
+        enable = true;
+        theme = "bgrt";
+      };
 
       networking.hostName = user.name;
       networking.networkmanager.enable = true;
@@ -95,10 +106,6 @@
           lcdfilter = "light";
         };
       };
-
-      environment.systemPackages = with pkgs; [
-        polkit_gnome
-      ];
 
       system.stateVersion = "26.05";
     };
