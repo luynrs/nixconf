@@ -10,6 +10,10 @@
 
       interactiveShellInit = ''
         if status is-interactive
+            if test -f "$HOME/.local/state/caelestia/sequences.txt"
+                cat "$HOME/.local/state/caelestia/sequences.txt"
+            end
+
             fastfetch
         end
 
@@ -24,7 +28,6 @@
         alias clear "printf '\033[2J\033[3J\033[1;1H'"
         alias ls 'eza --icons=auto'
 
-        # Colors come from the caelestia scheme (rendered on every scheme change).
         if test -f "$HOME/.local/state/caelestia/theme/fish-colors.fish"
             source "$HOME/.local/state/caelestia/theme/fish-colors.fish"
         end

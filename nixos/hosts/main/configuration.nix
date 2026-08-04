@@ -63,8 +63,6 @@
                   flavor = "mocha";
                   accent = "lavender";
                   cursors.enable = false; # keep the Bibata cursor theme instead
-
-                  foot.enable = true;
                 };
               }
             )
