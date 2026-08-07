@@ -23,7 +23,7 @@
       userSettings = {
         base_keymap = "VSCode";
 
-        icon_theme = "Colored Zed Icons";
+        icon_theme = "Colored Zed Icons Theme Dark";
         theme = "Caelestia";
 
       shell = {
