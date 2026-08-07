@@ -24,7 +24,7 @@
 
   window_rule = [
     {
-      match.class = "^zen$";
+      match.class = "^[Cc]hromium$";
       workspace = "1 silent";
       no_initial_focus = true;
     }

@@ -58,7 +58,7 @@
             _var = "nautilus";
           };
           browser = {
-            _var = "zen";
+            _var = "chromium";
           };
           picker = {
             _var = "hyprpicker -a";

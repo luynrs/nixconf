@@ -18,7 +18,7 @@ nix fmt                                       # форматирование (ni
 | `CTRL + SHIFT + Escape` | Процессы (btop)                   |
 | `SUPER + Q`            | Закрыть окно                      |
 | `SUPER + E`            | Файловый менеджер (nautilus)      |
-| `SUPER + W`            | Браузер (zen)                     |
+| `SUPER + W`            | Браузер (chromium)                   |
 | `SUPER + SHIFT + W`    | Смена обоев (caelestia, `>wallpaper`) |
 | `SUPER + SHIFT + Q`    | Power menu (caelestia)             |
 | `SUPER + S`            | Ланчер (caelestia)                 |
@@ -31,7 +31,7 @@ nix fmt                                       # форматирование (ni
 | `SUPER + стрелки`      | Фокус                            |
 | `XF86Audio*`           | Громкость/яркость/медиа           |
 
-Приложения закреплены по воркспейсам: zen=1, discord/ayugram=2, zed=3, игры (стим)=4, steam=5.
+Приложения закреплены по воркспейсам: chromium=1, discord/ayugram=2, zed=3, игры (стим)=4, steam=5.
 
 ## Структура
 

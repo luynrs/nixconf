@@ -276,8 +276,7 @@
         "justssh": "justssh",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
-        "treefmt-nix": "treefmt-nix",
-        "zen-browser": "zen-browser"
+        "treefmt-nix": "treefmt-nix"
       }
     },
     "systems": {
@@ -311,26 +310,6 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "zen-browser": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785480078,
-        "narHash": "sha256-wWRW/Teo+58EMeTpVVEAqYid1qLzpB/PViQJCv7Xxvc=",
-        "owner": "youwen5",
-        "repo": "zen-browser-flake",
-        "rev": "b7d4cc2778143a228675cd8bb7efdfa111638ac8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "youwen5",
-        "repo": "zen-browser-flake",
         "type": "github"
       }
     }

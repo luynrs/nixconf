@@ -14,19 +14,13 @@
         modesetting.enable = true;
 
         powerManagement.enable = true;
-        powerManagement.finegrained = true;
 
         nvidiaSettings = true;
         package = pkgs.linuxPackages.nvidiaPackages.stable;
-
         open = true;
 
         prime = {
-          offload = {
-            enable = true;
-            enableOffloadCmd = true;
-          };
-
+          sync.enable = true;
           intelBusId = lib.mkDefault "PCI:6:0:0";
           nvidiaBusId = lib.mkDefault "PCI:1:0:0";
         };
@@ -40,9 +34,5 @@
         __GLX_VENDOR_LIBRARY_NAME = "nvidia";
         WLR_NO_HARDWARE_CURSORS = "1";
       };
-
-      environment.systemPackages = with pkgs; [
-        nvtopPackages.full
-      ];
     };
 }
