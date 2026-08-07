@@ -1,9 +1,9 @@
 { ... }:
 {
-  flake.homeModules.firefox = { ... }: {
+  flake.homeModules.librewolf = { ... }: {
     home.sessionVariables.MOZ_ENABLE_WAYLAND = "1";
 
-    programs.firefox = {
+    programs.librewolf = {
       enable = true;
 
       policies.ExtensionSettings = {
