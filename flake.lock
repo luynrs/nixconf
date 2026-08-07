@@ -144,6 +144,21 @@
         "type": "github"
       }
     },
+    "justvpn": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1786125671,
+        "narHash": "sha256-f3zzDqev+4pZzxFHmORtL4Qeq1O+cs0BKdRyEhG2cMI=",
+        "path": "/home/luynar/Projects/justvpn",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/luynar/Projects/justvpn",
+        "type": "path"
+      }
+    },
     "m3shapes": {
       "flake": false,
       "locked": {
@@ -194,6 +209,23 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1785967620,
+        "narHash": "sha256-IItrdb7Puk05RqOBWZYFC5X6Wl1sJmCfh5MWVHw5iMM=",
+        "ref": "nixos-unstable",
+        "rev": "b7c2ada94fe99c15b0dbcf4d11fd7850b957a436",
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/NixOS/nixpkgs.git"
+      },
+      "original": {
+        "ref": "nixos-unstable",
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/NixOS/nixpkgs.git"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1785318670,
         "narHash": "sha256-dN6Ou5x/+23FZLEpYP3IffO+NyJFzUlGumt1uu3MMaY=",
         "owner": "NixOS",
@@ -208,7 +240,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1770107345,
         "narHash": "sha256-tbS0Ebx2PiA1FRW8mt8oejR0qMXmziJmPaU1d4kYY9g=",
@@ -274,7 +306,8 @@
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "justssh": "justssh",
-        "nixpkgs": "nixpkgs_2",
+        "justvpn": "justvpn",
+        "nixpkgs": "nixpkgs_3",
         "nixvim": "nixvim",
         "treefmt-nix": "treefmt-nix"
       }
@@ -297,7 +330,7 @@
     },
     "treefmt-nix": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_4"
       },
       "locked": {
         "lastModified": 1785360170,

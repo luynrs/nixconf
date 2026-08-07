@@ -17,7 +17,6 @@
         self.nixosModules.base
         self.nixosModules.hyprland
         self.nixosModules.fish
-        self.nixosModules.v2raya
         self.nixosModules.openrgb
         self.nixosModules.gpuAmd
         self.nixosModules.gaming
@@ -45,6 +44,7 @@
             self.homeModules.appearance
             self.homeModules.fastfetch
             self.homeModules.nvim
+            inputs.justvpn.homeManagerModules.xrs
             (
               { lib, ... }:
               {
@@ -66,6 +66,7 @@
                 };
               }
             )
+            { services.xrs.enable = true; }
           ];
         }
       ];

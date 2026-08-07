@@ -38,7 +38,7 @@ nix fmt                                       # форматирование (ni
 ```
 flake.nix                        собирает *.nix во всём репо автоматически (кроме _префиксных)
 nixos/base/                      база: система, тема, пользователь, keymap, мониторы
-nixos/extra/                     опциональное железо (gpu-amd, gpu-nvidia, openrgb, v2raya)
+nixos/extra/                     опциональное железо (gpu-amd, gpu-nvidia, openrgb)
 nixos/features/<name>/           каждая фича: default.nix + конфиги рядом
 nixos/features/nvim/             nvim на nixvim (плагины из Nix, Lua-конфиг в lua/)
 nixos/hosts/main/                nixosConfigurations.luynar — десктоп, AMD GPU

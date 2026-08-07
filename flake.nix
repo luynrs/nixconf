@@ -16,6 +16,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     justssh.url = "github:luynrs/justssh";
+    justvpn.url = "path:/home/luynar/Projects/justvpn";
     caelestia-shell = {
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
