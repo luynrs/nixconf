@@ -13,11 +13,11 @@
       enable = true;
 
       extensions = [
-        "colored-zed-icons",
+        "colored-zed-icons"
 
         # Languages
-        "nix",
-        "golang",
+        "nix"
+        "golang"
         ];
 
       userSettings = {
