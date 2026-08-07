@@ -4,22 +4,23 @@
   ...
 }:
 {
-  flake.nixosConfigurations.luynar = inputs.nixpkgs.lib.nixosSystem {
+  flake.nixosConfigurations.laptop = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
 
-    modules = [ self.nixosModules.main ];
+    modules = [ self.nixosModules.laptop ];
   };
 
-  flake.nixosModules.main =
+  flake.nixosModules.laptop =
     { config, ... }:
     {
+      networking.hostName = "laptop";
+
       imports = [
         self.nixosModules.base
         self.nixosModules.hyprland
         self.nixosModules.fish
         self.nixosModules.v2raya
-        self.nixosModules.openrgb
-        self.nixosModules.gpuAmd
+        self.nixosModules.gpuNvidia
         self.nixosModules.gaming
         self.nixosModules.bluetooth
 
@@ -84,10 +85,12 @@
           options = "grp:alt_shift_toggle";
         };
 
-        monitors."DP-1" = {
+        # ponytail: resolution is a guess (common laptop panel default),
+        # only the refresh rate is confirmed — fix width/height once installed.
+        monitors."eDP-1" = {
           width = 1920;
           height = 1080;
-          refreshRate = 165;
+          refreshRate = 144;
         };
       };
     };

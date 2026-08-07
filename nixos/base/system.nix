@@ -1,7 +1,7 @@
 { ... }:
 {
   flake.nixosModules.base =
-    { config, pkgs, ... }:
+    { config, pkgs, lib, ... }:
     let
       user = config.preferences.user;
     in
@@ -23,7 +23,7 @@
         theme = "bgrt";
       };
 
-      networking.hostName = user.name;
+      networking.hostName = lib.mkDefault user.name;
       networking.networkmanager.enable = true;
 
       time.timeZone = "Europe/Moscow";

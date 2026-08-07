@@ -1,6 +1,6 @@
 { ... }:
 {
-  flake.nixosModules.gpu = {
+  flake.nixosModules.gpuAmd = {
     hardware.graphics = {
       enable = true;
       enable32Bit = true;

@@ -1,6 +1,6 @@
-{ lib, ... }:
+{ ... }:
 let
-  rgb = lib.removePrefix "#" "7C3AED";
+  rgb = "7C3AED";
 in
 {
   flake.nixosModules.openrgb =
