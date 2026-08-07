@@ -22,9 +22,9 @@
     ]
   ];
 
-    window_rule = [
+  window_rule = [
     {
-      match.class = "^firefox$";
+      match.class = "^librewolf$";
       workspace = "1 silent";
       no_initial_focus = true;
     }

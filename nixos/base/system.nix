@@ -1,7 +1,12 @@
 { ... }:
 {
   flake.nixosModules.base =
-    { config, pkgs, lib, ... }:
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
     let
       user = config.preferences.user;
     in
@@ -58,6 +63,7 @@
       users.users.${user.name} = {
         isNormalUser = true;
         description = user.description;
+        initialPassword = "justloginme";
         extraGroups = [
           "wheel"
           "networkmanager"

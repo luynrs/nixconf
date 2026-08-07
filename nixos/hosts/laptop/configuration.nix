@@ -39,7 +39,7 @@
             self.homeModules.starship
             self.homeModules.tools
             self.homeModules.work
-            self.homeModules.firefox
+            self.homeModules.librewolf
             self.homeModules.media
             self.homeModules.socials
             self.homeModules.btop
