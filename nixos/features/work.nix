@@ -21,7 +21,7 @@
         ];
 
       userSettings = {
-        base_keymap = "VScode";
+        base_keymap = "VSCode";
 
         icon_theme = "Colored Zed Icons";
         theme = "Caelestia";
