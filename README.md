@@ -18,7 +18,7 @@ nix fmt                                       # форматирование (ni
 | `CTRL + SHIFT + Escape` | Процессы (btop)                   |
 | `SUPER + Q`            | Закрыть окно                      |
 | `SUPER + E`            | Файловый менеджер (nautilus)      |
-| `SUPER + W`            | Браузер (librewolf)               |
+| `SUPER + W`            | Браузер (zen)                     |
 | `SUPER + SHIFT + W`    | Смена обоев (caelestia, `>wallpaper`) |
 | `SUPER + SHIFT + Q`    | Power menu (caelestia)             |
 | `SUPER + S`            | Ланчер (caelestia)                 |
@@ -31,7 +31,7 @@ nix fmt                                       # форматирование (ni
 | `SUPER + стрелки`      | Фокус                            |
 | `XF86Audio*`           | Громкость/яркость/медиа           |
 
-Приложения закреплены по воркспейсам: librewolf=1, vesktop/ayugram=2, zed=3, игры (стим)=4, steam=5.
+Приложения закреплены по воркспейсам: zen=1, vesktop/ayugram=2, zed=3, игры (стим)=4, steam=5.
 
 ## Структура
 

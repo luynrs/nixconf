@@ -24,7 +24,7 @@
 
   window_rule = [
     {
-      match.class = "^librewolf$";
+      match.class = "^zen$";
       workspace = "1 silent";
       no_initial_focus = true;
     }

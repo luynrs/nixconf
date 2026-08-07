@@ -12,19 +12,22 @@
     programs.zed-editor = {
       enable = true;
 
-      extraPackages = [
-        pkgs.go
-        pkgs.gopls
-        pkgs.nixd
-        pkgs.nil
-      ];
+      extensions = [
+        "colored-zed-icons",
+
+        # Languages
+        "nix",
+        "golang",
+        ];
 
       userSettings = {
+        base_keymap = "VScode";
+
+        icon_theme = "Colored Zed Icons";
         theme = "Caelestia";
 
-        lsp = {
-          nix.binary.path_lookup = true;
-          ruff.binary.path_lookup = true;
+      shell = {
+         program = "foot";
         };
       };
     };
