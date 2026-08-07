@@ -58,7 +58,7 @@
             _var = "nautilus";
           };
           browser = {
-            _var = "google-chrome-stable --force-dark-mode --enable-features=WebUIDarkMode --disable-session-crashed-bubble";
+            _var = "firefox";
           };
           picker = {
             _var = "hyprpicker -a";

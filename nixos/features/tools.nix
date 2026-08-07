@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  flake.homeModules.tools = { pkgs, ... }: {
+  flake.homeModules.tools = { pkgs, config, ... }: {
     home.packages = with pkgs; [
       gh
       wget
@@ -26,7 +26,7 @@
 
     programs.nh = {
       enable = true;
-      flake = "/home/luynar/nixconf";
+      flake = "${config.home.homeDirectory}/nixconf";
     };
   };
 }

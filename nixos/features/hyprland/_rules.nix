@@ -24,7 +24,7 @@
 
     window_rule = [
     {
-      match.class = "^google-chrome$";
+      match.class = "^firefox$";
       workspace = "1 silent";
       no_initial_focus = true;
     }

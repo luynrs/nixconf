@@ -38,7 +38,7 @@
             self.homeModules.starship
             self.homeModules.tools
             self.homeModules.work
-            self.homeModules.chrome
+            self.homeModules.firefox
             self.homeModules.media
             self.homeModules.socials
             self.homeModules.btop

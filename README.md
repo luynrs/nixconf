@@ -3,13 +3,12 @@
 ## Rebuild
 
 ```bash
-sudo nixos-rebuild switch --flake .#luynar --impure   # система
-nh home switch                                         # или home-manager
-nix fmt                                                # форматирование (nixfmt)
+sudo nixos-rebuild switch --flake .#luynar   # десктоп
+sudo nixos-rebuild switch --flake .#laptop   # ноут
+# без #host — сама подхватит по имени машины, если оно совпадает с атрибутом
+nh home switch                                # или home-manager
+nix fmt                                       # форматирование (nixfmt)
 ```
-
-`--impure` обязателен: caelestia-shell собирается из локального чекаута
-`~/dev/caelestia-shell` (абсолютный путь вне флейка), см. «Структура» ниже.
 
 ## Хоткеи
 
@@ -19,7 +18,7 @@ nix fmt                                                # форматирова�
 | `CTRL + SHIFT + Escape` | Процессы (btop)                   |
 | `SUPER + Q`            | Закрыть окно                      |
 | `SUPER + E`            | Файловый менеджер (nautilus)      |
-| `SUPER + W`            | Браузер (chrome)                  |
+| `SUPER + W`            | Браузер (firefox)                 |
 | `SUPER + SHIFT + W`    | Смена обоев (caelestia, `>wallpaper`) |
 | `SUPER + SHIFT + Q`    | Power menu (caelestia)             |
 | `SUPER + S`            | Ланчер (caelestia)                 |
@@ -32,60 +31,86 @@ nix fmt                                                # форматирова�
 | `SUPER + стрелки`      | Фокус                            |
 | `XF86Audio*`           | Громкость/яркость/медиа           |
 
-Приложения закреплены по воркспейсам: chrome=1, vesktop/ayugram=2, zed=3, steam=10, игры (стим)=4.
+Приложения закреплены по воркспейсам: firefox=1, vesktop/ayugram=2, zed=3, игры (стим)=4, steam=5.
 
 ## Структура
 
 ```
 flake.nix                        собирает *.nix во всём репо автоматически (кроме _префиксных)
-nixos/base/                      база: система, тема, пользователь, keymap, мониторы, persist
-nixos/extra/                     опциональное железо (gpu, openrgb, v2raya)
+nixos/base/                      база: система, тема, пользователь, keymap, мониторы
+nixos/extra/                     опциональное железо (gpu-amd, gpu-nvidia, openrgb, v2raya)
 nixos/features/<name>/           каждая фича: default.nix + конфиги рядом
 nixos/features/nvim/             nvim на nixvim (плагины из Nix, Lua-конфиг в lua/)
-nixos/hosts/main/                сборка nixosConfigurations.luynar + разметка диска (_disko.nix)
+nixos/hosts/main/                nixosConfigurations.luynar — десктоп, AMD GPU
+nixos/hosts/laptop/               nixosConfigurations.laptop — ноут, Nvidia GPU
 Wallpapers/                      обои для рофл-свитчера
 ```
 
-Файлы с `_` в начале имени (`_disko.nix`, `_binds.nix`, ...) не импортируются автоматически —
+Файлы с `_` в начале имени (`_binds.nix`, `_rules.nix`, ...) не импортируются автоматически —
 это не самостоятельные flake-модули, а куски, которые явно подключают другие файлы.
 
-## Переустановка (disko + impermanence)
+## Установка (любой хост)
 
-Разметка диска не делается руками — она описана в `nixos/hosts/main/_disko.nix`
-и накатывается одной командой через [disko](https://github.com/nix-community/disko).
-После установки `/` — это tmpfs (чистая система на каждой загрузке), `/nix` и `/home`
-живут на своих постоянных разделах, так что пакеты, доты через home-manager, ssh-ключи,
-браузер, Steam — всё, что лежит в `/home`, — переустановку переживает само. Отдельно
-персистится только горстка системных файлов (`/etc/machine-id`, коннекшены NetworkManager)
-через `environment.persistence."/persist"`.
-
-**⚠️ `_disko.nix` форматирует диск — необратимо. Перед запуском обязательно закоммить
-и запушь всё важное, и убедись что `device` в файле указывает на правильный диск.**
-
-С livecd-установщика NixOS (интернет и git должны быть доступны):
+Одна и та же процедура для десктопа, ноута и любой следующей машины — меняется только
+`$HOST`. Разметка ручная, обычный ext4 (`/boot` — vfat ESP, `/` — ext4):
 
 ```bash
-git clone https://github.com/luynrs/nixconf.git
-sudo nix run github:nix-community/disko -- --mode destroy,format,mount ./nixconf/nixos/hosts/main/_disko.nix
-sudo nixos-install --flake ./nixconf#luynar
+# 1. Разметка — пример для GPT/UEFI, замени /dev/nvme0n1 на свой диск
+sudo parted /dev/nvme0n1 -- mklabel gpt
+sudo parted /dev/nvme0n1 -- mkpart ESP fat32 1MiB 1GiB
+sudo parted /dev/nvme0n1 -- set 1 esp on
+sudo parted /dev/nvme0n1 -- mkpart primary ext4 1GiB 100%
+sudo mkfs.fat -F32 -n boot /dev/nvme0n1p1
+sudo mkfs.ext4 -L nixos /dev/nvme0n1p2
+sudo mount /dev/nvme0n1p2 /mnt
+sudo mkdir -p /mnt/boot
+sudo mount /dev/nvme0n1p1 /mnt/boot
+
+# 2. Конфиг + имя хоста (совпадает с nixos/hosts/<host>/ и nixosConfigurations.<host>)
+git clone https://github.com/luynrs/nixconf.git /mnt/root/nixconf
+cd /mnt/root/nixconf
+HOST=laptop
+
+# 3. hardware-configuration.nix — один готовый кусок вывода nixos-generate-config,
+# обёрнутый в нужное имя модуля, никакой ручной разборки полей
+mkdir -p nixos/hosts/$HOST
+{ echo "{ flake.nixosModules.$HOST ="; nixos-generate-config --root /mnt --show-hardware-config; echo "; }"; } \
+  > nixos/hosts/$HOST/hardware-configuration.nix
+
+# 4. Установка
+sudo nixos-install --flake .#$HOST
 ```
 
-После первой загрузки на новом разделе включи персист (он выключен по умолчанию,
-чтобы не сломать текущую ext4-систему): в `nixos/hosts/main/configuration.nix` добавь
-`persistance.enable = true;` рядом с блоком `preferences` (на одном уровне с ним,
-внутри `flake.nixosModules.hostMain`), закоммить и `sudo nixos-rebuild switch --flake .#luynar`.
+Для `main`/`laptop` `configuration.nix` уже в репо. Для нового хоста скопируй
+`nixos/hosts/laptop/configuration.nix` рядом и поправь `preferences`/железные модули
+(`gpu-amd` vs `gpu-nvidia`, `openrgb` и т.п.) под новую машину.
 
-Данных, которых на диске никогда не было (например ты первый раз ставишь систему на новое
-железо), это не восстановит — ssh/gpg-ключи, сессии в мессенджерах и т.п. нужно занести
-в `/home` самому (бэкапом/rsync) до или после установки.
+На ноуте отдельно после установки: `lspci | grep -E "VGA|3D"` → впиши bus ID в
+`intelBusId`/`nvidiaBusId` в `nixos/extra/gpu-nvidia.nix`, и поправь
+`preferences.monitors."eDP-1"` в `nixos/hosts/laptop/configuration.nix`, если разрешение
+не 1920x1080.
+
+После первой загрузки — репо в `~/nixconf` (так его ждёт `programs.nh.flake`), закоммить.
+Дальше на любой из машин просто:
+
+```bash
+nh os switch
+```
+
+Без флагов и без `#host` — `nh` берёт хост по `networking.hostName`, а он у каждой машины
+уже свой (`luynar` на десктопе, `laptop` на ноуте) и совпадает с именем в
+`nixosConfigurations`, так что один и тот же алиас работает одинаково везде.
 
 ## Темизация
 
-Цвета задаются один раз в `theme.nix` → `config.theme.*` (палитра Catppuccin Mocha, тянется из `catppuccin/nix`), дальше уходят в hyprland/foot/starship нативно, а в hyprshot через `lib.replaceStrings` по плейсхолдерам. GTK/Qt Catppuccin Mocha (lavender), иконки Papirus.
+Палитра — Catppuccin Mocha, акцент lavender, везде. GTK/Qt/курсор/иконки заданы напрямую в
+`nixos/features/appearance.nix` (adw-gtk3-dark, Papirus-Dark, Bibata). nvim берёт catppuccin
+через встроенную colorscheme в nixvim. Hyprland-бордеры, цвета fish и starship — не статичные
+nix-значения, а шаблоны, которые перерисовывает caelestia (ниже) при каждой смене схемы.
 
 Бар, ланчер, powermenu и уведомления — caelestia-shell (`nixos/features/caelestia/`),
-собирается из локального чекаута в `~/dev/caelestia-shell` (правь QML там, `home-manager
-switch` подхватит правки напрямую). Схема цветов у caelestia — не плоский hex, а полная
+собирается из вендоренного чекаута `vendor/caelestia-shell` (правь QML там, `nh home switch`
+пересоберёт). Схема цветов у caelestia — не плоский hex, а полная
 палитра Material 3, поэтому вместо ручного маппинга из `theme.nix` используется встроенная
 схема `catppuccin/mocha` (её акцент `lavender` уже совпадает с этим репо), проставляется
 один раз через `caelestia scheme set` в `home.activation`.
