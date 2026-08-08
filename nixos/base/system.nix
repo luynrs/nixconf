@@ -56,6 +56,7 @@
       security.polkit.enable = true;
 
       services.gvfs.enable = true;
+      services.speechd.enable = false; # graphical-desktop.nix enables it by default; we don't need speech synthesis
 
       users.users.${user.name} = {
         isNormalUser = true;
