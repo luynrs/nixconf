@@ -57,7 +57,7 @@
             _var = "nautilus";
           };
           browser = {
-            _var = "librewolf";
+            _var = "firefox";
           };
           picker = {
             _var = "hyprpicker -a";

@@ -15,7 +15,7 @@
         self.homeModules.starship
         self.homeModules.tools
         self.homeModules.work
-        self.homeModules.librewolf
+        self.homeModules.firefox
         self.homeModules.media
         self.homeModules.socials
         self.homeModules.btop
