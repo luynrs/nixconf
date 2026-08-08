@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     justssh.url = "github:luynrs/justssh";
-    justxray.url = "path:/home/luynar/Projects/justvpn";
+    justxray.url = "path:/home/luynar/Projects/justxray";
     caelestia-shell = {
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";

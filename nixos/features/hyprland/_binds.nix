@@ -61,6 +61,13 @@ in
   }
   {
     _args = [
+      (inline ''mainMod .. " + SHIFT + R"'')
+      (inline ''hl.dsp.exec_cmd("caelestia shell -k; pkill -x qs; caelestia shell -d")'')
+      { description = "Restart widgets"; }
+    ];
+  }
+  {
+    _args = [
       "SUPER + D"
       (inline ''hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })'')
       { description = "Window: Maximize"; }

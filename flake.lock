@@ -129,13 +129,13 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786183701,
-        "narHash": "sha256-abKY+jTV4dvqYD7WMTxGegKvl+Xl2I6JMXoS+lHqARs=",
-        "path": "/home/luynar/Projects/justvpn",
+        "lastModified": 1786188902,
+        "narHash": "sha256-zpmZhQ85VTzGFas641jCHis8Bw9AwGDZrWD/8A7xZxI=",
+        "path": "/home/luynar/Projects/justxray",
         "type": "path"
       },
       "original": {
-        "path": "/home/luynar/Projects/justvpn",
+        "path": "/home/luynar/Projects/justxray",
         "type": "path"
       }
     },

@@ -156,10 +156,6 @@
                   workspaces = true;
                 };
                 showOnHover = false;
-                status = {
-                  showBattery = false;
-                  showKbLayout = true;
-                };
                 statusIcons = [
                   {
                     enabled = true;
