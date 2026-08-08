@@ -18,7 +18,6 @@
       imports = [
         self.nixosModules.base
         self.nixosModules.hyprland
-        self.nixosModules.caelestia
         self.nixosModules.fish
         self.nixosModules.gpuNvidia
         self.nixosModules.gaming

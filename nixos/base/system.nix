@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 {
   flake.nixosModules.base =
     {
@@ -50,6 +50,7 @@
         ];
       };
       nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
       zramSwap.enable = true;
 

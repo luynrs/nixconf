@@ -1,25 +1,5 @@
 { inputs, self, ... }:
 {
-  flake.nixosModules.caelestia =
-    { config, ... }:
-    {
-      security.sudo.extraRules = [
-        {
-          users = [ config.preferences.user.name ];
-          commands = [
-            {
-              command = "/run/current-system/sw/bin/mkdir -p /etc/chromium/policies/managed";
-              options = [ "NOPASSWD" ];
-            }
-            {
-              command = "/run/current-system/sw/bin/tee /etc/chromium/policies/managed/caelestia.json";
-              options = [ "NOPASSWD" ];
-            }
-          ];
-        }
-      ];
-    };
-
   flake.homeModules.caelestia =
     {
       config,
@@ -34,7 +14,6 @@
         enable = true;
         cli.enable = true;
         cli.settings.theme = {
-          enableChromium = true;
           postHook = "hyprctl reload";
         };
 

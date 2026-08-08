@@ -24,7 +24,7 @@
 
   window_rule = [
     {
-      match.class = "^[Cc]hromium$";
+      match.class = "^librewolf$";
       workspace = "1 silent";
       no_initial_focus = true;
     }

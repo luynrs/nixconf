@@ -1,18 +1,30 @@
 { ... }:
 {
-  flake.homeModules.chromium =
-    { ... }:
+  flake.homeModules.librewolf =
+    { pkgs, ... }:
     {
-      programs.chromium = {
+      home.sessionVariables.MOZ_ENABLE_WAYLAND = "1";
+
+      programs.librewolf = {
         enable = true;
-        commandLineArgs = [
-          "--ozone-platform=wayland"
-          "--font-render-hinting=full"
-        ];
-        extensions = [
-          "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
-          "mnbndgmknlpdjntjjkklckcocgohadmo" # SponsorBlock
-        ];
+        profiles.default = {
+          extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
+            ublock-origin
+            privacy-badger
+            foxyproxy-standard
+          ];
+
+          search = {
+            force = true;
+            default = "google";
+            engines = {
+              bing.metaData.hidden = true;
+              ddg.metaData.hidden = true;
+              ebay.metaData.hidden = true;
+              wikipedia.metaData.hidden = true;
+            };
+          };
+        };
       };
     };
 }
