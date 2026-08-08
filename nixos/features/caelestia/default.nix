@@ -151,10 +151,10 @@
                   tray = true;
                 };
                 showOnHover = false;
-                status = {
-                  showBattery = false;
-                  showKbLayout = true;
-                };
+                statusIcons = [
+                  { id = "battery"; enabled = false; }
+                  { id = "kbLayout"; enabled = true; }
+                ];
                 tray = {
                   background = true;
                   compact = false;

@@ -81,10 +81,17 @@ StackView {
                 required property QsMenuEntry modelData
 
                 implicitWidth: Tokens.sizes.bar.trayMenuWidth
-                implicitHeight: modelData.isSeparator ? 1 : children.implicitHeight
+                implicitHeight: modelData.isSeparator ? 1 : rowMetrics.height
 
                 radius: Tokens.rounding.full
                 color: modelData.isSeparator ? Colours.palette.m3outlineVariant : "transparent"
+
+                TextMetrics {
+                    id: rowMetrics
+
+                    font: Tokens.font.body.small
+                    text: "Mg"
+                }
 
                 Loader {
                     id: children

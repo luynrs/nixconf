@@ -34,11 +34,11 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1785666574,
-        "narHash": "sha256-a+CHe+Le203wP7SwfCOL6Al91iHKLpjcuFRW2+b9S14=",
+        "lastModified": 1786013040,
+        "narHash": "sha256-/RABHr0dLEjX0Nktpe36Wdg8IUbc3BQLu/Hm4DOmPNI=",
         "owner": "caelestia-dots",
         "repo": "shell",
-        "rev": "7fc6f153f1862e37a3fb48f585f934d1a90e1078",
+        "rev": "c99f9755770ee48c5ea613833bc5376b4f4f740e",
         "type": "github"
       },
       "original": {
@@ -129,8 +129,8 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786171142,
-        "narHash": "sha256-9qQwck1VHX3dHiMb6mpXsegwYhbAi9iBHzgun+81fO0=",
+        "lastModified": 1786178365,
+        "narHash": "sha256-YVXN/YrcTMubdgMWFlco6RhHp05LOjKGW3gVBXYadFs=",
         "path": "/home/luynar/Projects/justvpn",
         "type": "path"
       },

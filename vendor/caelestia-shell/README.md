@@ -448,21 +448,41 @@ For example, to disable the bar on DP-1:
             "iconSubs": [],
             "hiddenIcons": []
         },
-        "status": {
-            "showAudio": false,
-            "showMicrophone": false,
-            "showKbLayout": false,
-            "showNetwork": true,
-            "showWifi": true,
-            "showBluetooth": true,
-            "showBattery": true,
-            "showLockStatus": true
-        },
         "clock": {
             "background": false,
             "showDate": false,
             "showIcon": true
         },
+        "statusIcons": [
+            {
+                "id": "lockStatus",
+                "enabled": true
+            },
+            {
+                "id": "audio",
+                "enabled": false
+            },
+            {
+                "id": "microphone",
+                "enabled": false
+            },
+            {
+                "id": "kbLayout",
+                "enabled": false
+            },
+            {
+                "id": "network",
+                "enabled": true
+            },
+            {
+                "id": "bluetooth",
+                "enabled": true
+            },
+            {
+                "id": "battery",
+                "enabled": true
+            }
+        ],
         "entries": [
             {
                 "id": "logo",
@@ -655,6 +675,7 @@ For example, to disable the bar on DP-1:
     },
     "lock": {
         "enabled": true,
+        "useWallpaper": false,
         "recolourLogo": true,
         "enableFprint": true,
         "maxFprintTries": 3,
@@ -826,9 +847,12 @@ programs.caelestia = {
     environment = [];
   };
   settings = {
-    bar.status = {
-      showBattery = false;
-    };
+    bar.statusIcons = [
+      { id = "lockStatus"; enabled = true; }
+      { id = "network"; enabled = true; }
+      { id = "bluetooth"; enabled = true; }
+      { id = "battery"; enabled = false; }
+    ];
     paths.wallpaperDir = "~/Images";
   };
   cli = {
