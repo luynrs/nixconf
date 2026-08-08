@@ -12,10 +12,11 @@
             "extensions.autoDisableScopes" = 0;
             "browser.urlbar.oneOffSearches" = false;
             "identity.fxaccounts.toolbar.enabled" = false;
+            "browser.startup.page" = 3;
+            "browser.sessionstore.resume_from_crash" = true;
           };
 
           userChrome = ''
-            /* search-mode switcher icon in the urlbar */
             #urlbar-searchmode-switcher { display: none !important; }
           '';
 
