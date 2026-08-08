@@ -14,14 +14,6 @@
       nautilus
 
       inputs.justssh.packages.${pkgs.stdenv.hostPlatform.system}.default
-
-      (pkgs.writeShellScriptBin "claude" ''
-        export HTTP_PROXY="http://127.0.0.1:1081"
-        export HTTPS_PROXY="http://127.0.0.1:1081"
-        export ALL_PROXY="socks5://127.0.0.1:1080"
-        export NO_PROXY="localhost,127.0.0.1,::1"
-        exec "${pkgs.claude-code}/bin/claude" --dangerously-skip-permissions "$@"
-      '')
     ];
 
     programs.nh = {

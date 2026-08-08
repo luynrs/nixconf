@@ -47,26 +47,6 @@
         "type": "github"
       }
     },
-    "catppuccin": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785485193,
-        "narHash": "sha256-JgUmb34d3Zv1W5fYukqEUEDHSaWhw7WV9HVUXOmOCaA=",
-        "owner": "catppuccin",
-        "repo": "nix",
-        "rev": "41c4ebf8cb3e4052001947a457b4ac093e5dc119",
-        "type": "github"
-      },
-      "original": {
-        "owner": "catppuccin",
-        "repo": "nix",
-        "type": "github"
-      }
-    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -144,13 +124,13 @@
         "type": "github"
       }
     },
-    "justvpn": {
+    "justxray": {
       "inputs": {
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786125671,
-        "narHash": "sha256-f3zzDqev+4pZzxFHmORtL4Qeq1O+cs0BKdRyEhG2cMI=",
+        "lastModified": 1786171142,
+        "narHash": "sha256-9qQwck1VHX3dHiMb6mpXsegwYhbAi9iBHzgun+81fO0=",
         "path": "/home/luynar/Projects/justvpn",
         "type": "path"
       },
@@ -302,11 +282,10 @@
     "root": {
       "inputs": {
         "caelestia-shell": "caelestia-shell",
-        "catppuccin": "catppuccin",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "justssh": "justssh",
-        "justvpn": "justvpn",
+        "justxray": "justxray",
         "nixpkgs": "nixpkgs_3",
         "nixvim": "nixvim",
         "treefmt-nix": "treefmt-nix"

@@ -39,7 +39,6 @@
       home.packages = [
         hyprshot
         pkgs.hyprpicker
-        pkgs.awww
         pkgs.wl-clipboard
       ];
 

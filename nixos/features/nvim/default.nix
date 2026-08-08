@@ -32,7 +32,6 @@
       ];
 
       extraPlugins = with pkgs.vimPlugins; [
-        nvim-lspconfig
         nvim-cmp
         cmp-nvim-lsp
         cmp-buffer

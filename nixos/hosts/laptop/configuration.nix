@@ -18,6 +18,7 @@
       imports = [
         self.nixosModules.base
         self.nixosModules.hyprland
+        self.nixosModules.caelestia
         self.nixosModules.fish
         self.nixosModules.gpuNvidia
         self.nixosModules.gaming
@@ -29,46 +30,9 @@
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "hm-bak";
 
-          home-manager.users.${config.preferences.user.name}.imports = [
-            inputs.catppuccin.homeModules.catppuccin
-            self.homeModules.hyprland
-            self.homeModules.caelestia
-            self.homeModules.foot
-            self.homeModules.fish
-            self.homeModules.starship
-            self.homeModules.tools
-            self.homeModules.work
-            self.homeModules.chromium
-            self.homeModules.media
-            self.homeModules.socials
-            self.homeModules.btop
-            self.homeModules.appearance
-            self.homeModules.fastfetch
-            self.homeModules.nvim
-            inputs.justvpn.homeManagerModules.xrs
-            (
-              { lib, ... }:
-              {
-                home.username = config.preferences.user.name;
-                home.homeDirectory = "/home/${config.preferences.user.name}";
-                home.stateVersion = "26.05";
-
-                home.activation.seedWallpapers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-                  mkdir -p "$HOME/Pictures/Wallpapers"
-                  cp -n ${../../../Wallpapers}/* "$HOME/Pictures/Wallpapers/" 2>/dev/null || true
-                '';
-
-                catppuccin = {
-                  enable = true;
-                  autoEnable = false; # manual theming via caelestia scheme is the single source of truth
-                  flavor = "mocha";
-                  accent = "lavender";
-                  cursors.enable = false; # keep the Bibata cursor theme instead
-                };
-              }
-            )
-            { services.xrs.enable = true; }
-          ];
+          home-manager.users.${config.preferences.user.name} = {
+            imports = [ self.homeModules.general ];
+          };
         }
       ];
 
@@ -86,8 +50,6 @@
           options = "grp:alt_shift_toggle";
         };
 
-        # ponytail: resolution is a guess (common laptop panel default),
-        # only the refresh rate is confirmed — fix width/height once installed.
         monitors."eDP-1" = {
           width = 1920;
           height = 1080;

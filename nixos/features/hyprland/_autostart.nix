@@ -11,7 +11,6 @@ in
       (inline ''
         function()
           hl.exec_cmd("caelestia-shell")
-          hl.exec_cmd("awww-daemon")
           hl.exec_cmd(${toLua polkitAgent})
 
           hl.exec_cmd(browser)
