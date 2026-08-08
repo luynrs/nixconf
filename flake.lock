@@ -129,8 +129,8 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786178365,
-        "narHash": "sha256-YVXN/YrcTMubdgMWFlco6RhHp05LOjKGW3gVBXYadFs=",
+        "lastModified": 1786183701,
+        "narHash": "sha256-abKY+jTV4dvqYD7WMTxGegKvl+Xl2I6JMXoS+lHqARs=",
         "path": "/home/luynar/Projects/justvpn",
         "type": "path"
       },

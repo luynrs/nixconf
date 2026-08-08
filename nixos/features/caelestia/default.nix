@@ -150,10 +150,41 @@
                   activeWindow = false;
                   tray = true;
                 };
+                scrollActions = {
+                  brightness = false;
+                  volume = false;
+                  workspaces = true;
+                };
                 showOnHover = false;
+                status = {
+                  showBattery = false;
+                  showKbLayout = true;
+                };
                 statusIcons = [
-                  { id = "battery"; enabled = false; }
-                  { id = "kbLayout"; enabled = true; }
+                  {
+                    enabled = true;
+                    id = "kbLayout";
+                  }
+                  {
+                    enabled = false;
+                    id = "audio";
+                  }
+                  {
+                    enabled = false;
+                    id = "microphone";
+                  }
+                  {
+                    enabled = true;
+                    id = "network";
+                  }
+                  {
+                    enabled = true;
+                    id = "bluetooth";
+                  }
+                  {
+                    enabled = true;
+                    id = "lockStatus";
+                  }
                 ];
                 tray = {
                   background = true;
@@ -168,13 +199,63 @@
                 };
               };
               dashboard.performance.showBattery = false;
+              launcher = {
+                hiddenApps = [
+                  "foot-server"
+                  "footclient"
+                  "foot"
+                  "kvantummanager"
+                ];
+                useFuzzy.apps = true;
+              };
+              notifs.openExpanded = false;
               services = {
                 audioIncrement = 0.05;
                 brightnessIncrement = 0.05;
                 useFahrenheit = false;
                 useTwelveHourClock = false;
               };
-              utilities.toasts.kbLayoutChanged = false;
+              utilities = {
+                quickToggles = [
+                  {
+                    enabled = true;
+                    id = "wifi";
+                  }
+                  {
+                    enabled = true;
+                    id = "bluetooth";
+                  }
+                  {
+                    enabled = true;
+                    id = "mic";
+                  }
+                  {
+                    enabled = true;
+                    id = "settings";
+                  }
+                  {
+                    enabled = true;
+                    id = "gameMode";
+                  }
+                  {
+                    enabled = true;
+                    id = "dnd";
+                  }
+                  {
+                    enabled = true;
+                    id = "vpn";
+                  }
+                ];
+                toasts = {
+                  kbLayoutChanged = false;
+                  nowPlaying = false;
+                };
+                vpn = {
+                  enabled = false;
+                  provider = [ ];
+                  selectedProvider = "";
+                };
+              };
             }
           );
         in
