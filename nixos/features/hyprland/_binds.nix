@@ -54,7 +54,7 @@ in
   }
   {
     _args = [
-      (inline ''mainMod .. " + V"'')
+      (inline ''mainMod .. " + SPACE"'')
       (inline ''hl.dsp.window.float({ action = "toggle" })'')
       { description = "Toggle floating"; }
     ];
@@ -62,7 +62,7 @@ in
   {
     _args = [
       (inline ''mainMod .. " + SHIFT + R"'')
-      (inline ''hl.dsp.exec_cmd("caelestia shell -k; pkill -x qs; caelestia shell -d")'')
+      (inline ''hl.dsp.exec_cmd("caelestia shell -k; caelestia shell -d")'')
       { description = "Restart widgets"; }
     ];
   }
@@ -82,9 +82,16 @@ in
   }
   {
     _args = [
-      (inline ''mainMod .. " + S"'')
+      (inline "mainMod")
       (inline ''hl.dsp.global("caelestia:launcher")'')
       { description = "App launcher"; }
+    ];
+  }
+  {
+    _args = [
+      (inline ''mainMod .. " + S"'')
+      (inline ''hl.dsp.global("caelestia:dashboard")'')
+      { description = "Dashboard"; }
     ];
   }
   {

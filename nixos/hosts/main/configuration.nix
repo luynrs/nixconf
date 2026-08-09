@@ -10,38 +10,37 @@
     modules = [ self.nixosModules.main ];
   };
 
-  flake.nixosModules.main =
-    {
-      imports = [
-        self.nixosModules.base
-        self.nixosModules.general
-        self.nixosModules.hyprland
-        self.nixosModules.fish
-        self.nixosModules.openrgb
-        self.nixosModules.gpuAmd
-        self.nixosModules.gaming
-        self.nixosModules.bluetooth
-      ];
+  flake.nixosModules.main = {
+    imports = [
+      self.nixosModules.base
+      self.nixosModules.general
+      self.nixosModules.hyprland
+      self.nixosModules.fish
+      self.nixosModules.openrgb
+      self.nixosModules.gpuAmd
+      self.nixosModules.gaming
+      self.nixosModules.bluetooth
+    ];
 
-      preferences = {
-        user = {
-          name = "luynar";
-          description = "luynar";
-        };
+    preferences = {
+      user = {
+        name = "luynar";
+        description = "luynar";
+      };
 
-        keymap = {
-          layouts = [
-            "us"
-            "ru"
-          ];
-          options = "grp:alt_shift_toggle";
-        };
+      keymap = {
+        layouts = [
+          "us"
+          "ru"
+        ];
+        options = "grp:alt_shift_toggle";
+      };
 
-        monitors."DP-1" = {
-          width = 1920;
-          height = 1080;
-          refreshRate = 165;
-        };
+      monitors."DP-1" = {
+        width = 1920;
+        height = 1080;
+        refreshRate = 165;
       };
     };
+  };
 }

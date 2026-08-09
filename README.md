@@ -21,9 +21,10 @@ nix fmt                                       # форматирование (ni
 | `SUPER + W`            | Браузер (chromium)                   |
 | `SUPER + SHIFT + W`    | Смена обоев (caelestia, `>wallpaper`) |
 | `SUPER + SHIFT + Q`    | Power menu (caelestia)             |
-| `SUPER + S`            | Ланчер (caelestia)                 |
+| `SUPER`                | Ланчер (caelestia)                 |
+| `SUPER + S`            | Dashboard (caelestia)              |
 | `SUPER + D` / `F`      | Maximize / Fullscreen             |
-| `SUPER + V`            | Float toggle                      |
+| `SUPER + SPACE`        | Float toggle                      |
 | `SUPER + SHIFT + S`    | Скрин области (в буфер)           |
 | `PRINT`                | Скрин всего (в буфер)             |
 | `SUPER + SHIFT + C`    | Пайпетка (цвет)                   |

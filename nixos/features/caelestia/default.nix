@@ -173,7 +173,10 @@
                   shown = 5;
                 };
               };
-              dashboard.performance.showBattery = false;
+              dashboard = {
+                showOnHover = false;
+                performance.showBattery = false;
+              };
               launcher = {
                 hiddenApps = [
                   "foot-server"
@@ -184,6 +187,10 @@
                 useFuzzy.apps = true;
               };
               notifs.openExpanded = false;
+              sidebar = {
+                showOnHover = true;
+                minHoverThreshold = 30;
+              };
               services = {
                 audioIncrement = 0.05;
                 brightnessIncrement = 0.05;
@@ -191,6 +198,7 @@
                 useTwelveHourClock = false;
               };
               utilities = {
+                enabled = false;
                 quickToggles = [
                   {
                     enabled = true;
@@ -213,7 +221,7 @@
                     id = "gameMode";
                   }
                   {
-                    enabled = true;
+                    enabled = false;
                     id = "dnd";
                   }
                   {
@@ -222,6 +230,7 @@
                   }
                 ];
                 toasts = {
+                  configLoaded = false;
                   kbLayoutChanged = false;
                   nowPlaying = false;
                 };
