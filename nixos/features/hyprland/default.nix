@@ -42,6 +42,12 @@
         pkgs.wl-clipboard
       ];
 
+      xdg.configFile."hypr/xdph.conf".text = ''
+        screencopy {
+          allow_token_by_default = true
+        }
+      '';
+
       wayland.windowManager.hyprland = {
         enable = true;
         configType = "lua";
