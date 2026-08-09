@@ -150,14 +150,17 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786188902,
-        "narHash": "sha256-zpmZhQ85VTzGFas641jCHis8Bw9AwGDZrWD/8A7xZxI=",
-        "path": "/home/luynar/Projects/justxray",
-        "type": "path"
+        "lastModified": 1786187839,
+        "narHash": "sha256-d2MZ1UQ4c0S5IX9q4QWVGbHUwTpkOQOfBW3maOdqUdw=",
+        "owner": "luynrs",
+        "repo": "justxray",
+        "rev": "0a5fbbcbe628562805ffc320d3463d5c620fef2a",
+        "type": "github"
       },
       "original": {
-        "path": "/home/luynar/Projects/justxray",
-        "type": "path"
+        "owner": "luynrs",
+        "repo": "justxray",
+        "type": "github"
       }
     },
     "m3shapes": {

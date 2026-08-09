@@ -11,27 +11,16 @@
   };
 
   flake.nixosModules.main =
-    { config, ... }:
     {
       imports = [
         self.nixosModules.base
+        self.nixosModules.general
         self.nixosModules.hyprland
         self.nixosModules.fish
         self.nixosModules.openrgb
         self.nixosModules.gpuAmd
         self.nixosModules.gaming
         self.nixosModules.bluetooth
-
-        inputs.home-manager.nixosModules.default
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.backupFileExtension = "hm-bak";
-
-          home-manager.users.${config.preferences.user.name} = {
-            imports = [ self.homeModules.general ];
-          };
-        }
       ];
 
       preferences = {
