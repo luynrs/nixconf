@@ -37,6 +37,9 @@
     {
       home.packages = [
         pkgs.hyprpicker
+        pkgs.cliphist
+        pkgs.fuzzel
+        pkgs.wl-clipboard
       ];
 
       xdg.configFile."hypr/xdph.conf".text = ''

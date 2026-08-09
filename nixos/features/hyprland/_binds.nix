@@ -114,6 +114,13 @@ in
   }
   {
     _args = [
+      (inline ''mainMod .. " + V"'')
+      (inline ''hl.dsp.exec_cmd("caelestia clipboard")'')
+      { description = "Clipboard history"; }
+    ];
+  }
+  {
+    _args = [
       (inline ''mainMod .. " + SHIFT + S"'')
       (inline ''hl.dsp.global("caelestia:screenshotFreezeClip")'')
       { description = "Screenshot: area"; }
