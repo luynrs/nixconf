@@ -29,7 +29,6 @@
     { pkgs, lib, ... }:
     let
       inline = lib.generators.mkLuaInline;
-      hyprshot = import ./_hyprshot.nix { inherit lib pkgs; };
       animations = import ./_animations.nix;
       rules = import ./_rules.nix;
       binds = import ./_binds.nix { inherit lib; };
@@ -37,9 +36,7 @@
     in
     {
       home.packages = [
-        hyprshot
         pkgs.hyprpicker
-        pkgs.wl-clipboard
       ];
 
       xdg.configFile."hypr/xdph.conf".text = ''

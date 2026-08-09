@@ -82,14 +82,14 @@ in
   }
   {
     _args = [
-      (inline "mainMod")
+      (inline ''mainMod .. " + S"'')
       (inline ''hl.dsp.global("caelestia:launcher")'')
       { description = "App launcher"; }
     ];
   }
   {
     _args = [
-      (inline ''mainMod .. " + S"'')
+      (inline ''mainMod .. " + A"'')
       (inline ''hl.dsp.global("caelestia:dashboard")'')
       { description = "Dashboard"; }
     ];
@@ -115,14 +115,14 @@ in
   {
     _args = [
       (inline ''mainMod .. " + SHIFT + S"'')
-      (inline ''hl.dsp.exec_cmd("hyprshot -m region --clipboard-only --freeze")'')
+      (inline ''hl.dsp.global("caelestia:screenshotFreezeClip")'')
       { description = "Screenshot: area"; }
     ];
   }
   {
     _args = [
       "PRINT"
-      (inline ''hl.dsp.exec_cmd("hyprshot -m output -m active --clipboard-only")'')
+      (inline ''hl.dsp.exec_cmd("caelestia screenshot")'')
       { description = "Screenshot: full screen"; }
     ];
   }

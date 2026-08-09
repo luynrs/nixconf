@@ -21,8 +21,8 @@ nix fmt                                       # форматирование (ni
 | `SUPER + W`            | Браузер (chromium)                   |
 | `SUPER + SHIFT + W`    | Смена обоев (caelestia, `>wallpaper`) |
 | `SUPER + SHIFT + Q`    | Power menu (caelestia)             |
-| `SUPER`                | Ланчер (caelestia)                 |
-| `SUPER + S`            | Dashboard (caelestia)              |
+| `SUPER + S`            | Ланчер (caelestia)                 |
+| `SUPER + A`            | Dashboard (caelestia)              |
 | `SUPER + D` / `F`      | Maximize / Fullscreen             |
 | `SUPER + SPACE`        | Float toggle                      |
 | `SUPER + SHIFT + S`    | Скрин области (в буфер)           |
