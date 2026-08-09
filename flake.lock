@@ -150,11 +150,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786187839,
-        "narHash": "sha256-d2MZ1UQ4c0S5IX9q4QWVGbHUwTpkOQOfBW3maOdqUdw=",
+        "lastModified": 1786267435,
+        "narHash": "sha256-dh6g6f27wOd1GWUyuECxA4ITcw8zWW1uEKyE3KqwPmU=",
         "owner": "luynrs",
         "repo": "justxray",
-        "rev": "0a5fbbcbe628562805ffc320d3463d5c620fef2a",
+        "rev": "85721a9168d261ea7ca7e8990ef7ef14469708fe",
         "type": "github"
       },
       "original": {
@@ -213,10 +213,10 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1785967620,
-        "narHash": "sha256-IItrdb7Puk05RqOBWZYFC5X6Wl1sJmCfh5MWVHw5iMM=",
+        "lastModified": 1786106723,
+        "narHash": "sha256-zDSUbpoeo/9ZmD2+wXnzxoo1+uhL8vxc0b8yuYMKYq0=",
         "ref": "nixos-unstable",
-        "rev": "b7c2ada94fe99c15b0dbcf4d11fd7850b957a436",
+        "rev": "f13ff45afd1bb73e640eaa08a7066dbed07e3238",
         "shallow": true,
         "type": "git",
         "url": "https://github.com/NixOS/nixpkgs.git"
