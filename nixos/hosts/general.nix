@@ -15,7 +15,6 @@
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
-        backupFileExtension = "hm-bak";
         users.${user.name}.imports = [ self.homeModules.general ];
       };
     };
