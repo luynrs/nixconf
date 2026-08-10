@@ -152,15 +152,15 @@
       "locked": {
         "lastModified": 1786267435,
         "narHash": "sha256-dh6g6f27wOd1GWUyuECxA4ITcw8zWW1uEKyE3KqwPmU=",
-        "owner": "luynrs",
-        "repo": "justxray",
+        "ref": "refs/heads/main",
         "rev": "85721a9168d261ea7ca7e8990ef7ef14469708fe",
-        "type": "github"
+        "revCount": 5,
+        "type": "git",
+        "url": "ssh://git@github.com/luynrs/justxray"
       },
       "original": {
-        "owner": "luynrs",
-        "repo": "justxray",
-        "type": "github"
+        "type": "git",
+        "url": "ssh://git@github.com/luynrs/justxray"
       }
     },
     "m3shapes": {

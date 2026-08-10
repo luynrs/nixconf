@@ -13,7 +13,7 @@
     };
     nur.url = "github:nix-community/NUR";
     justssh.url = "github:luynrs/justssh";
-    justxray.url = "github:luynrs/justxray";
+    justxray.url = "git+ssh://git@github.com/luynrs/justxray";
     caelestia-shell = {
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
