@@ -19,6 +19,146 @@
 
         systemd.enable = false;
 
+        settings = {
+          appearance = {
+            deformScale = 0;
+            transparency.enabled = true;
+          };
+
+          bar = {
+            activeWindow = {
+              compact = true;
+              inverted = true;
+              showOnHover = false;
+            };
+            clock = {
+              background = true;
+              showDate = false;
+              showIcon = false;
+            };
+            popouts = {
+              activeWindow = false;
+              tray = true;
+            };
+            scrollActions = {
+              brightness = false;
+              volume = false;
+              workspaces = true;
+            };
+            showOnHover = false;
+            statusIcons = [
+              {
+                enabled = true;
+                id = "kbLayout";
+              }
+              {
+                enabled = false;
+                id = "audio";
+              }
+              {
+                enabled = false;
+                id = "microphone";
+              }
+              {
+                enabled = true;
+                id = "network";
+              }
+              {
+                enabled = true;
+                id = "bluetooth";
+              }
+              {
+                enabled = true;
+                id = "lockStatus";
+              }
+            ];
+            tray = {
+              background = true;
+              compact = false;
+              recolour = true;
+            };
+            workspaces = {
+              activeIndicator = true;
+              activeTrail = true;
+              occupiedBg = false;
+              shown = 5;
+            };
+          };
+
+          dashboard = {
+            performance.showBattery = false;
+            showOnHover = false;
+          };
+
+          launcher = {
+            hiddenApps = [
+              "foot-server"
+              "footclient"
+              "foot"
+              "kvantummanager"
+            ];
+            useFuzzy.apps = true;
+          };
+
+          notifs.openExpanded = false;
+
+          sidebar = {
+            showOnHover = true;
+            minHoverThreshold = 30;
+          };
+
+          services = {
+            audioIncrement = 0.05;
+            brightnessIncrement = 0.05;
+            useFahrenheit = false;
+            useTwelveHourClock = false;
+          };
+
+          utilities = {
+            enabled = false;
+            quickToggles = [
+              {
+                enabled = true;
+                id = "wifi";
+              }
+              {
+                enabled = true;
+                id = "bluetooth";
+              }
+              {
+                enabled = true;
+                id = "mic";
+              }
+              {
+                enabled = true;
+                id = "settings";
+              }
+              {
+                enabled = true;
+                id = "gameMode";
+              }
+              {
+                enabled = false;
+                id = "dnd";
+              }
+              {
+                enabled = true;
+                id = "vpn";
+              }
+            ];
+            toasts = {
+              configLoaded = false;
+              kbLayoutChanged = false;
+              nowPlaying = false;
+            };
+            vpn = {
+              enabled = false;
+              provider = [ ];
+              selectedProvider = "";
+            };
+          };
+        };
+
         package =
           inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.with-cli.overrideAttrs
             (_old: {
@@ -105,150 +245,6 @@
       home.activation.caelestiaScheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         ${config.programs.caelestia.cli.package}/bin/caelestia scheme set -n catppuccin -f mocha -m dark || true
       '';
-
-      home.activation.caelestiaShellDefaults =
-        let
-          shellDefaults = pkgs.writeText "caelestia-shell-defaults.json" (
-            builtins.toJSON {
-              appearance = {
-                deformScale = 0;
-                transparency.enabled = true;
-              };
-              bar = {
-                activeWindow = {
-                  compact = true;
-                  inverted = true;
-                  showOnHover = false;
-                };
-                clock = {
-                  background = true;
-                  showDate = false;
-                  showIcon = false;
-                };
-                popouts = {
-                  activeWindow = false;
-                  tray = true;
-                };
-                scrollActions = {
-                  brightness = false;
-                  volume = false;
-                  workspaces = true;
-                };
-                showOnHover = false;
-                statusIcons = [
-                  {
-                    enabled = true;
-                    id = "kbLayout";
-                  }
-                  {
-                    enabled = false;
-                    id = "audio";
-                  }
-                  {
-                    enabled = false;
-                    id = "microphone";
-                  }
-                  {
-                    enabled = true;
-                    id = "network";
-                  }
-                  {
-                    enabled = true;
-                    id = "bluetooth";
-                  }
-                  {
-                    enabled = true;
-                    id = "lockStatus";
-                  }
-                ];
-                tray = {
-                  background = true;
-                  compact = false;
-                  recolour = true;
-                };
-                workspaces = {
-                  activeIndicator = true;
-                  activeTrail = true;
-                  occupiedBg = false;
-                  shown = 5;
-                };
-              };
-              dashboard = {
-                showOnHover = false;
-                performance.showBattery = false;
-              };
-              launcher = {
-                hiddenApps = [
-                  "foot-server"
-                  "footclient"
-                  "foot"
-                  "kvantummanager"
-                ];
-                useFuzzy.apps = true;
-              };
-              notifs.openExpanded = false;
-              sidebar = {
-                showOnHover = true;
-                minHoverThreshold = 30;
-              };
-              services = {
-                audioIncrement = 0.05;
-                brightnessIncrement = 0.05;
-                useFahrenheit = false;
-                useTwelveHourClock = false;
-              };
-              utilities = {
-                enabled = false;
-                quickToggles = [
-                  {
-                    enabled = true;
-                    id = "wifi";
-                  }
-                  {
-                    enabled = true;
-                    id = "bluetooth";
-                  }
-                  {
-                    enabled = true;
-                    id = "mic";
-                  }
-                  {
-                    enabled = true;
-                    id = "settings";
-                  }
-                  {
-                    enabled = true;
-                    id = "gameMode";
-                  }
-                  {
-                    enabled = false;
-                    id = "dnd";
-                  }
-                  {
-                    enabled = true;
-                    id = "vpn";
-                  }
-                ];
-                toasts = {
-                  configLoaded = false;
-                  kbLayoutChanged = false;
-                  nowPlaying = false;
-                };
-                vpn = {
-                  enabled = false;
-                  provider = [ ];
-                  selectedProvider = "";
-                };
-              };
-            }
-          );
-        in
-        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          mkdir -p "$HOME/.config/caelestia"
-          if [ ! -e "$HOME/.config/caelestia/shell.json" ]; then
-            install -m644 ${shellDefaults} "$HOME/.config/caelestia/shell.json"
-          fi
-        '';
 
       xdg.configFile."caelestia/shell-tokens.json".text =
         let

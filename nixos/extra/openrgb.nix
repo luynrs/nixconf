@@ -7,14 +7,14 @@ in
     { pkgs, ... }:
     let
       applyMainboard = ''
-        ${pkgs.openrgb}/bin/openrgb --device "B650" --mode static --color ${rgb}
+        ${pkgs.openrgb}/bin/openrgb --device "B650" --mode static --color ${rgb} 2>/dev/null || true
       '';
 
       applyDramOff = ''
         OPENRGB=${pkgs.openrgb}/bin/openrgb
         while read -r line; do
           if [[ "$line" =~ ^([0-9]+):\ ENE\ DRAM ]]; then
-            "$OPENRGB" --device "''${BASH_REMATCH[1]}" --mode off
+            "$OPENRGB" --device "''${BASH_REMATCH[1]}" --mode off 2>/dev/null || true
           fi
         done < <("$OPENRGB" --list-devices 2>/dev/null)
       '';
@@ -43,7 +43,7 @@ in
           StandardError = "null";
         };
         script = ''
-          ${pkgs.openrgb}/bin/openrgb --list-devices 2>&1 | grep -q "Connected to server"
+          ${pkgs.openrgb}/bin/openrgb --list-devices 2>&1 | grep -q "Connected to server" || true
           ${applyMainboard}
           ${applyDramOff}
         '';
