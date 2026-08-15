@@ -150,11 +150,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786267435,
-        "narHash": "sha256-dh6g6f27wOd1GWUyuECxA4ITcw8zWW1uEKyE3KqwPmU=",
+        "lastModified": 1786783269,
+        "narHash": "sha256-kGraYQOkMSGdI4yg6pR7R/QQvyEdQMHxumm1FIO1U04=",
         "ref": "refs/heads/main",
-        "rev": "85721a9168d261ea7ca7e8990ef7ef14469708fe",
-        "revCount": 5,
+        "rev": "37ec6227b4a389adf68e17a9a449452397bbe3d6",
+        "revCount": 4,
         "type": "git",
         "url": "ssh://git@github.com/luynrs/justxray"
       },
