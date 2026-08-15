@@ -49,10 +49,6 @@
 
           icon_theme = "Colored Zed Icons Theme Dark";
           theme = "Caelestia";
-
-          shell = {
-            program = "foot";
-          };
         };
       };
     };

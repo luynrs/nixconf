@@ -13,7 +13,7 @@ in
   {
     _args = [
       "CTRL + SHIFT + Escape"
-      (inline ''hl.dsp.exec_cmd(terminal .. " btop")'')
+      (inline ''hl.dsp.exec_cmd(terminal .. " -e btop")'')
       { description = "Process monitor"; }
     ];
   }

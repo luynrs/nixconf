@@ -57,7 +57,7 @@
             _var = "SUPER";
           };
           terminal = {
-            _var = "foot";
+            _var = "ghostty +new-window";
           };
           fileManager = {
             _var = "nautilus";

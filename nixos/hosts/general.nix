@@ -25,7 +25,7 @@
       imports = [
         self.homeModules.hyprland
         self.homeModules.caelestia
-        self.homeModules.foot
+        self.homeModules.ghostty
         self.homeModules.fish
         self.homeModules.starship
         self.homeModules.tools

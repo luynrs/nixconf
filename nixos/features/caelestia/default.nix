@@ -14,7 +14,10 @@
         enable = true;
         cli.enable = true;
         cli.settings.theme = {
-          postHook = "hyprctl reload";
+          postHook = ''
+            hyprctl reload
+            systemctl --user reload app-com.mitchellh.ghostty.service || true
+          '';
         };
 
         systemd.enable = false;
@@ -92,9 +95,7 @@
 
           launcher = {
             hiddenApps = [
-              "foot-server"
-              "footclient"
-              "foot"
+              "com.mitchellh.ghostty"
               "kvantummanager"
             ];
             useFuzzy.apps = true;
@@ -240,6 +241,31 @@
         success_symbol = "[❯](bold #{{ green.hex }})"
         error_symbol = "[❯](bold #{{ red.hex }})"
         vimcmd_symbol = "[❮](bold #{{ lavender.hex }})"
+      '';
+
+      xdg.configFile."caelestia/templates/ghostty.conf".text = ''
+        background = #{{ background.hex }}
+        foreground = #{{ onBackground.hex }}
+        cursor-color = #{{ primary.hex }}
+        cursor-text = #{{ onPrimary.hex }}
+        selection-background = #{{ primary.hex }}
+        selection-foreground = #{{ onPrimary.hex }}
+        palette = 0=#{{ term0.hex }}
+        palette = 1=#{{ term1.hex }}
+        palette = 2=#{{ term2.hex }}
+        palette = 3=#{{ term3.hex }}
+        palette = 4=#{{ term4.hex }}
+        palette = 5=#{{ term5.hex }}
+        palette = 6=#{{ term6.hex }}
+        palette = 7=#{{ term7.hex }}
+        palette = 8=#{{ term8.hex }}
+        palette = 9=#{{ term9.hex }}
+        palette = 10=#{{ term10.hex }}
+        palette = 11=#{{ term11.hex }}
+        palette = 12=#{{ term12.hex }}
+        palette = 13=#{{ term13.hex }}
+        palette = 14=#{{ term14.hex }}
+        palette = 15=#{{ term15.hex }}
       '';
 
       home.activation.caelestiaScheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
