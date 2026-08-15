@@ -28,14 +28,6 @@
         description = "luynar";
       };
 
-      keymap = {
-        layouts = [
-          "us"
-          "ru"
-        ];
-        options = "grp:alt_shift_toggle";
-      };
-
       monitors."DP-1" = {
         width = 1920;
         height = 1080;

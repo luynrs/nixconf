@@ -9,28 +9,25 @@
         position = "${toString m.x}x${toString m.y}";
         scale = 1;
       }) (lib.filterAttrs (_: m: m.enabled) config.preferences.monitors);
-      layouts = lib.concatStringsSep "," config.preferences.keymap.layouts;
     in
     {
       programs.hyprland.enable = true;
 
-      home-manager.users.${config.preferences.user.name}.wayland.windowManager.hyprland.settings = {
-        monitor = monitors;
-        config.input = {
-          kb_layout = layouts;
-          kb_options = config.preferences.keymap.options;
-          follow_mouse = 1;
-          sensitivity = 0;
-          touchpad.natural_scroll = false;
+      home-manager.users.${config.preferences.user.name}.wayland.windowManager.hyprland.settings =
+        {
+          monitor = monitors;
+        }
+        // import ./_input.nix {
+          inherit lib;
+          inherit (config.preferences) keymap;
         };
-      };
     };
   flake.homeModules.hyprland =
     { pkgs, lib, ... }:
     let
       inline = lib.generators.mkLuaInline;
       animations = import ./_animations.nix;
-      rules = import ./_rules.nix;
+      rules = import ./_rules.nix { inherit pkgs; };
       binds = import ./_binds.nix { inherit lib; };
       autostart = import ./_autostart.nix { inherit lib pkgs; };
     in

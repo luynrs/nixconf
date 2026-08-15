@@ -7,11 +7,14 @@
           options = {
             layouts = lib.mkOption {
               type = lib.types.listOf lib.types.str;
-              default = [ "us" ];
+              default = [
+                "us"
+                "ru"
+              ];
             };
             options = lib.mkOption {
               type = lib.types.str;
-              default = "";
+              default = "grp:alt_shift_toggle";
             };
           };
         };

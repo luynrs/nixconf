@@ -29,14 +29,6 @@
         description = "luynar";
       };
 
-      keymap = {
-        layouts = [
-          "us"
-          "ru"
-        ];
-        options = "grp:alt_shift_toggle";
-      };
-
       monitors."eDP-1" = {
         width = 1920;
         height = 1080;

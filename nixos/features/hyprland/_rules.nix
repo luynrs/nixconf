@@ -1,5 +1,10 @@
+{ pkgs }:
 {
   env = map (vars: { _args = vars; }) [
+    [
+      "CAELESTIA_XKB_RULES_PATH"
+      "${pkgs.xkeyboard_config}/share/X11/xkb/rules/base.lst"
+    ]
     [
       "XCURSOR_SIZE"
       "24"
