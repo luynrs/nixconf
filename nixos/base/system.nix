@@ -89,25 +89,29 @@
       fonts.packages = with pkgs; [
         nerd-fonts.jetbrains-mono
         jetbrains-mono
+        inter
         noto-fonts
         noto-fonts-color-emoji
       ];
 
       fonts.fontconfig = {
         defaultFonts = {
-          sansSerif = [ "Noto Sans" ];
+          sansSerif = [
+            "Inter"
+            "Noto Sans"
+          ];
           serif = [ "Noto Serif" ];
           monospace = [ "JetBrainsMono Nerd Font" ];
           emoji = [ "Noto Color Emoji" ];
         };
         hinting = {
           enable = true;
-          style = "full";
+          style = "slight";
         };
         antialias = true;
         subpixel = {
           rgba = "rgb";
-          lcdfilter = "light";
+          lcdfilter = "default";
         };
       };
 
