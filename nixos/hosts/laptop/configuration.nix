@@ -5,8 +5,6 @@
 }:
 {
   flake.nixosConfigurations.laptop = inputs.nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-
     modules = [ self.nixosModules.laptop ];
   };
 
@@ -24,11 +22,6 @@
     ];
 
     preferences = {
-      user = {
-        name = "luynar";
-        description = "luynar";
-      };
-
       monitors."eDP-1" = {
         width = 1920;
         height = 1080;

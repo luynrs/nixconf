@@ -4,20 +4,17 @@
   ...
 }:
 {
-  flake.nixosModules.general =
-    { config, ... }:
-    let
-      user = config.preferences.user;
-    in
-    {
-      imports = [ inputs.home-manager.nixosModules.default ];
+  flake.nixosModules.general = {
+    imports = [ inputs.home-manager.nixosModules.default ];
 
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-        users.${user.name}.imports = [ self.homeModules.general ];
-      };
+    programs.gpu-screen-recorder.enable = true;
+
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      users.luynar.imports = [ self.homeModules.general ];
     };
+  };
 
   flake.homeModules.general =
     { lib, ... }:
@@ -46,7 +43,7 @@
 
       home.activation.seedWallpapers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         mkdir -p "$HOME/Pictures/Wallpapers"
-        cp -n ${../../Wallpapers}/* "$HOME/Pictures/Wallpapers/" 2>/dev/null || true
+        cp -n --no-preserve=mode ${../../Wallpapers}/* "$HOME/Pictures/Wallpapers/" 2>/dev/null || true
       '';
     };
 }

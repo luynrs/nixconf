@@ -12,8 +12,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nur.url = "github:nix-community/NUR";
-    justssh.url = "github:luynrs/justssh";
-    justxray.url = "git+ssh://git@github.com/luynrs/justxray";
+    justssh = {
+      url = "github:luynrs/justssh";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    justxray = {
+      url = "git+ssh://git@github.com/luynrs/justxray";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     caelestia-shell = {
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,10 +49,7 @@
         treefmt = {
           projectRootFile = "flake.nix";
           programs.nixfmt.enable = true;
-          settings.global.excludes = [
-            "**/hardware-configuration.nix"
-            "vendor/**"
-          ];
+          settings.global.excludes = [ "**/hardware-configuration.nix" ];
         };
       };
     };

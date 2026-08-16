@@ -35,7 +35,10 @@
         in
         (lib.genAttrs images (_: "org.gnome.Loupe.desktop"))
         // (lib.genAttrs videos (_: "org.gnome.Showtime.desktop"))
-        // (lib.genAttrs audio (_: "mpv.desktop"));
+        // (lib.genAttrs audio (_: "mpv.desktop"))
+        // {
+          "inode/directory" = "org.gnome.Nautilus.desktop";
+        };
     };
   };
 }

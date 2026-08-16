@@ -5,8 +5,6 @@
 }:
 {
   flake.nixosConfigurations.luynar = inputs.nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-
     modules = [ self.nixosModules.main ];
   };
 
@@ -23,11 +21,6 @@
     ];
 
     preferences = {
-      user = {
-        name = "luynar";
-        description = "luynar";
-      };
-
       monitors."DP-1" = {
         width = 1920;
         height = 1080;

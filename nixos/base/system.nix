@@ -2,14 +2,10 @@
 {
   flake.nixosModules.base =
     {
-      config,
       pkgs,
       lib,
       ...
     }:
-    let
-      user = config.preferences.user;
-    in
     {
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
@@ -19,20 +15,17 @@
         "splash"
       ];
 
-      # bgrt shows the motherboard's own UEFI boot logo (from the firmware's
-      # ACPI BGRT table) with a spinner underneath — the "like Windows" look.
-      # No themePackages needed: bgrt ships built into plymouth itself.
       boot.plymouth = {
         enable = true;
         theme = "bgrt";
       };
 
-      networking.hostName = lib.mkDefault user.name;
+      networking.hostName = lib.mkDefault "luynar";
       networking.networkmanager.enable = true;
 
       time.timeZone = "Europe/Moscow";
       i18n.defaultLocale = "en_US.UTF-8";
-      console.keyMap = builtins.head config.preferences.keymap.layouts;
+      console.keyMap = "us";
 
       nix.settings = {
         experimental-features = [
@@ -48,19 +41,25 @@
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         ];
       };
+      nix.gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 14d";
+      };
+      nix.optimise.automatic = true;
+
       nixpkgs.config.allowUnfree = true;
       nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
       zramSwap.enable = true;
 
-      security.polkit.enable = true;
-
       services.gvfs.enable = true;
-      services.speechd.enable = false; # graphical-desktop.nix enables it by default; we don't need speech synthesis
+      services.upower.enable = true;
+      services.speechd.enable = false;
 
-      users.users.${user.name} = {
+      users.users.luynar = {
         isNormalUser = true;
-        description = user.description;
+        description = "luynar";
         initialPassword = "justloginme";
         extraGroups = [
           "wheel"

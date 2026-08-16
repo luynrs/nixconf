@@ -12,7 +12,7 @@ in
         function()
           hl.exec_cmd("caelestia-shell")
           hl.exec_cmd(${toLua polkitAgent})
-          hl.exec_cmd("wl-paste --watch cliphist store")
+          hl.exec_cmd("wl-paste --watch cliphist -max-items 25 store")
 
           hl.exec_cmd(browser)
           hl.exec_cmd("vesktop")

@@ -1,6 +1,7 @@
-{ ... }:
-{
+_: {
   flake.homeModules.appearance = { pkgs, ... }: {
+    home.packages = [ pkgs.adwaita-icon-theme ];
+
     home.pointerCursor = {
       enable = true;
       package = pkgs.bibata-cursors;
@@ -21,8 +22,8 @@
         name = "adw-gtk3-dark";
       };
       iconTheme = {
-        package = pkgs.papirus-icon-theme;
-        name = "Papirus-Dark";
+        package = pkgs.morewaita-icon-theme;
+        name = "MoreWaita";
       };
       gtk3.extraConfig = {
         "gtk-application-prefer-dark-theme" = true;
@@ -47,7 +48,7 @@
         "org/gnome/desktop/interface" = {
           color-scheme = "prefer-dark";
           gtk-theme = "adw-gtk3-dark";
-          icon-theme = "Papirus-Dark";
+          icon-theme = "MoreWaita";
           enable-animations = false;
         };
       };

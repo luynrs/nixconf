@@ -1,0 +1,1565 @@
+diff --git a/README.md b/README.md
+index 61d58f3e..86cae474 100644
+--- a/README.md
++++ b/README.md
+@@ -233,7 +233,7 @@ For example, to disable the bar on DP-1:
+ >
+ > - `appearance` (`anim`, `transparency`)
+ > - `general` (`logo`, `apps`, `idle`, `battery`)
+-> - `bar.workspaces` (`perMonitorWorkspaces`, `specialWorkspaceIcons`, `windowIcons`)
++> - `bar.workspaces` (`perMonitorWorkspaces`)
+ > - `bar.tray` (`iconSubs`, `hiddenIcons`)
+ > - `dashboard` (`mediaUpdateInterval`, `resourceUpdateInterval`)
+ > - `launcher` (`specialPrefix`, `actionPrefix`, `enableDangerousActions`, `vimKeybinds`,
+@@ -432,27 +432,9 @@ For example, to disable the bar on DP-1:
+             "shown": 5,
+             "activeIndicator": true,
+             "occupiedBg": false,
+-            "showWindows": true,
+-            "showWindowsOnSpecialWorkspaces": true,
+-            "maxWindowIcons": 5,
+             "activeTrail": false,
+             "perMonitorWorkspaces": true,
+-            "label": "  ",
+-            "occupiedLabel": "󰮯",
+-            "activeLabel": "󰮯",
+-            "capitalisation": "preserve",
+-            "specialWorkspaceIcons": [
+-                {
+-                    "name": "steam",
+-                    "icon": "sports_esports"
+-                }
+-            ],
+-            "windowIcons": [
+-                {
+-                    "regex": "steam(_app_(default|[0-9]+))?",
+-                    "icon": "sports_esports"
+-                }
+-            ]
++            "capitalisation": "preserve"
+         },
+         "activeWindow": {
+             "compact": false,
+diff --git a/components/effects/Elevation.qml b/components/effects/Elevation.qml
+index 9b8822c5..0cb5728a 100644
+--- a/components/effects/Elevation.qml
++++ b/components/effects/Elevation.qml
+@@ -7,10 +7,10 @@ RectangularShadow {
+     property int level
+     property real dp: [0, 1, 3, 6, 8, 12][level]
+ 
+-    color: Qt.alpha(Colours.palette.m3shadow, 0.7)
+-    blur: (dp * 5) ** 0.7
+-    spread: -dp * 0.3 + (dp * 0.1) ** 2
+-    offset.y: dp / 2
++    color: Qt.alpha(Colours.palette.m3shadow, 0)
++    blur: 10
++    spread: 0
++    offset.y: 0
+ 
+     Behavior on dp {
+         Anim {
+diff --git a/components/widgets/CoverArt.qml b/components/widgets/CoverArt.qml
+index 1c7fbdb0..6c3e6f94 100644
+--- a/components/widgets/CoverArt.qml
++++ b/components/widgets/CoverArt.qml
+@@ -1,7 +1,6 @@
+ pragma ComponentBehavior: Bound
+ 
+ import QtQuick
+-import QtQuick.Effects
+ import M3Shapes
+ import Caelestia.Config
+ import qs.components
+@@ -18,15 +17,6 @@ Item {
+     property bool hadPrevious
+     property color fallbackColour: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+ 
+-    // Slight glow to separate from bg
+-    layer.enabled: true
+-    layer.effect: MultiEffect {
+-        shadowEnabled: true
+-        blurMax: 1
+-        shadowColor: Colours.palette.m3outline
+-        shadowOpacity: 0.3
+-    }
+-
+     Behavior on fallbackColour {
+         CAnim {}
+     }
+diff --git a/modules/areapicker/Picker.qml b/modules/areapicker/Picker.qml
+index 07777fba..bcc42acf 100644
+--- a/modules/areapicker/Picker.qml
++++ b/modules/areapicker/Picker.qml
+@@ -38,8 +38,7 @@ MouseArea {
+         if (!mon)
+             return [];
+ 
+-        const special = mon.lastIpcObject.specialWorkspace;
+-        const wsId = special.name ? special.id : mon.activeWorkspace.id;
++        const wsId = mon.activeWorkspace.id;
+ 
+         return Hypr.toplevels.values.filter(c => c.workspace?.id === wsId).sort((a, b) => {
+             // Pinned first, then fullscreen, then floating, then any other
+diff --git a/modules/bar/Bar.qml b/modules/bar/Bar.qml
+index f12f7137..2f396eb5 100644
+--- a/modules/bar/Bar.qml
++++ b/modules/bar/Bar.qml
+@@ -80,10 +80,7 @@ ColumnLayout {
+         if (ch?.entryId === "workspaces" && Config.bar.scrollActions.workspaces) {
+             // Workspace scroll
+             const mon = (GlobalConfig.bar.workspaces.perMonitorWorkspaces ? Hypr.monitorFor(screen) : Hypr.focusedMonitor);
+-            const specialWs = mon?.lastIpcObject.specialWorkspace.name;
+-            if (specialWs?.length > 0)
+-                Hypr.dispatch(Hypr.usingLua ? `hl.dsp.workspace.toggle_special("${specialWs.slice(8)}")` : `togglespecialworkspace ${specialWs.slice(8)}`);
+-            else if (angleDelta.y < 0 || (GlobalConfig.bar.workspaces.perMonitorWorkspaces ? mon.activeWorkspace?.id : Hypr.activeWsId) > 1)
++            if (angleDelta.y < 0 || (GlobalConfig.bar.workspaces.perMonitorWorkspaces ? mon.activeWorkspace?.id : Hypr.activeWsId) > 1)
+                 Hypr.dispatch(Hypr.usingLua ? `hl.dsp.focus({ workspace = "r${angleDelta.y > 0 ? "-" : "+"}1" })` : `workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
+         } else if (y < screen.height / 2 && Config.bar.scrollActions.volume) {
+             // Volume scroll on top half
+diff --git a/modules/bar/components/ActiveWindow.qml b/modules/bar/components/ActiveWindow.qml
+index cf1f4b98..ad435122 100644
+--- a/modules/bar/components/ActiveWindow.qml
++++ b/modules/bar/components/ActiveWindow.qml
+@@ -4,7 +4,6 @@ import QtQuick
+ import Caelestia.Config
+ import qs.components
+ import qs.services
+-import qs.utils
+ 
+ Item {
+     id: root
+@@ -35,8 +34,8 @@ Item {
+     property Title current: text1
+ 
+     clip: true
+-    implicitWidth: Math.max(icon.implicitWidth, current.implicitHeight)
+-    implicitHeight: icon.implicitHeight + current.implicitWidth + current.anchors.topMargin
++    implicitWidth: current.implicitHeight
++    implicitHeight: current.implicitWidth
+ 
+     Loader {
+         asynchronous: true
+@@ -64,16 +63,6 @@ Item {
+         }
+     }
+ 
+-    MaterialIcon {
+-        id: icon
+-
+-        anchors.horizontalCenter: parent.horizontalCenter
+-
+-        animate: true
+-        text: Icons.getAppCategoryIcon(Hypr.activeToplevel?.lastIpcObject.class, "desktop_windows")
+-        color: root.colour
+-    }
+-
+     Title {
+         id: text1
+     }
+@@ -88,7 +77,7 @@ Item {
+         text: root.windowTitle
+         font: root.Tokens.font.body.builders.small.letterSpacing(1.4).build()
+         elide: Qt.ElideRight
+-        elideWidth: root.maxHeight - icon.height
++        elideWidth: root.maxHeight
+ 
+         onTextChanged: {
+             const next = root.current === text1 ? text2 : text1;
+@@ -105,9 +94,8 @@ Item {
+     component Title: StyledText {
+         id: text
+ 
+-        anchors.horizontalCenter: icon.horizontalCenter
+-        anchors.top: icon.bottom
+-        anchors.topMargin: Tokens.spacing.small
++        anchors.horizontalCenter: parent.horizontalCenter
++        anchors.top: parent.top
+ 
+         font: metrics.font
+         color: root.colour
+diff --git a/modules/bar/components/workspaces/SpecialWorkspaces.qml b/modules/bar/components/workspaces/SpecialWorkspaces.qml
+index 6937fb81..e69de29b 100644
+--- a/modules/bar/components/workspaces/SpecialWorkspaces.qml
++++ b/modules/bar/components/workspaces/SpecialWorkspaces.qml
+@@ -1,374 +0,0 @@
+-pragma ComponentBehavior: Bound
+-
+-import QtQuick
+-import QtQuick.Layouts
+-import Quickshell
+-import Quickshell.Hyprland
+-import Caelestia.Config
+-import qs.components
+-import qs.components.effects
+-import qs.services
+-import qs.utils
+-
+-Item {
+-    id: root
+-
+-    required property ShellScreen screen
+-    readonly property HyprlandMonitor monitor: Hypr.monitorFor(screen)
+-    readonly property string activeSpecial: (GlobalConfig.bar.workspaces.perMonitorWorkspaces ? monitor : Hypr.focusedMonitor)?.lastIpcObject.specialWorkspace?.name ?? ""
+-
+-    layer.enabled: true
+-    layer.effect: Mask {
+-        maskSource: mask
+-    }
+-
+-    Item {
+-        id: mask
+-
+-        anchors.fill: parent
+-        layer.enabled: true
+-        visible: false
+-
+-        Rectangle {
+-            anchors.fill: parent
+-            radius: Tokens.rounding.full
+-
+-            gradient: Gradient {
+-                orientation: Gradient.Vertical
+-
+-                GradientStop {
+-                    position: 0
+-                    color: Qt.rgba(0, 0, 0, 0)
+-                }
+-                GradientStop {
+-                    position: 0.3
+-                    color: Qt.rgba(0, 0, 0, 1)
+-                }
+-                GradientStop {
+-                    position: 0.7
+-                    color: Qt.rgba(0, 0, 0, 1)
+-                }
+-                GradientStop {
+-                    position: 1
+-                    color: Qt.rgba(0, 0, 0, 0)
+-                }
+-            }
+-        }
+-
+-        Rectangle {
+-            anchors.top: parent.top
+-            anchors.left: parent.left
+-            anchors.right: parent.right
+-
+-            radius: Tokens.rounding.full
+-            implicitHeight: parent.height / 2
+-            opacity: view.contentY > 0 ? 0 : 1
+-
+-            Behavior on opacity {
+-                Anim {
+-                    type: Anim.DefaultEffects
+-                }
+-            }
+-        }
+-
+-        Rectangle {
+-            anchors.bottom: parent.bottom
+-            anchors.left: parent.left
+-            anchors.right: parent.right
+-
+-            radius: Tokens.rounding.full
+-            implicitHeight: parent.height / 2
+-            opacity: view.contentY < view.contentHeight - parent.height + Tokens.padding.extraSmall ? 0 : 1
+-
+-            Behavior on opacity {
+-                Anim {
+-                    type: Anim.DefaultEffects
+-                }
+-            }
+-        }
+-    }
+-
+-    ListView {
+-        id: view
+-
+-        anchors.fill: parent
+-        spacing: Tokens.spacing.medium
+-        interactive: false
+-
+-        currentIndex: model.values.findIndex(w => w.name === root.activeSpecial)
+-        onCurrentIndexChanged: currentIndex = Qt.binding(() => model.values.findIndex(w => w.name === root.activeSpecial))
+-
+-        model: ScriptModel {
+-            values: Hypr.workspaces.values.filter(w => w.name.startsWith("special:") && (!GlobalConfig.bar.workspaces.perMonitorWorkspaces || w.monitor === root.monitor))
+-        }
+-
+-        preferredHighlightBegin: 0
+-        preferredHighlightEnd: height
+-        highlightRangeMode: ListView.StrictlyEnforceRange
+-
+-        highlightFollowsCurrentItem: false
+-        highlight: Item {
+-            y: view.currentItem?.y ?? 0
+-            implicitHeight: (view.currentItem as SpecialWsDelegate)?.size ?? 0
+-
+-            Behavior on y {
+-                Anim {}
+-            }
+-        }
+-
+-        delegate: SpecialWsDelegate {}
+-
+-        add: Transition {
+-            Anim {
+-                properties: "scale"
+-                from: 0
+-                to: 1
+-                easing: Tokens.anim.standardDecel
+-            }
+-        }
+-
+-        remove: Transition {
+-            Anim {
+-                property: "scale"
+-                to: 0.5
+-                type: Anim.StandardSmall
+-            }
+-            Anim {
+-                property: "opacity"
+-                to: 0
+-                type: Anim.StandardSmall
+-            }
+-        }
+-
+-        move: Transition {
+-            Anim {
+-                properties: "scale"
+-                to: 1
+-                easing: Tokens.anim.standardDecel
+-            }
+-            Anim {
+-                properties: "x,y"
+-            }
+-        }
+-
+-        displaced: Transition {
+-            Anim {
+-                properties: "scale"
+-                to: 1
+-                easing: Tokens.anim.standardDecel
+-            }
+-            Anim {
+-                properties: "x,y"
+-            }
+-        }
+-    }
+-
+-    Loader {
+-        asynchronous: true
+-        active: Config.bar.workspaces.activeIndicator
+-        anchors.fill: parent
+-
+-        sourceComponent: Item {
+-            StyledClippingRect {
+-                id: indicator
+-
+-                anchors.left: parent.left
+-                anchors.right: parent.right
+-
+-                y: (view.currentItem?.y ?? 0) - view.contentY
+-                implicitHeight: (view.currentItem as SpecialWsDelegate)?.size ?? 0
+-
+-                color: Colours.palette.m3tertiary
+-                radius: Tokens.rounding.full
+-
+-                Colouriser {
+-                    source: view
+-                    sourceColor: Colours.palette.m3onSurface
+-                    colorizationColor: Colours.palette.m3onTertiary
+-
+-                    anchors.horizontalCenter: parent.horizontalCenter
+-
+-                    x: 0
+-                    y: -indicator.y
+-                    implicitWidth: view.width
+-                    implicitHeight: view.height
+-                }
+-
+-                Behavior on y {
+-                    Anim {
+-                        type: Anim.Emphasized
+-                    }
+-                }
+-
+-                Behavior on implicitHeight {
+-                    Anim {
+-                        type: Anim.Emphasized
+-                    }
+-                }
+-            }
+-        }
+-    }
+-
+-    MouseArea {
+-        property real startY
+-
+-        anchors.fill: view
+-
+-        drag.target: view.contentItem
+-        drag.axis: Drag.YAxis
+-        drag.maximumY: 0
+-        drag.minimumY: Math.min(0, view.height - view.contentHeight - Tokens.padding.extraSmall)
+-
+-        onPressed: event => startY = event.y
+-
+-        onClicked: event => {
+-            if (Math.abs(event.y - startY) > drag.threshold)
+-                return;
+-
+-            const ws = view.itemAt(event.x, event.y) as SpecialWsDelegate;
+-            if (ws?.modelData)
+-                Hypr.dispatch(Hypr.usingLua ? `hl.dsp.workspace.toggle_special("${ws.modelData.name.slice(8)}")` : `togglespecialworkspace ${ws.modelData.name.slice(8)}`);
+-            else
+-                Hypr.dispatch(Hypr.usingLua ? 'hl.dsp.workspace.toggle_special("special")' : "togglespecialworkspace special");
+-        }
+-    }
+-
+-    component SpecialWsDelegate: ColumnLayout {
+-        id: ws
+-
+-        required property HyprlandWorkspace modelData
+-        readonly property int size: label.Layout.preferredHeight + (hasWindows ? windows.implicitHeight + Tokens.padding.extraSmall : 0)
+-        property int wsId
+-        property string icon
+-        property bool hasWindows
+-
+-        anchors.left: view.contentItem.left
+-        anchors.right: view.contentItem.right
+-
+-        spacing: 0
+-
+-        Component.onCompleted: {
+-            wsId = modelData.id;
+-            icon = Icons.getSpecialWsIcon(modelData.name);
+-            hasWindows = Config.bar.workspaces.showWindowsOnSpecialWorkspaces && modelData.lastIpcObject.windows > 0;
+-        }
+-
+-        // Hacky thing cause modelData gets destroyed before the remove anim finishes
+-        Connections {
+-            function onIdChanged(): void {
+-                if (ws.modelData)
+-                    ws.wsId = ws.modelData.id;
+-            }
+-
+-            function onNameChanged(): void {
+-                if (ws.modelData)
+-                    ws.icon = Icons.getSpecialWsIcon(ws.modelData.name);
+-            }
+-
+-            function onLastIpcObjectChanged(): void {
+-                if (ws.modelData)
+-                    ws.hasWindows = root.Config.bar.workspaces.showWindowsOnSpecialWorkspaces && ws.modelData.lastIpcObject.windows > 0;
+-            }
+-
+-            target: ws.modelData
+-        }
+-
+-        Connections {
+-            function onShowWindowsOnSpecialWorkspacesChanged(): void {
+-                if (ws.modelData)
+-                    ws.hasWindows = root.Config.bar.workspaces.showWindowsOnSpecialWorkspaces && ws.modelData.lastIpcObject.windows > 0;
+-            }
+-
+-            target: root.Config.bar.workspaces
+-        }
+-
+-        Loader {
+-            id: label
+-
+-            asynchronous: true
+-
+-            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+-            Layout.preferredHeight: Tokens.sizes.bar.innerWidth - Tokens.padding.small
+-
+-            sourceComponent: ws.icon.length === 1 ? letterComp : iconComp
+-
+-            Component {
+-                id: iconComp
+-
+-                MaterialIcon {
+-                    fill: 1
+-                    text: ws.icon
+-                    verticalAlignment: Qt.AlignVCenter
+-                }
+-            }
+-
+-            Component {
+-                id: letterComp
+-
+-                StyledText {
+-                    text: ws.icon
+-                    verticalAlignment: Qt.AlignVCenter
+-                }
+-            }
+-        }
+-
+-        Loader {
+-            id: windows
+-
+-            asynchronous: true
+-
+-            Layout.alignment: Qt.AlignHCenter
+-            Layout.fillHeight: true
+-            Layout.preferredHeight: implicitHeight
+-
+-            visible: active
+-            active: ws.hasWindows
+-
+-            sourceComponent: Column {
+-                spacing: 0
+-
+-                add: Transition {
+-                    Anim {
+-                        properties: "scale"
+-                        from: 0
+-                        to: 1
+-                        easing: Tokens.anim.standardDecel
+-                    }
+-                }
+-
+-                move: Transition {
+-                    Anim {
+-                        properties: "scale"
+-                        to: 1
+-                        easing: Tokens.anim.standardDecel
+-                    }
+-                    Anim {
+-                        properties: "x,y"
+-                    }
+-                }
+-
+-                Repeater {
+-                    model: ScriptModel {
+-                        values: {
+-                            const windows = Hypr.toplevels.values.filter(c => c.workspace?.id === ws.wsId);
+-                            const maxIcons = root.Config.bar.workspaces.maxWindowIcons;
+-                            return maxIcons > 0 ? windows.slice(0, maxIcons) : windows;
+-                        }
+-                    }
+-
+-                    MaterialIcon {
+-                        required property var modelData
+-
+-                        grade: 0
+-                        text: Icons.getAppCategoryIcon(modelData.lastIpcObject.class, "terminal")
+-                        color: Colours.palette.m3onSurfaceVariant
+-                    }
+-                }
+-            }
+-
+-            Behavior on Layout.preferredHeight {
+-                Anim {}
+-            }
+-        }
+-    }
+-}
+diff --git a/modules/bar/components/workspaces/Workspace.qml b/modules/bar/components/workspaces/Workspace.qml
+index a7d0dada..8b8f12ba 100644
+--- a/modules/bar/components/workspaces/Workspace.qml
++++ b/modules/bar/components/workspaces/Workspace.qml
+@@ -6,7 +6,6 @@ import Quickshell
+ import Caelestia.Config
+ import qs.components
+ import qs.services
+-import qs.utils
+ 
+ ColumnLayout {
+     id: root
+@@ -18,11 +17,10 @@ ColumnLayout {
+ 
+     readonly property bool isWorkspace: true // Flag for finding workspace children
+     // Unanimated prop for others to use as reference
+-    readonly property int size: implicitHeight + (hasWindows ? Tokens.padding.extraSmall : 0)
++    readonly property int size: implicitHeight
+ 
+     readonly property int ws: groupOffset + index + 1
+     readonly property bool isOccupied: occupied[ws] ?? false
+-    readonly property bool hasWindows: isOccupied && Config.bar.workspaces.showWindows
+ 
+     Layout.alignment: Qt.AlignHCenter
+     Layout.preferredHeight: size
+@@ -45,70 +43,13 @@ ColumnLayout {
+             } else if (Config.bar.workspaces.capitalisation.toLowerCase() === "lower") {
+                 displayName = displayName.toLowerCase();
+             }
+-            const label = Config.bar.workspaces.label || displayName;
+-            const occupiedLabel = Config.bar.workspaces.occupiedLabel || label;
+-            const activeLabel = Config.bar.workspaces.activeLabel || (root.isOccupied ? occupiedLabel : label);
+-            return root.activeWsId === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label;
++            return displayName;
+         }
+         color: Config.bar.workspaces.occupiedBg || root.isOccupied || root.activeWsId === root.ws ? Colours.palette.m3onSurface : Colours.layer(Colours.palette.m3outlineVariant, 2)
+         verticalAlignment: Qt.AlignVCenter
+         font.family: Tokens.font.workspaces
+-    }
+-
+-    Loader {
+-        id: windows
+-
+-        asynchronous: true
+-
+-        Layout.alignment: Qt.AlignHCenter
+-        Layout.fillHeight: true
+-        Layout.topMargin: -Tokens.sizes.bar.innerWidth / 10
+-
+-        visible: active
+-        active: root.hasWindows
+-
+-        sourceComponent: Column {
+-            spacing: 0
+-
+-            add: Transition {
+-                Anim {
+-                    properties: "scale"
+-                    from: 0
+-                    to: 1
+-                    easing: Tokens.anim.standardDecel
+-                }
+-            }
+-
+-            move: Transition {
+-                Anim {
+-                    properties: "scale"
+-                    to: 1
+-                    easing: Tokens.anim.standardDecel
+-                }
+-                Anim {
+-                    properties: "x,y"
+-                }
+-            }
+-
+-            Repeater {
+-                model: ScriptModel {
+-                    values: {
+-                        const ws = root.ws;
+-                        const windows = Hypr.toplevels.values.filter(c => c.workspace?.id === ws);
+-                        const maxIcons = root.Config.bar.workspaces.maxWindowIcons;
+-                        return maxIcons > 0 ? windows.slice(0, maxIcons) : windows;
+-                    }
+-                }
+-
+-                MaterialIcon {
+-                    required property var modelData
+-
+-                    grade: 0
+-                    text: Icons.getAppCategoryIcon(modelData.lastIpcObject.class, "terminal")
+-                    color: Colours.palette.m3onSurfaceVariant
+-                }
+-            }
+-        }
++        font.pixelSize: 15
++        font.weight: Font.Medium
+     }
+ 
+     Behavior on Layout.preferredHeight {
+diff --git a/modules/bar/components/workspaces/Workspaces.qml b/modules/bar/components/workspaces/Workspaces.qml
+index 75cd54d6..7b7c1362 100644
+--- a/modules/bar/components/workspaces/Workspaces.qml
++++ b/modules/bar/components/workspaces/Workspaces.qml
+@@ -1,7 +1,6 @@
+ pragma ComponentBehavior: Bound
+ 
+ import QtQuick
+-import QtQuick.Effects
+ import QtQuick.Layouts
+ import Quickshell
+ import Caelestia.Config
+@@ -14,7 +13,6 @@ StyledClippingRect {
+     required property ShellScreen screen
+     required property bool fullscreen
+ 
+-    readonly property bool onSpecial: (GlobalConfig.bar.workspaces.perMonitorWorkspaces ? Hypr.monitorFor(screen) : Hypr.focusedMonitor)?.lastIpcObject.specialWorkspace?.name !== ""
+     readonly property int activeWsId: GlobalConfig.bar.workspaces.perMonitorWorkspaces ? (Hypr.monitorFor(screen).activeWorkspace?.id ?? 1) : Hypr.activeWsId
+ 
+     readonly property var occupied: {
+@@ -25,8 +23,6 @@ StyledClippingRect {
+     }
+     readonly property int groupOffset: Math.floor((activeWsId - 1) / Config.bar.workspaces.shown) * Config.bar.workspaces.shown
+ 
+-    property real blur: onSpecial ? 1 : 0
+-
+     implicitWidth: Tokens.sizes.bar.innerWidth
+     implicitHeight: layout.implicitHeight + Tokens.padding.small
+ 
+@@ -35,17 +31,8 @@ StyledClippingRect {
+ 
+     Item {
+         anchors.fill: parent
+-        scale: root.onSpecial ? 0.8 : 1
+-        opacity: root.onSpecial ? 0.5 : 1
+         visible: !root.fullscreen
+ 
+-        layer.enabled: root.blur > 0
+-        layer.effect: MultiEffect {
+-            blurEnabled: true
+-            blur: root.blur
+-            blurMax: 32
+-        }
+-
+         Loader {
+             asynchronous: true
+             active: Config.bar.workspaces.occupiedBg
+@@ -96,57 +83,10 @@ StyledClippingRect {
+             anchors.fill: layout
+             onClicked: event => {
+                 const ws = (layout.childAt(event.x, event.y) as Workspace)?.ws;
+-                if (!ws)
++                if (!ws || Hypr.activeWsId === ws)
+                     return;
+-                if (Hypr.activeWsId !== ws)
+-                    Hypr.dispatch(Hypr.usingLua ? `hl.dsp.focus({ workspace = "${ws}" })` : `workspace ${ws}`);
+-                else
+-                    Hypr.dispatch(Hypr.usingLua ? 'hl.dsp.workspace.toggle_special("special")' : "togglespecialworkspace special");
++                Hypr.dispatch(Hypr.usingLua ? `hl.dsp.focus({ workspace = "${ws}" })` : `workspace ${ws}`);
+             }
+         }
+-
+-        Behavior on scale {
+-            Anim {}
+-        }
+-
+-        Behavior on opacity {
+-            Anim {
+-                type: Anim.DefaultEffects
+-            }
+-        }
+-    }
+-
+-    Loader {
+-        id: specialWs
+-
+-        asynchronous: true
+-
+-        anchors.fill: parent
+-        anchors.margins: Tokens.padding.extraSmall
+-
+-        active: opacity > 0
+-
+-        scale: root.onSpecial ? 1 : 0.5
+-        opacity: root.onSpecial ? 1 : 0
+-
+-        sourceComponent: SpecialWorkspaces {
+-            screen: root.screen
+-        }
+-
+-        Behavior on scale {
+-            Anim {}
+-        }
+-
+-        Behavior on opacity {
+-            Anim {
+-                type: Anim.DefaultEffects
+-            }
+-        }
+-    }
+-
+-    Behavior on blur {
+-        Anim {
+-            type: Anim.StandardSmall
+-        }
+     }
+ }
+diff --git a/modules/bar/popouts/Audio.qml b/modules/bar/popouts/Audio.qml
+new file mode 100644
+index 00000000..18983428
+--- /dev/null
++++ b/modules/bar/popouts/Audio.qml
+@@ -0,0 +1,113 @@
++pragma ComponentBehavior: Bound
++
++import QtQuick
++import QtQuick.Controls
++import QtQuick.Layouts
++import Quickshell.Services.Pipewire
++import Caelestia.Config
++import qs.components
++import qs.components.controls
++import qs.services
++
++Item {
++    id: root
++
++    required property PopoutState popouts
++
++    implicitWidth: layout.implicitWidth + Tokens.padding.medium * 2
++    implicitHeight: layout.implicitHeight + Tokens.padding.medium * 2
++
++    ButtonGroup {
++        id: sinks
++    }
++
++    ButtonGroup {
++        id: sources
++    }
++
++    ColumnLayout {
++        id: layout
++
++        anchors.left: parent.left
++        anchors.verticalCenter: parent.verticalCenter
++        spacing: Tokens.spacing.medium
++
++        StyledText {
++            text: qsTr("Output device")
++            font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
++        }
++
++        Repeater {
++            model: Audio.sinks
++
++            StyledRadioButton {
++                id: control
++
++                required property PwNode modelData
++
++                ButtonGroup.group: sinks
++                checked: Audio.sink?.id === modelData.id
++                onClicked: Audio.setAudioSink(modelData)
++                text: modelData.description
++            }
++        }
++
++        StyledText {
++            Layout.topMargin: Tokens.spacing.medium
++            text: qsTr("Input device")
++            font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
++        }
++
++        Repeater {
++            model: Audio.sources
++
++            StyledRadioButton {
++                required property PwNode modelData
++
++                ButtonGroup.group: sources
++                checked: Audio.source?.id === modelData.id
++                onClicked: Audio.setAudioSource(modelData)
++                text: modelData.description
++            }
++        }
++
++        StyledText {
++            Layout.topMargin: Tokens.spacing.medium
++            text: qsTr("Volume (%1)").arg(Audio.muted ? qsTr("Muted") : `${Math.round(Audio.volume * 100)}%`)
++            font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
++        }
++
++        CustomMouseArea {
++            Layout.fillWidth: true
++            implicitHeight: Tokens.padding.medium * 3
++
++            onWheel: event => {
++                if (event.angleDelta.y > 0)
++                    Audio.incrementVolume();
++                else if (event.angleDelta.y < 0)
++                    Audio.decrementVolume();
++            }
++
++            StyledSlider {
++                anchors.left: parent.left
++                anchors.right: parent.right
++                implicitHeight: parent.implicitHeight
++
++                value: Audio.volume
++                onInteraction: value => Audio.setVolume(value)
++            }
++        }
++
++        IconTextButton {
++            Layout.fillWidth: true
++            Layout.topMargin: Tokens.spacing.medium
++            inactiveColour: Colours.palette.m3primaryContainer
++            inactiveOnColour: Colours.palette.m3onPrimaryContainer
++            verticalPadding: Tokens.padding.extraSmall
++            text: qsTr("Open settings")
++            icon: "settings"
++
++            onClicked: root.popouts.detachRequested("audio")
++        }
++    }
++}
+diff --git a/modules/bar/popouts/TrayMenu.qml b/modules/bar/popouts/TrayMenu.qml
+index c4b8bf2c..53b7bd47 100644
+--- a/modules/bar/popouts/TrayMenu.qml
++++ b/modules/bar/popouts/TrayMenu.qml
+@@ -81,11 +81,18 @@ StackView {
+                 required property QsMenuEntry modelData
+ 
+                 implicitWidth: Tokens.sizes.bar.trayMenuWidth
+-                implicitHeight: modelData.isSeparator ? 1 : children.implicitHeight
++                implicitHeight: modelData.isSeparator ? 1 : rowMetrics.height
+ 
+                 radius: Tokens.rounding.full
+                 color: modelData.isSeparator ? Colours.palette.m3outlineVariant : "transparent"
+ 
++                TextMetrics {
++                    id: rowMetrics
++
++                    font: Tokens.font.body.small
++                    text: "Mg"
++                }
++
+                 Loader {
+                     id: children
+ 
+diff --git a/modules/bar/popouts/kblayout/KbLayout.qml b/modules/bar/popouts/kblayout/KbLayout.qml
+index abbbae09..7c173805 100644
+--- a/modules/bar/popouts/kblayout/KbLayout.qml
++++ b/modules/bar/popouts/kblayout/KbLayout.qml
+@@ -202,7 +202,7 @@ ColumnLayout {
+                     property: "scale"
+                     to: 1.0
+                     duration: 220
+-                    easing.type: Easing.OutBack
++                    easing.type: Easing.OutCubic
+                 }
+             }
+         }
+diff --git a/modules/dashboard/Media.qml b/modules/dashboard/Media.qml
+index 0576e799..ea78ddf3 100644
+--- a/modules/dashboard/Media.qml
++++ b/modules/dashboard/Media.qml
+@@ -14,10 +14,6 @@ Item {
+     implicitWidth: Tokens.sizes.dashboard.mediaTabWidth
+     implicitHeight: Tokens.sizes.dashboard.mediaTabHeight
+ 
+-    BackgroundShapes {
+-        anchors.fill: parent
+-    }
+-
+     RowLayout {
+         anchors.fill: parent
+         anchors.margins: Tokens.padding.large
+diff --git a/modules/dashboard/media/BackgroundShapes.qml b/modules/dashboard/media/BackgroundShapes.qml
+index 8523b9b1..e69de29b 100644
+--- a/modules/dashboard/media/BackgroundShapes.qml
++++ b/modules/dashboard/media/BackgroundShapes.qml
+@@ -1,97 +0,0 @@
+-pragma ComponentBehavior: Bound
+-
+-import QtQuick
+-import M3Shapes
+-import qs.components
+-import qs.services
+-
+-Item {
+-    id: root
+-
+-    readonly property list<int> shapePool: [MaterialShape.Circle, MaterialShape.Cookie4Sided, MaterialShape.Cookie6Sided, MaterialShape.Cookie7Sided, MaterialShape.Cookie9Sided, MaterialShape.Cookie12Sided, MaterialShape.Sunny, MaterialShape.VerySunny, MaterialShape.SoftBurst, MaterialShape.Pentagon, MaterialShape.Gem, MaterialShape.Arch, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.Triangle, MaterialShape.Fan, MaterialShape.Oval]
+-
+-    property int count: 14
+-    property real minSize: 36
+-    property real maxSize: 124
+-    property real minSpeed: 4
+-    property real maxSpeed: 18
+-    property real minRotSpeed: -12
+-    property real maxRotSpeed: 12
+-    property list<real> lightOpacities: [0.34, 0.34, 0.08, 0.2]
+-    property list<real> darkOpacities: [0.16, 0.16, 0.04, 0.16]
+-
+-    function rand(min: real, max: real): real {
+-        return min + Math.random() * (max - min);
+-    }
+-
+-    function signedRand(min: real, max: real): real {
+-        return rand(min, max) * (Math.random() < 0.5 ? -1 : 1);
+-    }
+-
+-    clip: true
+-    Component.onCompleted: shapes.model = count
+-
+-    Repeater {
+-        id: shapes
+-
+-        DriftingShape {}
+-    }
+-
+-    FrameAnimation {
+-        running: root.visible && root.width > 0 && root.height > 0 && (Players.active?.isPlaying ?? false)
+-        onTriggered: {
+-            const dt = frameTime;
+-            for (let i = 0; i < shapes.count; i++) {
+-                const s = shapes.itemAt(i) as DriftingShape;
+-                if (!s)
+-                    continue;
+-
+-                s.x += s.vx * dt;
+-                s.y += s.vy * dt;
+-                s.rotation += s.vr * dt;
+-
+-                if (s.x + s.width < 0)
+-                    s.x = root.width;
+-                else if (s.x > root.width)
+-                    s.x = -s.width;
+-
+-                if (s.y + s.height < 0)
+-                    s.y = root.height;
+-                else if (s.y > root.height)
+-                    s.y = -s.height;
+-            }
+-        }
+-    }
+-
+-    component DriftingShape: MaterialShape {
+-        id: shapeItem
+-
+-        required property int index
+-
+-        property real vx: root.signedRand(root.minSpeed, root.maxSpeed)
+-        property real vy: root.signedRand(root.minSpeed, root.maxSpeed)
+-        property real vr: root.rand(root.minRotSpeed, root.maxRotSpeed)
+-        readonly property int colourIdx: Math.floor(Math.random() * 4)
+-
+-        implicitSize: root.minSize + (index / root.count) * (root.maxSize - root.minSize)
+-        shape: root.shapePool[Math.floor(Math.random() * root.shapePool.length)]
+-        color: [Colours.palette.m3primaryContainer, Colours.palette.m3secondaryContainer, Colours.palette.m3tertiaryContainer, Colours.palette.m3outlineVariant][colourIdx]
+-        opacity: Colours.light ? root.lightOpacities[colourIdx] : root.darkOpacities[colourIdx]
+-        rotation: root.rand(0, 360)
+-
+-        Component.onCompleted: {
+-            x = root.rand(0, root.width - implicitSize);
+-            y = root.rand(0, root.height - implicitSize);
+-        }
+-
+-        Behavior on color {
+-            CAnim {}
+-        }
+-
+-        Behavior on opacity {
+-            Anim {
+-                type: Anim.SlowEffects
+-            }
+-        }
+-    }
+-}
+diff --git a/modules/dashboard/media/LyricList.qml b/modules/dashboard/media/LyricList.qml
+index c7fa7d25..cff4a72d 100644
+--- a/modules/dashboard/media/LyricList.qml
++++ b/modules/dashboard/media/LyricList.qml
+@@ -1,7 +1,6 @@
+ pragma ComponentBehavior: Bound
+ 
+ import QtQuick
+-import QtQuick.Effects
+ import QtQuick.Layouts
+ import Caelestia.Config
+ import Caelestia.Services
+@@ -261,7 +260,6 @@ Item {
+ 
+             required property string modelData
+             required property int index
+-            property real effectScale: ListView.isCurrentItem ? 1 : 0
+ 
+             anchors.left: lyrics.contentItem.left
+             anchors.right: lyrics.contentItem.right
+@@ -271,21 +269,6 @@ Item {
+             font: Tokens.font.body.medium
+             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+ 
+-            layer.enabled: effectScale > 0
+-            layer.effect: MultiEffect {
+-                shadowEnabled: true
+-                shadowColor: Colours.palette.m3primary
+-                shadowOpacity: 0.5 * lyric.effectScale
+-                shadowBlur: 0.6 * lyric.effectScale
+-                blur: 0.4 * lyric.effectScale
+-            }
+-
+-            Behavior on effectScale {
+-                Anim {
+-                    type: Anim.SlowEffects
+-                }
+-            }
+-
+             MouseArea {
+                 id: mouse
+ 
+diff --git a/modules/drawers/ContentWindow.qml b/modules/drawers/ContentWindow.qml
+index 212682f9..9eb3165c 100644
+--- a/modules/drawers/ContentWindow.qml
++++ b/modules/drawers/ContentWindow.qml
+@@ -22,24 +22,12 @@ StyledWindow {
+     readonly property ScreenState screenState: ShellState.forScreen(screen)
+ 
+     readonly property HyprlandMonitor monitor: Hypr.monitorFor(screen)
+-    readonly property bool hasSpecialWorkspace: (monitor?.lastIpcObject.specialWorkspace?.name.length ?? 0) > 0
+-    readonly property bool hasFullscreenOnNormalWs: monitor?.activeWorkspace?.toplevels.values.some(t => t.lastIpcObject.fullscreen > 1) ?? false
+-    readonly property bool hasFullscreen: {
+-        if (hasSpecialWorkspace) {
+-            const specialName = monitor?.lastIpcObject.specialWorkspace?.name;
+-            if (!specialName)
+-                return false;
+-            const specialWs = Hypr.workspaces.values.find(ws => ws.name === specialName);
+-            return specialWs?.toplevels.values.some(t => t.lastIpcObject.fullscreen > 1) ?? false;
+-        }
+-        return hasFullscreenOnNormalWs;
+-    }
++    readonly property bool hasFullscreen: monitor?.activeWorkspace?.toplevels.values.some(t => t.lastIpcObject.fullscreen > 1) ?? false
+ 
+     property real fsTransitionProg: hasFullscreen ? 1 : 0
+     readonly property real sdfBorderOffset: 2 * fsTransitionProg // SDFs joins are not exact, so offset by 2px to ensure nothing shows
+     readonly property real borderThickness: contentItem.Config.border.thickness * (1 - fsTransitionProg)
+     readonly property real borderRounding: contentItem.Config.border.rounding * (1 - fsTransitionProg)
+-    readonly property real shadowOpacity: 0.7 * (1 - fsTransitionProg)
+     readonly property real borderLayoutThickness: hasFullscreen ? 0 : contentItem.Config.border.thickness
+ 
+     property color surfaceColour: Colours.tPalette.m3surface
+@@ -48,7 +36,7 @@ StyledWindow {
+         if (focusGrab.active || panels.popouts.isDetached)
+             return 0;
+ 
+-        if (monitor?.lastIpcObject.specialWorkspace?.name || monitor?.activeWorkspace?.lastIpcObject.windows > 0)
++        if (monitor?.activeWorkspace?.lastIpcObject.windows > 0)
+             return 0;
+ 
+         const thresholds = [];
+@@ -67,7 +55,7 @@ StyledWindow {
+ 
+     name: "drawers"
+     WlrLayershell.exclusionMode: ExclusionMode.Ignore
+-    WlrLayershell.layer: (fsTransitionProg > 0 && contentItem.Config.general.showOverFullscreen) || (hasSpecialWorkspace && hasFullscreenOnNormalWs) ? WlrLayer.Overlay : WlrLayer.Top
++    WlrLayershell.layer: fsTransitionProg > 0 && contentItem.Config.general.showOverFullscreen ? WlrLayer.Overlay : WlrLayer.Top
+     WlrLayershell.keyboardFocus: screenState.launcher || screenState.session ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+ 
+     mask: hasFullscreen ? emptyRegion : regions
+@@ -151,9 +139,7 @@ StyledWindow {
+         opacity: root.surfaceColour.a
+         layer.enabled: true
+         layer.effect: MultiEffect {
+-            shadowEnabled: true
+-            blurMax: 15
+-            shadowColor: Qt.alpha(Colours.palette.m3shadow, Math.max(0, root.shadowOpacity))
++            shadowEnabled: false
+         }
+ 
+         BlobGroup {
+diff --git a/modules/drawers/Interactions.qml b/modules/drawers/Interactions.qml
+index 3d94a528..17d6fff5 100644
+--- a/modules/drawers/Interactions.qml
++++ b/modules/drawers/Interactions.qml
+@@ -185,7 +185,7 @@ CustomMouseArea {
+                 if (showSidebarHover && !screenState.sidebar) {
+                     screenState.sidebar = true;
+                 } else {
+-                    const inSidebarArea = inRightPanel(panels.sidebar, x, y) || inRightPanel(panels.sessionWrapper, x, y);
++                    const inSidebarArea = inRightPanel(panels.sidebar, x, y) || inRightPanel(panels.sessionWrapper, x, y) || inRightPanel(panels.utilities, x, y);
+                     if (!inSidebarArea)
+                         screenState.sidebar = false;
+                 }
+diff --git a/modules/lock/LockSurface.qml b/modules/lock/LockSurface.qml
+index 58dfa6b5..1625863e 100644
+--- a/modules/lock/LockSurface.qml
++++ b/modules/lock/LockSurface.qml
+@@ -216,9 +216,7 @@ WlSessionLockSurface {
+ 
+             layer.enabled: true
+             layer.effect: MultiEffect {
+-                shadowEnabled: true
+-                blurMax: 15
+-                shadowColor: Qt.alpha(Colours.palette.m3shadow, 0.7)
++                shadowEnabled: false
+             }
+         }
+ 
+diff --git a/modules/nexus/common/AnimatedLogo.qml b/modules/nexus/common/AnimatedLogo.qml
+index 6d2aaa00..61a7ff6e 100644
+--- a/modules/nexus/common/AnimatedLogo.qml
++++ b/modules/nexus/common/AnimatedLogo.qml
+@@ -232,8 +232,7 @@ Item {
+                     from: 0.96
+                     to: 1.0
+                     duration: 250
+-                    easing.type: Easing.OutBack
+-                    easing.overshoot: 1.05
++                    easing.type: Easing.OutCubic
+                 }
+             }
+ 
+diff --git a/modules/nexus/pages/panels/taskbar/BarWorkspaces.qml b/modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
+index 814dc862..e896fbed 100644
+--- a/modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
++++ b/modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
+@@ -45,28 +45,6 @@ PageBase {
+             onToggled: GlobalConfig.bar.workspaces.occupiedBg = checked
+         }
+ 
+-        ToggleRow {
+-            text: qsTr("Show windows")
+-            subtext: qsTr("Show icons of open windows on each workspace")
+-            checked: Config.bar.workspaces.showWindows
+-            onToggled: GlobalConfig.bar.workspaces.showWindows = checked
+-        }
+-
+-        ToggleRow {
+-            text: qsTr("Windows on special workspaces")
+-            checked: Config.bar.workspaces.showWindowsOnSpecialWorkspaces
+-            onToggled: GlobalConfig.bar.workspaces.showWindowsOnSpecialWorkspaces = checked
+-        }
+-
+-        StepperRow {
+-            label: qsTr("Max window icons")
+-            value: Config.bar.workspaces.maxWindowIcons
+-            from: 0
+-            to: 20
+-            stepSize: 1
+-            onMoved: v => GlobalConfig.bar.workspaces.maxWindowIcons = v
+-        }
+-
+         ToggleRow {
+             last: true
+             text: qsTr("Per-monitor workspaces")
+diff --git a/modules/notifications/Notification.qml b/modules/notifications/Notification.qml
+index 48759b50..279b86bc 100644
+--- a/modules/notifications/Notification.qml
++++ b/modules/notifications/Notification.qml
+@@ -22,6 +22,12 @@ StyledRect {
+     readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
+     property bool expanded: Config.notifs.openExpanded
+ 
++    function focusApp(): void {
++        const app = root.modelData.appName.toLowerCase();
++        if (["discord", "vesktop", "ayugram", "telegram"].some(n => app.includes(n)))
++            Hypr.dispatch(Hypr.usingLua ? 'hl.dispatch(hl.dsp.focus({ workspace = "2" }))' : "workspace 2");
++    }
++
+     color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
+     radius: Tokens.rounding.large
+ 
+@@ -85,8 +91,10 @@ StyledRect {
+                 return;
+ 
+             const actions = root.modelData.actions;
+-            if (actions.length === 1)
++            if (actions.length === 1) {
+                 actions[0].invoke();
++                root.focusApp();
++            }
+         }
+ 
+         Item {
+@@ -487,7 +495,10 @@ StyledRect {
+                         inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+                         inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
+                         text: modelData.text
+-                        onClicked: modelData.invoke()
++                        onClicked: {
++                            modelData.invoke();
++                            root.focusApp();
++                        }
+ 
+                         label.horizontalAlignment: Text.AlignHCenter
+                         label.anchors.left: left
+diff --git a/plugin/src/Caelestia/Config/barconfig.hpp b/plugin/src/Caelestia/Config/barconfig.hpp
+index fb5a632c..037f9cb1 100644
+--- a/plugin/src/Caelestia/Config/barconfig.hpp
++++ b/plugin/src/Caelestia/Config/barconfig.hpp
+@@ -44,21 +44,9 @@ class BarWorkspaces : public ConfigObject {
+     CONFIG_PROPERTY(int, shown, 5)
+     CONFIG_PROPERTY(bool, activeIndicator, true)
+     CONFIG_PROPERTY(bool, occupiedBg, false)
+-    CONFIG_PROPERTY(bool, showWindows, true)
+-    CONFIG_PROPERTY(bool, showWindowsOnSpecialWorkspaces, true)
+-    CONFIG_PROPERTY(int, maxWindowIcons, 5)
+     CONFIG_PROPERTY(bool, activeTrail, false)
+     CONFIG_GLOBAL_PROPERTY(bool, perMonitorWorkspaces, true)
+-    CONFIG_PROPERTY(QString, label, u"  "_s)
+-    CONFIG_PROPERTY(QString, occupiedLabel, u"󰮯"_s)
+-    CONFIG_PROPERTY(QString, activeLabel, u"󰮯"_s)
+     CONFIG_PROPERTY(QString, capitalisation, u"preserve"_s)
+-    CONFIG_GLOBAL_PROPERTY(QVariantList, specialWorkspaceIcons)
+-    CONFIG_GLOBAL_PROPERTY(QVariantList, windowIcons,
+-        { vmap({
+-            { u"regex"_s, u"steam(_app_(default|[0-9]+))?"_s },
+-            { u"icon"_s, u"sports_esports"_s },
+-        }) })
+ 
+ public:
+     explicit BarWorkspaces(QObject* parent = nullptr)
+diff --git a/services/Hypr.qml b/services/Hypr.qml
+index d890f098..8f32c2d7 100644
+--- a/services/Hypr.qml
++++ b/services/Hypr.qml
+@@ -19,7 +19,7 @@ Singleton {
+ 
+     readonly property HyprlandToplevel activeToplevel: {
+         const t = Hyprland.activeToplevel;
+-        return t?.workspace?.name.startsWith("special:") || Hyprland.focusedWorkspace?.toplevels.values.length > 0 ? t : null;
++        return Hyprland.focusedWorkspace?.toplevels.values.length > 0 ? t : null;
+     }
+     readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
+     readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
+@@ -38,7 +38,6 @@ Singleton {
+     readonly property alias devices: extras.devices
+ 
+     property bool hadKeyboard
+-    property string lastSpecialWorkspace: ""
+ 
+     signal configReloaded
+ 
+@@ -46,39 +45,6 @@ Singleton {
+         Hyprland.dispatch(request);
+     }
+ 
+-    function cycleSpecialWorkspace(direction: string): void {
+-        const openSpecials = workspaces.values.filter(w => w.name.startsWith("special:") && w.lastIpcObject.windows > 0);
+-
+-        if (openSpecials.length === 0)
+-            return;
+-
+-        const activeSpecial = focusedMonitor.lastIpcObject.specialWorkspace.name ?? "";
+-
+-        if (!activeSpecial) {
+-            if (lastSpecialWorkspace) {
+-                const workspace = workspaces.values.find(w => w.name === lastSpecialWorkspace);
+-                if (workspace && workspace.lastIpcObject.windows > 0) {
+-                    dispatch(usingLua ? `hl.dsp.focus({ workspace = "${lastSpecialWorkspace}" })` : `workspace ${lastSpecialWorkspace}`);
+-                    return;
+-                }
+-            }
+-            dispatch(usingLua ? `hl.dsp.focus({ workspace = "${openSpecials[0].name}" })` : `workspace ${openSpecials[0].name}`);
+-            return;
+-        }
+-
+-        const currentIndex = openSpecials.findIndex(w => w.name === activeSpecial);
+-        let nextIndex = 0;
+-
+-        if (currentIndex !== -1) {
+-            if (direction === "next")
+-                nextIndex = (currentIndex + 1) % openSpecials.length;
+-            else
+-                nextIndex = (currentIndex - 1 + openSpecials.length) % openSpecials.length;
+-        }
+-
+-        dispatch(usingLua ? `hl.dsp.focus({ workspace = "${openSpecials[nextIndex].name}" })` : `workspace ${openSpecials[nextIndex].name}`);
+-    }
+-
+     function monitorNames(): list<string> {
+         return monitors.values.map(e => e.name);
+     }
+@@ -133,7 +99,7 @@ Singleton {
+             if (n === "configreloaded") {
+                 root.configReloaded();
+                 root.reloadDynamicConfs();
+-            } else if (["workspace", "moveworkspace", "activespecial", "focusedmon"].includes(n)) {
++            } else if (["workspace", "moveworkspace", "focusedmon"].includes(n)) {
+                 Hyprland.refreshWorkspaces();
+                 Hyprland.refreshMonitors();
+             } else if (["openwindow", "closewindow", "movewindow"].includes(n)) {
+@@ -151,18 +117,6 @@ Singleton {
+         target: Hyprland
+     }
+ 
+-    Connections {
+-        function onLastIpcObjectChanged(): void {
+-            const specialName = root.focusedMonitor.lastIpcObject.specialWorkspace.name;
+-
+-            if (specialName && specialName.startsWith("special:")) {
+-                root.lastSpecialWorkspace = specialName;
+-            }
+-        }
+-
+-        target: root.focusedMonitor
+-    }
+-
+     FileView {
+         id: kbLayoutFile
+ 
+@@ -201,14 +155,6 @@ Singleton {
+             extras.refreshDevices();
+         }
+ 
+-        function cycleSpecialWorkspace(direction: string): void {
+-            root.cycleSpecialWorkspace(direction);
+-        }
+-
+-        function listSpecialWorkspaces(): string {
+-            return root.workspaces.values.filter(w => w.name.startsWith("special:") && w.lastIpcObject.windows > 0).map(w => w.name).join("\n");
+-        }
+-
+         target: "hypr"
+     }
+ 
+diff --git a/services/NotifData.qml b/services/NotifData.qml
+index 8e980f18..82180605 100644
+--- a/services/NotifData.qml
++++ b/services/NotifData.qml
+@@ -39,15 +39,7 @@ QtObject {
+     property bool hasActionIcons
+     property list<var> actions
+ 
+-    readonly property bool hasFullscreen: {
+-        const monitor = Hypr.focusedMonitor;
+-        const specialName = monitor?.lastIpcObject.specialWorkspace?.name;
+-        if (specialName) {
+-            const specialWs = Hypr.workspaces.values.find(ws => ws.name === specialName);
+-            return specialWs?.toplevels.values.some(t => t.lastIpcObject.fullscreen > 1) ?? false;
+-        }
+-        return monitor?.activeWorkspace?.toplevels.values.some(t => t.lastIpcObject.fullscreen > 1) ?? false;
+-    }
++    readonly property bool hasFullscreen: Hypr.focusedMonitor?.activeWorkspace?.toplevels.values.some(t => t.lastIpcObject.fullscreen > 1) ?? false
+ 
+     readonly property Timer timer: Timer {
+         running: true
+diff --git a/services/Players.qml b/services/Players.qml
+index 893c9554..c6de2ce9 100644
+--- a/services/Players.qml
++++ b/services/Players.qml
+@@ -18,6 +18,10 @@ Singleton {
+     // Dedup key for progressive metadata (e.g. mpv-mpris/yt-dlp player fills title then artist later).
+     property string lastNowPlayingKey: ""
+ 
++    // Firefox's MPRIS bridge flaps mpris:artUrl: present on the first Metadata push for a track,
++    // dropped on later PropertiesChanged (e.g. on Seeked), clearing trackArtUrl.
++    property var artUrlCache: ({})
++
+     function getIdentity(player: MprisPlayer): string {
+         if (!player)
+             return "";
+@@ -28,14 +32,21 @@ Singleton {
+     function getArtUrl(player: MprisPlayer): string {
+         if (!player)
+             return "";
+-        if (player.trackArtUrl)
++
++        const id = player.metadata["mpris:trackid"] ?? "";
++        if (player.trackArtUrl) {
++            if (id)
++                artUrlCache[id] = player.trackArtUrl;
+             return player.trackArtUrl;
++        }
++        if (id && artUrlCache[id])
++            return artUrlCache[id];
+ 
+         const url = player.metadata["xesam:url"] ?? "";
+         if (url.startsWith("https://www.youtube.com/watch")) {
+             // Fallback for youtube
+-            const id = url.match(/[?&]v=([\w-]{11})/)?.[1];
+-            return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
++            const ytId = url.match(/[?&]v=([\w-]{11})/)?.[1];
++            return ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : "";
+         }
+         return "";
+     }
+diff --git a/utils/Icons.qml b/utils/Icons.qml
+index 719170e3..deb843e3 100644
+--- a/utils/Icons.qml
++++ b/utils/Icons.qml
+@@ -39,66 +39,6 @@ Singleton {
+             "99": "thunderstorm"
+         })
+ 
+-    readonly property var categoryIcons: ({
+-            WebBrowser: "web",
+-            Printing: "print",
+-            Security: "security",
+-            Network: "chat",
+-            Archiving: "archive",
+-            Compression: "archive",
+-            Development: "code",
+-            IDE: "code",
+-            TextEditor: "edit_note",
+-            Audio: "music_note",
+-            Music: "music_note",
+-            Player: "music_note",
+-            Recorder: "mic",
+-            Game: "sports_esports",
+-            FileTools: "files",
+-            FileManager: "files",
+-            Filesystem: "files",
+-            FileTransfer: "files",
+-            Settings: "settings",
+-            DesktopSettings: "settings",
+-            HardwareSettings: "settings",
+-            TerminalEmulator: "terminal",
+-            ConsoleOnly: "terminal",
+-            Utility: "build",
+-            Monitor: "monitor_heart",
+-            Midi: "graphic_eq",
+-            Mixer: "graphic_eq",
+-            AudioVideoEditing: "video_settings",
+-            AudioVideo: "music_video",
+-            Video: "videocam",
+-            Building: "construction",
+-            Graphics: "photo_library",
+-            "2DGraphics": "photo_library",
+-            RasterGraphics: "photo_library",
+-            TV: "tv",
+-            System: "host",
+-            Office: "content_paste"
+-        })
+-
+-    // Checks if a name matches an icon config. Icon configs can have the following keys:
+-    // - name: The exact name of the icon
+-    // - regex: A regex to match against the name (takes priority over name)
+-    // - flags: The regex flags (only used if regex is set)
+-    // - icon: The icon to use
+-    function matchIconConfig(name: string, iconConfig: var): bool {
+-        if (!iconConfig.icon)
+-            return false;
+-
+-        if (iconConfig.regex) {
+-            const re = new RegExp(iconConfig.regex, iconConfig.flags ?? "");
+-            if (re.test(name))
+-                return true;
+-        } else if (iconConfig.name === name) {
+-            return true;
+-        }
+-
+-        return false;
+-    }
+-
+     function getAppIcon(name: string, fallback: string): string {
+         const icon = DesktopEntries.heuristicLookup(name)?.icon;
+         if (fallback !== "undefined")
+@@ -106,20 +46,6 @@ Singleton {
+         return Quickshell.iconPath(icon);
+     }
+ 
+-    function getAppCategoryIcon(name: string, fallback: string): string {
+-        for (const iconConfig of GlobalConfig.bar.workspaces.windowIcons)
+-            if (matchIconConfig(name, iconConfig))
+-                return iconConfig.icon;
+-
+-        const categories = DesktopEntries.heuristicLookup(name)?.categories;
+-
+-        if (categories)
+-            for (const [key, value] of Object.entries(categoryIcons))
+-                if (categories.includes(key))
+-                    return value;
+-        return fallback;
+-    }
+-
+     function getNetworkIcon(strength: int, isSecure = false): string {
+         if (isSecure) {
+             if (strength >= 80)
+@@ -209,26 +135,6 @@ Singleton {
+         return "mic_off";
+     }
+ 
+-    function getSpecialWsIcon(name: string): string {
+-        name = name.toLowerCase().slice("special:".length);
+-
+-        for (const iconConfig of GlobalConfig.bar.workspaces.specialWorkspaceIcons)
+-            if (matchIconConfig(name, iconConfig))
+-                return iconConfig.icon;
+-
+-        if (name === "special")
+-            return "star";
+-        if (name === "communication")
+-            return "forum";
+-        if (name === "music")
+-            return "music_cast";
+-        if (name === "todo")
+-            return "checklist";
+-        if (name === "sysmon")
+-            return "monitor_heart";
+-        return name[0].toUpperCase();
+-    }
+-
+     function getTrayIcon(id: string, icon: string): string {
+         for (const sub of GlobalConfig.bar.tray.iconSubs)
+             if (sub.id === id)

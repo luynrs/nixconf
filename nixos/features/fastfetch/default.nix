@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   flake.homeModules.fastfetch = { pkgs, ... }: {
     home.packages = [ pkgs.fastfetch ];
 

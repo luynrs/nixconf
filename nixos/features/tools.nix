@@ -9,8 +9,6 @@
       bun
       procps
       ruff
-      brightnessctl
-      playerctl
       nautilus
 
       inputs.justssh.packages.${pkgs.stdenv.hostPlatform.system}.default

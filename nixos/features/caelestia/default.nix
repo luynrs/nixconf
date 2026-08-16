@@ -1,4 +1,4 @@
-{ inputs, self, ... }:
+{ inputs, ... }:
 {
   flake.homeModules.caelestia =
     {
@@ -7,6 +7,152 @@
       pkgs,
       ...
     }:
+    let
+      shellSettings = {
+        appearance = {
+          deformScale = 0;
+          transparency.enabled = true;
+        };
+
+        general = {
+          showOverFullscreen = true;
+        };
+
+        bar = {
+          activeWindow = {
+            compact = true;
+            inverted = true;
+            showOnHover = false;
+          };
+          clock = {
+            background = true;
+            showDate = false;
+            showIcon = false;
+          };
+          popouts = {
+            activeWindow = false;
+            tray = true;
+          };
+          scrollActions = {
+            brightness = false;
+            volume = false;
+            workspaces = true;
+          };
+          showOnHover = false;
+          statusIcons = [
+            {
+              enabled = true;
+              id = "kbLayout";
+            }
+            {
+              enabled = false;
+              id = "audio";
+            }
+            {
+              enabled = false;
+              id = "microphone";
+            }
+            {
+              enabled = true;
+              id = "network";
+            }
+            {
+              enabled = true;
+              id = "bluetooth";
+            }
+            {
+              enabled = true;
+              id = "lockStatus";
+            }
+          ];
+          tray = {
+            background = true;
+            compact = false;
+            recolour = true;
+          };
+          workspaces = {
+            activeIndicator = true;
+            activeTrail = true;
+            occupiedBg = false;
+            shown = 5;
+          };
+        };
+
+        dashboard = {
+          performance.showBattery = false;
+          showOnHover = false;
+        };
+
+        launcher = {
+          hiddenApps = [
+            "com.mitchellh.ghostty"
+            "kvantummanager"
+          ];
+          useFuzzy.apps = true;
+        };
+
+        notifs = {
+          defaultExpireTimeout = 3000;
+          openExpanded = false;
+        };
+
+        sidebar = {
+          showOnHover = true;
+          minHoverThreshold = 30;
+        };
+
+        services = {
+          audioIncrement = 0.05;
+          brightnessIncrement = 0.05;
+          useFahrenheit = false;
+          useTwelveHourClock = false;
+        };
+
+        utilities = {
+          enabled = false;
+          quickToggles = [
+            {
+              enabled = true;
+              id = "wifi";
+            }
+            {
+              enabled = true;
+              id = "bluetooth";
+            }
+            {
+              enabled = true;
+              id = "mic";
+            }
+            {
+              enabled = true;
+              id = "settings";
+            }
+            {
+              enabled = true;
+              id = "gameMode";
+            }
+            {
+              enabled = false;
+              id = "dnd";
+            }
+            {
+              enabled = true;
+              id = "vpn";
+            }
+          ];
+          toasts = {
+            configLoaded = false;
+            kbLayoutChanged = false;
+            nowPlaying = false;
+          };
+          vpn = {
+            enabled = false;
+            provider = [ ];
+            selectedProvider = "";
+          };
+        };
+      };
+    in
     {
       imports = [ inputs.caelestia-shell.homeManagerModules.default ];
 
@@ -22,153 +168,36 @@
 
         systemd.enable = false;
 
-        settings = {
-          appearance = {
-            deformScale = 0;
-            transparency.enabled = true;
-          };
-
-          bar = {
-            activeWindow = {
-              compact = true;
-              inverted = true;
-              showOnHover = false;
-            };
-            clock = {
-              background = true;
-              showDate = false;
-              showIcon = false;
-            };
-            popouts = {
-              activeWindow = false;
-              tray = true;
-            };
-            scrollActions = {
-              brightness = false;
-              volume = false;
-              workspaces = true;
-            };
-            showOnHover = false;
-            statusIcons = [
-              {
-                enabled = true;
-                id = "kbLayout";
-              }
-              {
-                enabled = false;
-                id = "audio";
-              }
-              {
-                enabled = false;
-                id = "microphone";
-              }
-              {
-                enabled = true;
-                id = "network";
-              }
-              {
-                enabled = true;
-                id = "bluetooth";
-              }
-              {
-                enabled = true;
-                id = "lockStatus";
-              }
-            ];
-            tray = {
-              background = true;
-              compact = false;
-              recolour = true;
-            };
-            workspaces = {
-              activeIndicator = true;
-              activeTrail = true;
-              occupiedBg = false;
-              shown = 5;
-            };
-          };
-
-          dashboard = {
-            performance.showBattery = false;
-            showOnHover = false;
-          };
-
-          launcher = {
-            hiddenApps = [
-              "com.mitchellh.ghostty"
-              "kvantummanager"
-            ];
-            useFuzzy.apps = true;
-          };
-
-          notifs.openExpanded = false;
-
-          sidebar = {
-            showOnHover = true;
-            minHoverThreshold = 30;
-          };
-
-          services = {
-            audioIncrement = 0.05;
-            brightnessIncrement = 0.05;
-            useFahrenheit = false;
-            useTwelveHourClock = false;
-          };
-
-          utilities = {
-            enabled = false;
-            quickToggles = [
-              {
-                enabled = true;
-                id = "wifi";
-              }
-              {
-                enabled = true;
-                id = "bluetooth";
-              }
-              {
-                enabled = true;
-                id = "mic";
-              }
-              {
-                enabled = true;
-                id = "settings";
-              }
-              {
-                enabled = true;
-                id = "gameMode";
-              }
-              {
-                enabled = false;
-                id = "dnd";
-              }
-              {
-                enabled = true;
-                id = "vpn";
-              }
-            ];
-            toasts = {
-              configLoaded = false;
-              kbLayoutChanged = false;
-              nowPlaying = false;
-            };
-            vpn = {
-              enabled = false;
-              provider = [ ];
-              selectedProvider = "";
-            };
-          };
-        };
-
         package =
-          inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.with-cli.overrideAttrs
-            (_old: {
-              src = self + /vendor/caelestia-shell;
-            });
+          let
+            inherit (pkgs.stdenv.hostPlatform) system;
+            upstream = inputs.caelestia-shell;
+          in
+          pkgs.callPackage
+            "${
+              pkgs.applyPatches {
+                name = "caelestia-shell-src";
+                src = upstream;
+                patches = [ ./shell.patch ];
+                patchFlags = [
+                  "-p1"
+                  "-E"
+                ];
+              }
+            }/nix"
+            {
+              inherit (upstream.inputs) m3shapes;
+              inherit (upstream) rev;
+              stdenv = pkgs.clangStdenv;
+              quickshell = upstream.inputs.quickshell.packages.${system}.default.override {
+                withX11 = false;
+                withI3 = false;
+              };
+              caelestia-cli = upstream.inputs.caelestia-cli.packages.${system}.default;
+              withCli = true;
+            };
       };
 
-      # User templates rendered by the caelestia CLI into
-      # ~/.local/state/caelestia/theme/ on every scheme change.
       xdg.configFile."caelestia/templates/fish-colors.fish".text = ''
         # Unquoted, unprefixed hex: a leading "#" starts a fish comment.
         set -g fish_color_normal {{ onSurface.hex }}
@@ -203,11 +232,11 @@
         truncation_length = 3
         truncate_to_repo = true
         home_symbol = "~"
-        read_only = " "
+        read_only = " "
         read_only_style = "bold #{{ red.hex }}"
 
         [git_branch]
-        symbol = "  "
+        symbol = "  "
         style = "bold #{{ mauve.hex }}"
         format = "[$symbol$branch]($style) "
 
@@ -226,7 +255,7 @@
         deleted = "✕"
 
         [nix_shell]
-        symbol = "  "
+        symbol = "  "
         style = "bold #{{ teal.hex }}"
         format = "[$symbol$name]($style) "
         impure_msg = ""
@@ -269,8 +298,29 @@
       '';
 
       home.activation.caelestiaScheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        ${config.programs.caelestia.cli.package}/bin/caelestia scheme set -n catppuccin -f mocha -m dark || true
+        if [ ! -e "${config.xdg.stateHome}/caelestia/scheme.json" ]; then
+          ${config.programs.caelestia.cli.package}/bin/caelestia scheme set -n catppuccin -f mocha -m dark || true
+        fi
       '';
+
+      home.activation.caelestiaShellConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        target="${config.xdg.configHome}/caelestia/shell.json"
+        mkdir -p "$(dirname "$target")"
+        cat > "$target" <<'SHELL_JSON'
+        ${builtins.toJSON shellSettings}
+        SHELL_JSON
+      '';
+
+      xdg.configFile."caelestia/cli.json".text = builtins.toJSON {
+        record.extraArgs = [
+          "-k"
+          "av1"
+          "-q"
+          "high"
+          "-f"
+          "60"
+        ];
+      };
 
       xdg.configFile."caelestia/shell-tokens.json".text =
         let

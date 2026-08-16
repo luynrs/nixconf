@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   flake.homeModules.ghostty =
     { config, ... }:
     {

@@ -1,4 +1,4 @@
-{ lib, keymap }:
+{ lib }:
 let
   inline = lib.generators.mkLuaInline;
   overview = inline ''
@@ -10,8 +10,8 @@ in
 {
   config = {
     input = {
-      kb_layout = lib.concatStringsSep "," keymap.layouts;
-      kb_options = keymap.options;
+      kb_layout = "us,ru";
+      kb_options = "grp:alt_shift_toggle";
 
       follow_mouse = 1;
       sensitivity = 0;

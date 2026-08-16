@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   flake.nixosModules.hyprland =
     { config, lib, ... }:
     let
@@ -13,14 +12,10 @@
     {
       programs.hyprland.enable = true;
 
-      home-manager.users.${config.preferences.user.name}.wayland.windowManager.hyprland.settings =
-        {
-          monitor = monitors;
-        }
-        // import ./_input.nix {
-          inherit lib;
-          inherit (config.preferences) keymap;
-        };
+      home-manager.users.luynar.wayland.windowManager.hyprland.settings = {
+        monitor = monitors;
+      }
+      // import ./_input.nix { inherit lib; };
     };
   flake.homeModules.hyprland =
     { pkgs, lib, ... }:
@@ -115,8 +110,29 @@
             dwindle.preserve_split = true;
 
             misc = {
-              force_default_wallpaper = -1;
+              animate_manual_resizes = false;
+              animate_mouse_windowdragging = false;
+
+              disable_hyprland_logo = true;
+              force_default_wallpaper = 0;
+
+              on_focus_under_fullscreen = 2;
+              allow_session_lock_restore = true;
+              middle_click_paste = false;
               focus_on_activate = true;
+              session_lock_xray = true;
+
+              mouse_move_enables_dpms = true;
+              key_press_enables_dpms = true;
+
+              background_color = inline ''
+                (function()
+                  local ok, s = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/scheme/current.lua")
+                  if ok and s and s.surfaceContainer then
+                    return "rgb(" .. s.surfaceContainer .. ")"
+                  end
+                end)()
+              '';
             };
           };
 

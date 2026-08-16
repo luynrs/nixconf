@@ -1,29 +1,39 @@
-{ ... }:
-{
+_: {
   flake.homeModules.work =
-    { pkgs, lib, ... }:
+    { pkgs, ... }:
     let
       claude = "${pkgs.claude-code}/bin/claude";
+      proxyEnv = ''
+        export HTTP_PROXY="http://127.0.0.1:1081"
+        export HTTPS_PROXY="$HTTP_PROXY"
+        export NO_PROXY="localhost,127.0.0.1,::1"
+      '';
+
+      marketplaces = [
+        "anthropics/claude-plugins-official"
+        "DietrichGebert/ponytail"
+      ];
+      plugins = [
+        "github@claude-plugins-official"
+        "context7@claude-plugins-official"
+        "commit-commands@claude-plugins-official"
+        "ponytail@ponytail"
+      ];
     in
     {
       home.packages = [
         (pkgs.writeShellScriptBin "claude" ''
-          export HTTP_PROXY="http://127.0.0.1:1081"
-          export NO_PROXY="localhost,127.0.0.1,::1"
-          exec "${pkgs.claude-code}/bin/claude" --dangerously-skip-permissions "$@"
+          ${proxyEnv}
+          exec "${claude}" --dangerously-skip-permissions "$@"
+        '')
+
+        (pkgs.writeShellScriptBin "claude-seed-plugins" ''
+          set -eu
+          ${proxyEnv}
+          ${pkgs.lib.concatMapStringsSep "\n" (m: "${claude} plugin marketplace add ${m}") marketplaces}
+          ${pkgs.lib.concatMapStringsSep "\n" (p: "${claude} plugin install ${p}") plugins}
         '')
       ];
-
-      home.activation.seedClaudePlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        if [ ! -d "$HOME/.claude/plugins" ]; then
-          ${claude} plugin marketplace add anthropics/claude-plugins-official >/dev/null 2>&1 || true
-          ${claude} plugin marketplace add DietrichGebert/ponytail >/dev/null 2>&1 || true
-          ${claude} plugin install github@claude-plugins-official >/dev/null 2>&1 || true
-          ${claude} plugin install context7@claude-plugins-official >/dev/null 2>&1 || true
-          ${claude} plugin install ponytail@ponytail >/dev/null 2>&1 || true
-          ${claude} plugin install commit-commands@claude-plugins-official >/dev/null 2>&1 || true
-        fi
-      '';
 
       programs.git = {
         enable = true;
@@ -37,9 +47,6 @@
         enable = true;
 
         extensions = [
-          "colored-zed-icons"
-
-          # Languages
           "nix"
           "golang"
         ];
@@ -47,7 +54,6 @@
         userSettings = {
           base_keymap = "VSCode";
 
-          icon_theme = "Colored Zed Icons Theme Dark";
           theme = "Caelestia";
         };
       };
