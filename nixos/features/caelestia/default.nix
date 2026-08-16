@@ -8,6 +8,17 @@
       ...
     }:
     let
+      inherit (pkgs.stdenv.hostPlatform) system;
+      upstream = inputs.caelestia-shell;
+
+      caelestiaCli = upstream.inputs.caelestia-cli.packages.${system}.default.overrideAttrs (old: {
+        src = pkgs.applyPatches {
+          name = "caelestia-cli-src";
+          src = old.src;
+          patches = [ ./cli.patch ];
+        };
+      });
+
       shellSettings = {
         appearance = {
           deformScale = 0;
@@ -170,6 +181,7 @@
       programs.caelestia = {
         enable = true;
         cli.enable = true;
+        cli.package = caelestiaCli;
         cli.settings = {
           theme.postHook = ''
             hyprctl reload
@@ -181,19 +193,13 @@
             "-bm"
             "cbr"
             "-q"
-            "8000"
-            "-f"
-            "60"
+            "12000"
           ];
         };
 
         systemd.enable = false;
 
         package =
-          let
-            inherit (pkgs.stdenv.hostPlatform) system;
-            upstream = inputs.caelestia-shell;
-          in
           pkgs.callPackage
             "${
               pkgs.applyPatches {
@@ -214,7 +220,7 @@
                 withX11 = false;
                 withI3 = false;
               };
-              caelestia-cli = upstream.inputs.caelestia-cli.packages.${system}.default;
+              caelestia-cli = caelestiaCli;
               withCli = true;
             };
       };

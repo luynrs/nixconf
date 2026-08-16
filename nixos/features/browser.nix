@@ -1,4 +1,4 @@
-_: {
+{
   flake.homeModules.firefox =
     { pkgs, ... }:
     {
@@ -11,36 +11,31 @@ _: {
             "extensions.autoDisableScopes" = 0;
             "browser.urlbar.oneOffSearches" = false;
             "identity.fxaccounts.toolbar.enabled" = false;
-            "browser.startup.page" = 3;
-            "browser.sessionstore.resume_from_crash" = true;
             "gfx.webrender.quality.force-subpixel-aa-where-possible" = true;
-          };
 
-          userChrome = ''
-            #urlbar-searchmode-switcher { display: none !important; }
-          '';
+            "network.trr.mode" = 2;
+            "network.proxy.type" = 1;
+            "network.proxy.socks" = "127.0.0.1";
+            "network.proxy.socks_port" = 1080;
+            "network.proxy.socks_version" = 5;
+            "network.proxy.socks_remote_dns" = true;
+            "network.proxy.no_proxies_on" = "localhost,127.0.0.1";
+
+            "privacy.sanitize.sanitizeOnShutdown" = true;
+            "privacy.clearOnShutdown.history" = true;
+            "privacy.clearOnShutdown.cookies" = false;
+
+            "browser.startup.page" = 3;
+            "browser.sessionstore.resume_session_once" = false;
+          };
 
           extensions = {
             force = true;
             packages = with pkgs.nur.repos.rycee.firefox-addons; [
               ublock-origin
               privacy-badger
-              foxyproxy-standard
+              tab-session-manager
             ];
-            settings."foxyproxy@eric.h.jung".settings = {
-              data = [
-                {
-                  title = "SOCKS";
-                  type = "socks5";
-                  hostname = "127.0.0.1";
-                  port = "1080";
-                  proxyDNS = true;
-                  include = [ ];
-                  exclude = [ ];
-                  tabProxy = [ ];
-                }
-              ];
-            };
           };
 
           search = {

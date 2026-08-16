@@ -154,11 +154,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786783269,
-        "narHash": "sha256-kGraYQOkMSGdI4yg6pR7R/QQvyEdQMHxumm1FIO1U04=",
+        "lastModified": 1786910658,
+        "narHash": "sha256-E97ouYwX8R8VzWQDXlgMsJ0pbq8Vk/ebbE38o5XiJ60=",
         "ref": "refs/heads/main",
-        "rev": "37ec6227b4a389adf68e17a9a449452397bbe3d6",
-        "revCount": 4,
+        "rev": "a3b5281350ae4dad763326282a9e2f4d4c5a98f4",
+        "revCount": 5,
         "type": "git",
         "url": "ssh://git@github.com/luynrs/justxray"
       },

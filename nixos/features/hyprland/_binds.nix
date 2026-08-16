@@ -81,5 +81,6 @@ in
   [
     (b (mod key) "hl.dsp.focus({ workspace = ${toString ws} })" null)
     (b (mod "SHIFT + ${key}") "hl.dsp.window.move({ workspace = ${toString ws} })" null)
+    (b (mod "ALT + ${key}") "hl.dsp.window.move({ workspace = ${toString ws} })" null)
   ]
 ) (lib.range 1 10))
