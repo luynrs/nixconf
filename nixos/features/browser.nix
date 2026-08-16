@@ -28,20 +28,12 @@ _: {
               foxyproxy-standard
             ];
             settings."foxyproxy@eric.h.jung".settings = {
-              mode = "disable";
-              passthrough = "";
               data = [
                 {
-                  active = true;
                   title = "SOCKS";
                   type = "socks5";
                   hostname = "127.0.0.1";
                   port = "1080";
-                  username = "";
-                  password = "";
-                  cc = "";
-                  city = "";
-                  color = "#0adc4d";
                   proxyDNS = true;
                   include = [ ];
                   exclude = [ ];
