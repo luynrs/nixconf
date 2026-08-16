@@ -1,6 +1,11 @@
 _: {
   flake.homeModules.work =
-    { pkgs, ... }:
+    {
+      pkgs,
+      lib,
+      config,
+      ...
+    }:
     let
       claude = "${pkgs.claude-code}/bin/claude";
       proxyEnv = ''
@@ -26,14 +31,16 @@ _: {
           ${proxyEnv}
           exec "${claude}" --dangerously-skip-permissions "$@"
         '')
-
-        (pkgs.writeShellScriptBin "claude-seed-plugins" ''
-          set -eu
-          ${proxyEnv}
-          ${pkgs.lib.concatMapStringsSep "\n" (m: "${claude} plugin marketplace add ${m}") marketplaces}
-          ${pkgs.lib.concatMapStringsSep "\n" (p: "${claude} plugin install ${p}") plugins}
-        '')
       ];
+
+      home.activation.claudeSeedPlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if [ ! -e "${config.home.homeDirectory}/.claude/plugins/installed_plugins.json" ]; then
+          ( ${proxyEnv}
+            ${lib.concatMapStringsSep "\n" (m: "${claude} plugin marketplace add ${m}") marketplaces}
+            ${lib.concatMapStringsSep "\n" (p: "${claude} plugin install ${p}") plugins}
+          ) || true
+        fi
+      '';
 
       programs.git = {
         enable = true;

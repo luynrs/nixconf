@@ -52,6 +52,7 @@
       nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
       zramSwap.enable = true;
+      services.fstrim.enable = true;
 
       services.gvfs.enable = true;
       services.upower.enable = true;

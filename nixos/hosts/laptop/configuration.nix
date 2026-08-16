@@ -21,6 +21,8 @@
       self.nixosModules.bluetooth
     ];
 
+    services.power-profiles-daemon.enable = true;
+
     preferences = {
       monitors."eDP-1" = {
         width = 1920;

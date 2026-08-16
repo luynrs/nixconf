@@ -47,7 +47,7 @@ in
     description = "Screenshot: area";
   })
   (b "PRINT" ''hl.dsp.exec_cmd("caelestia screenshot")'' { description = "Screenshot: full screen"; })
-  (b (mod "SHIFT + E") ''hl.dsp.exec_cmd("caelestia record")'' {
+  (b (mod "SHIFT + E") ''hl.dsp.exec_cmd("caelestia record -s")'' {
     description = "Toggle screen recording";
   })
 

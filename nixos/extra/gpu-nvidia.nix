@@ -13,12 +13,16 @@ _: {
         modesetting.enable = true;
 
         powerManagement.enable = true;
+        powerManagement.finegrained = true;
 
         nvidiaSettings = true;
         package = pkgs.linuxPackages.nvidiaPackages.stable;
         open = true;
         prime = {
-          sync.enable = true;
+          offload = {
+            enable = true;
+            enableOffloadCmd = true;
+          };
           amdgpuBusId = lib.mkDefault "PCI:6:0:0";
           nvidiaBusId = lib.mkDefault "PCI:1:0:0";
         };

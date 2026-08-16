@@ -16,6 +16,17 @@
 
         general = {
           showOverFullscreen = true;
+          idle.timeouts = [
+            {
+              timeout = 180;
+              idleAction = "lock";
+            }
+            {
+              timeout = 600;
+              idleAction = "dpms off";
+              returnAction = "dpms on";
+            }
+          ];
         };
 
         bar = {
@@ -159,11 +170,21 @@
       programs.caelestia = {
         enable = true;
         cli.enable = true;
-        cli.settings.theme = {
-          postHook = ''
+        cli.settings = {
+          theme.postHook = ''
             hyprctl reload
             systemctl --user reload app-com.mitchellh.ghostty.service || true
           '';
+          record.extraArgs = [
+            "-k"
+            "av1"
+            "-bm"
+            "cbr"
+            "-q"
+            "8000"
+            "-f"
+            "60"
+          ];
         };
 
         systemd.enable = false;
@@ -310,17 +331,6 @@
         ${builtins.toJSON shellSettings}
         SHELL_JSON
       '';
-
-      xdg.configFile."caelestia/cli.json".text = builtins.toJSON {
-        record.extraArgs = [
-          "-k"
-          "av1"
-          "-q"
-          "high"
-          "-f"
-          "60"
-        ];
-      };
 
       xdg.configFile."caelestia/shell-tokens.json".text =
         let
