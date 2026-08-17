@@ -8,7 +8,6 @@
       nodejs
       bun
       procps
-      ruff
       nautilus
 
       inputs.justssh.packages.${pkgs.stdenv.hostPlatform.system}.default

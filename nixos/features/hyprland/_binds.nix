@@ -16,40 +16,26 @@ let
   };
 in
 [
-  (b (mod "RETURN") "hl.dsp.exec_cmd(terminal)" { description = "Terminal"; })
-  (b "CTRL + SHIFT + Escape" ''hl.dsp.exec_cmd(terminal .. " -e btop")'' {
-    description = "Process monitor";
-  })
-  (b (mod "Q") "hl.dsp.window.close()" { description = "Close window"; })
-  (b (mod "E") "hl.dsp.exec_cmd(fileManager)" { description = "File manager"; })
-  (b (mod "W") "hl.dsp.exec_cmd(browser)" { description = "Browser"; })
-  (b (mod "L") ''hl.dsp.global("caelestia:lock")'' { description = "Lock session"; })
-  (b (mod "SHIFT + Q") ''hl.dsp.global("caelestia:session")'' { description = "Power menu"; })
-  (b (mod "SPACE") ''hl.dsp.window.float({ action = "toggle" })'' {
-    description = "Toggle floating";
-  })
-  (b (mod "SHIFT + R") ''hl.dsp.exec_cmd("caelestia shell -k; caelestia shell -d")'' {
-    description = "Restart widgets";
-  })
-  (b (mod "D") ''hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })'' {
-    description = "Window: Maximize";
-  })
-  (b (mod "F") ''hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" })'' {
-    description = "Window: Fullscreen";
-  })
-  (b (mod "S") ''hl.dsp.global("caelestia:launcher")'' { description = "App launcher"; })
-  (b (mod "A") ''hl.dsp.global("caelestia:dashboard")'' { description = "Dashboard"; })
+  (b (mod "RETURN") "hl.dsp.exec_cmd(terminal)" null)
+  (b "CTRL + SHIFT + Escape" ''hl.dsp.exec_cmd(terminal .. " -e btop")'' null)
+  (b (mod "Q") "hl.dsp.window.close()" null)
+  (b (mod "E") "hl.dsp.exec_cmd(fileManager)" null)
+  (b (mod "W") "hl.dsp.exec_cmd(browser)" null)
+  (b (mod "L") ''hl.dsp.global("caelestia:lock")'' null)
+  (b (mod "SHIFT + Q") ''hl.dsp.global("caelestia:session")'' null)
+  (b (mod "SPACE") ''hl.dsp.window.float({ action = "toggle" })'' null)
+  (b (mod "SHIFT + R") ''hl.dsp.exec_cmd("caelestia shell -k; caelestia shell -d")'' null)
+  (b (mod "D") ''hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })'' null)
+  (b (mod "F") ''hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" })'' null)
+  (b (mod "S") ''hl.dsp.global("caelestia:launcher")'' null)
+  (b (mod "A") ''hl.dsp.global("caelestia:dashboard")'' null)
   (b (mod "P") "hl.dsp.window.pseudo()" null)
   (b (mod "J") ''hl.dsp.layout("togglesplit")'' null)
-  (b (mod "SHIFT + C") "hl.dsp.exec_cmd(picker)" { description = "Colour picker"; })
-  (b (mod "V") ''hl.dsp.exec_cmd("caelestia clipboard")'' { description = "Clipboard history"; })
-  (b (mod "SHIFT + S") ''hl.dsp.global("caelestia:screenshotFreezeClip")'' {
-    description = "Screenshot: area";
-  })
-  (b "PRINT" ''hl.dsp.exec_cmd("caelestia screenshot")'' { description = "Screenshot: full screen"; })
-  (b (mod "SHIFT + E") ''hl.dsp.exec_cmd("caelestia record -s")'' {
-    description = "Toggle screen recording";
-  })
+  (b (mod "SHIFT + C") "hl.dsp.exec_cmd(picker)" null)
+  (b (mod "V") ''hl.dsp.exec_cmd("caelestia clipboard")'' null)
+  (b (mod "SHIFT + S") ''hl.dsp.global("caelestia:screenshotFreezeClip")'' null)
+  (b "PRINT" ''hl.dsp.exec_cmd("caelestia screenshot")'' null)
+  (b (mod "SHIFT + E") ''hl.dsp.exec_cmd("caelestia record -s")'' null)
 
   (b (mod "left") ''hl.dsp.focus({ direction = "l" })'' null)
   (b (mod "right") ''hl.dsp.focus({ direction = "r" })'' null)
@@ -81,6 +67,6 @@ in
   [
     (b (mod key) "hl.dsp.focus({ workspace = ${toString ws} })" null)
     (b (mod "SHIFT + ${key}") "hl.dsp.window.move({ workspace = ${toString ws} })" null)
-    (b (mod "ALT + ${key}") "hl.dsp.window.move({ workspace = ${toString ws} })" null)
+    (b (mod "ALT + ${key}") "hl.dsp.window.move({ workspace = ${toString ws}, follow = false })" null)
   ]
 ) (lib.range 1 10))

@@ -1,8 +1,47 @@
 {
   flake.homeModules.firefox =
-    { pkgs, ... }:
+    { pkgs, lib, ... }:
+    let
+      caelestiafoxId = "caelestiafox@caelestia.org";
+
+      caelestiafoxXpi =
+        pkgs.runCommand "caelestiafox-xpi"
+          {
+            nativeBuildInputs = [ pkgs.zip ];
+            passthru.addonId = caelestiafoxId;
+          }
+          ''
+            mkdir -p "$out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+            cp -r ${./caelestiafox/extension} extension
+            chmod -R u+w extension
+            cd extension
+            zip -r -X "$out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/${caelestiafoxId}.xpi" manifest.json dist
+          '';
+
+      caelestiafoxApp =
+        pkgs.runCommand "caelestiafox-native-app" { nativeBuildInputs = [ pkgs.makeWrapper ]; }
+          ''
+            install -Dm755 ${./caelestiafox/native-app.fish} $out/bin/caelestiafox
+            wrapProgram $out/bin/caelestiafox \
+              --prefix PATH : ${
+                lib.makeBinPath [
+                  pkgs.fish
+                  pkgs.jq
+                  pkgs.inotify-tools
+                ]
+              }
+          '';
+    in
     {
       home.sessionVariables.MOZ_ENABLE_WAYLAND = "1";
+
+      home.file.".mozilla/native-messaging-hosts/caelestiafox.json".text = builtins.toJSON {
+        name = "caelestiafox";
+        description = "Native app for CaelestiaFox extension.";
+        path = "${caelestiafoxApp}/bin/caelestiafox";
+        type = "stdio";
+        allowed_extensions = [ caelestiafoxId ];
+      };
 
       programs.firefox = {
         enable = true;
@@ -31,11 +70,13 @@
 
           extensions = {
             force = true;
-            packages = with pkgs.nur.repos.rycee.firefox-addons; [
-              ublock-origin
-              privacy-badger
-              tab-session-manager
-            ];
+            packages =
+              (with pkgs.nur.repos.rycee.firefox-addons; [
+                ublock-origin
+                privacy-badger
+                tab-session-manager
+              ])
+              ++ [ caelestiafoxXpi ];
           };
 
           search = {
