@@ -61,8 +61,10 @@
             "network.proxy.no_proxies_on" = "localhost,127.0.0.1";
 
             "privacy.sanitize.sanitizeOnShutdown" = true;
-            "privacy.clearOnShutdown.history" = true;
             "privacy.clearOnShutdown.cookies" = false;
+            "privacy.clearOnShutdown.sessions" = false;
+
+            "layout.css.prefers-color-scheme.content-override" = 1;
 
             "browser.startup.page" = 3;
             "browser.sessionstore.resume_session_once" = false;
