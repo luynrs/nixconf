@@ -127,6 +127,26 @@
         "type": "github"
       }
     },
+    "justray": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787060027,
+        "narHash": "sha256-N6wE5FeIV91Ter1f4XKBZRVMi1p0chx8Vz74c3XKhi8=",
+        "ref": "refs/heads/main",
+        "rev": "099758fab454348af1ee21aac52e5ded56924a50",
+        "revCount": 8,
+        "type": "git",
+        "url": "ssh://git@github.com/luynrs/justray"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/luynrs/justray"
+      }
+    },
     "justssh": {
       "inputs": {
         "nixpkgs": [
@@ -145,26 +165,6 @@
         "owner": "luynrs",
         "repo": "justssh",
         "type": "github"
-      }
-    },
-    "justxray": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1786910658,
-        "narHash": "sha256-E97ouYwX8R8VzWQDXlgMsJ0pbq8Vk/ebbE38o5XiJ60=",
-        "ref": "refs/heads/main",
-        "rev": "a3b5281350ae4dad763326282a9e2f4d4c5a98f4",
-        "revCount": 5,
-        "type": "git",
-        "url": "ssh://git@github.com/luynrs/justxray"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/luynrs/justxray"
       }
     },
     "m3shapes": {
@@ -314,8 +314,8 @@
         "caelestia-shell": "caelestia-shell",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
+        "justray": "justray",
         "justssh": "justssh",
-        "justxray": "justxray",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
         "nur": "nur",
