@@ -34,10 +34,10 @@
         self.homeModules.appearance
         self.homeModules.fastfetch
         self.homeModules.nvim
-        inputs.justxray.homeManagerModules.justxray
+        inputs.justray.homeManagerModules.justray
       ];
 
-      services.justxray.enable = true;
+      services.justray.enable = true;
 
       home.stateVersion = "26.05";
 
