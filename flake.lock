@@ -134,17 +134,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1787060027,
-        "narHash": "sha256-N6wE5FeIV91Ter1f4XKBZRVMi1p0chx8Vz74c3XKhi8=",
-        "ref": "refs/heads/main",
-        "rev": "099758fab454348af1ee21aac52e5ded56924a50",
-        "revCount": 8,
-        "type": "git",
-        "url": "ssh://git@github.com/luynrs/justray"
+        "lastModified": 1787076315,
+        "narHash": "sha256-5wMdCTcI7fVg+gDraYx4RCUfT/txIXDBwBQoX+WrXRM=",
+        "owner": "luynrs",
+        "repo": "justray",
+        "rev": "72f2501cd62a3cb71a54e57c1401dd4cf98c4b72",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/luynrs/justray"
+        "owner": "luynrs",
+        "repo": "justray",
+        "type": "github"
       }
     },
     "justssh": {

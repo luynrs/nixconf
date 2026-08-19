@@ -9,7 +9,7 @@ _: {
     let
       claude = "${pkgs.claude-code}/bin/claude";
       proxyEnv = ''
-        export HTTP_PROXY="http://127.0.0.1:1081"
+        export HTTP_PROXY="http://127.0.0.1:10808"
         export HTTPS_PROXY="$HTTP_PROXY"
         export NO_PROXY="localhost,127.0.0.1,::1"
       '';
