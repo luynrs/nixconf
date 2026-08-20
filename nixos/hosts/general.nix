@@ -5,8 +5,7 @@
 }:
 {
   flake.nixosModules.general =
-    { pkgs, ... }:
-    {
+    _: {
       imports = [ inputs.home-manager.nixosModules.default ];
 
       programs.gpu-screen-recorder.enable = true;
@@ -16,26 +15,13 @@
         useUserPackages = true;
         users.luynar.imports = [ self.homeModules.general ];
       };
-
-      systemd.services.justrayd = {
-        description = "justray background daemon";
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        wantedBy = [ "multi-user.target" ];
-        serviceConfig = {
-          User = "luynar";
-          ExecStart = "${inputs.justray.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/justrayd --config-dir /home/luynar/.config/justray";
-          AmbientCapabilities = [ "CAP_NET_ADMIN" ];
-          Restart = "on-failure";
-          RestartSec = 2;
-        };
-      };
     };
 
   flake.homeModules.general =
-    { lib, pkgs, ... }:
+    { lib, ... }:
     {
       imports = [
+        inputs.justray.homeManagerModules.default
         self.homeModules.hyprland
         self.homeModules.caelestia
         self.homeModules.ghostty
@@ -52,7 +38,7 @@
         self.homeModules.nvim
       ];
 
-      home.packages = [ inputs.justray.packages.${pkgs.stdenv.hostPlatform.system}.default ];
+      services.justray.enable = true;
 
       home.stateVersion = "26.05";
 

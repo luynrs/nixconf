@@ -23,4 +23,16 @@ in
       '')
     ];
   }
+  {
+    _args = [
+      "window.active"
+      (inline ''
+        function(win)
+          if win and win.class == "com.mitchellh.ghostty" then
+            hl.exec_cmd("hyprctl switchxkblayout all 0")
+          end
+        end
+      '')
+    ];
+  }
 ]
