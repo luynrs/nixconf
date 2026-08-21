@@ -17,7 +17,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     justray = {
-      url = "github:luynrs/justray";
+      url = "git+https://github.com/luynrs/justray?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     caelestia-shell = {
