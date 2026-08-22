@@ -1,4 +1,5 @@
-_: {
+{ self, ... }:
+{
   flake.nixosModules.hyprland =
     { config, lib, ... }:
     let
@@ -20,6 +21,7 @@ _: {
   flake.homeModules.hyprland =
     { pkgs, lib, ... }:
     let
+      apps = self.guiApps;
       inline = lib.generators.mkLuaInline;
       animations = import ./_animations.nix;
       rules = import ./_rules.nix { inherit pkgs; };
@@ -49,13 +51,13 @@ _: {
             _var = "SUPER";
           };
           terminal = {
-            _var = "ghostty +new-window";
+            _var = "${apps.terminal} +new-window";
           };
           fileManager = {
-            _var = "nautilus";
+            _var = apps.explorer;
           };
           browser = {
-            _var = "firefox";
+            _var = apps.browser;
           };
           picker = {
             _var = "hyprpicker -a";

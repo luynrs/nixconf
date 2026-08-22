@@ -3,7 +3,6 @@
   flake.homeModules.media = { pkgs, ... }: {
     home.packages = with pkgs; [
       loupe
-      showtime
       mpv
     ];
 
@@ -34,7 +33,7 @@
           ];
         in
         (lib.genAttrs images (_: "org.gnome.Loupe.desktop"))
-        // (lib.genAttrs videos (_: "org.gnome.Showtime.desktop"))
+        // (lib.genAttrs videos (_: "mpv.desktop"))
         // (lib.genAttrs audio (_: "mpv.desktop"))
         // {
           "inode/directory" = "org.gnome.Nautilus.desktop";

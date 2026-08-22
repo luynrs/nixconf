@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 {
   flake.homeModules.caelestia =
     {
@@ -9,6 +9,8 @@
     }:
     let
       inherit (pkgs.stdenv.hostPlatform) system;
+      inherit (self) guiApps;
+      apps = guiApps;
       upstream = inputs.caelestia-shell;
 
       caelestiaCli = upstream.inputs.caelestia-cli.packages.${system}.default.overrideAttrs (old: {
@@ -27,6 +29,17 @@
 
         general = {
           showOverFullscreen = true;
+          apps = {
+            explorer = [
+              apps.explorer
+              "--new-window"
+            ];
+            playback = [ apps.playback ];
+            terminal = [
+              apps.terminal
+              "--gtk-single-instance=true"
+            ];
+          };
           idle.timeouts = [
             {
               timeout = 180;
@@ -107,7 +120,7 @@
 
         launcher = {
           hiddenApps = [
-            "com.mitchellh.ghostty"
+            "com.mitchellh.${apps.terminal}"
             "kvantummanager"
           ];
           useFuzzy.apps = true;
@@ -132,6 +145,7 @@
 
         utilities = {
           enabled = false;
+          maxToasts = 3;
           quickToggles = [
             {
               enabled = true;
@@ -164,13 +178,33 @@
           ];
           toasts = {
             configLoaded = false;
+            dndChanged = false;
+            gameModeChanged = false;
             kbLayoutChanged = false;
             nowPlaying = false;
+            numLockChanged = false;
           };
           vpn = {
             enabled = false;
-            provider = [ ];
-            selectedProvider = "";
+            provider = [
+              {
+                connectCmd = [
+                  "jray"
+                  "up"
+                  "--tun"
+                ];
+                disconnectCmd = [
+                  "jray"
+                  "up"
+                  "--proxy"
+                ];
+                displayName = "justray";
+                id = "vpn-mt4hvdiz-42oig";
+                interface = "justray";
+                name = "justray";
+              }
+            ];
+            selectedProvider = "vpn-mt4hvdiz-42oig";
           };
         };
       };
@@ -182,10 +216,11 @@
         enable = true;
         cli.enable = true;
         cli.package = caelestiaCli;
+        settings = shellSettings;
         cli.settings = {
           theme.postHook = ''
             hyprctl reload
-            systemctl --user reload app-com.mitchellh.ghostty.service || true
+            systemctl --user reload app-com.mitchellh.${apps.terminal}.service || true
           '';
           record.extraArgs = [
             "-k"
@@ -328,14 +363,6 @@
         if [ ! -e "${config.xdg.stateHome}/caelestia/scheme.json" ]; then
           ${config.programs.caelestia.cli.package}/bin/caelestia scheme set -n catppuccin -f mocha -m dark || true
         fi
-      '';
-
-      home.activation.caelestiaShellConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-        target="${config.xdg.configHome}/caelestia/shell.json"
-        mkdir -p "$(dirname "$target")"
-        cat > "$target" <<'SHELL_JSON'
-        ${builtins.toJSON shellSettings}
-        SHELL_JSON
       '';
 
       xdg.configFile."caelestia/shell-tokens.json".text =

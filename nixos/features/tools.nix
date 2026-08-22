@@ -3,7 +3,6 @@
   flake.homeModules.tools = { pkgs, config, ... }: {
     home.packages = with pkgs; [
       gh
-      wget
       eza
       nodejs
       bun

@@ -79,7 +79,7 @@
       center = true;
     }
     {
-      match.class = "^(org\\.gnome\\.Loupe|org\\.gnome\\.Showtime)$";
+      match.class = "^(org\\.gnome\\.Loupe|mpv)$";
       float = true;
       center = true;
     }

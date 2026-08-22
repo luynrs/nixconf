@@ -4,18 +4,17 @@
   ...
 }:
 {
-  flake.nixosModules.general =
-    _: {
-      imports = [ inputs.home-manager.nixosModules.default ];
+  flake.nixosModules.general = _: {
+    imports = [ inputs.home-manager.nixosModules.default ];
 
-      programs.gpu-screen-recorder.enable = true;
+    programs.gpu-screen-recorder.enable = true;
 
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-        users.luynar.imports = [ self.homeModules.general ];
-      };
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      users.luynar.imports = [ self.homeModules.general ];
     };
+  };
 
   flake.homeModules.general =
     { lib, ... }:
