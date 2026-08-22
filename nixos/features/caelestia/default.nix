@@ -216,7 +216,6 @@
         enable = true;
         cli.enable = true;
         cli.package = caelestiaCli;
-        settings = shellSettings;
         cli.settings = {
           theme.postHook = ''
             hyprctl reload
@@ -357,6 +356,14 @@
         palette = 13=#{{ term13.hex }}
         palette = 14=#{{ term14.hex }}
         palette = 15=#{{ term15.hex }}
+      '';
+
+      home.activation.caelestiaShellConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        target="${config.xdg.configHome}/caelestia/shell.json"
+        mkdir -p "$(dirname "$target")"
+        cat > "$target" <<'SHELL_JSON'
+        ${builtins.toJSON shellSettings}
+        SHELL_JSON
       '';
 
       home.activation.caelestiaScheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
