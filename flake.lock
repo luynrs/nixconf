@@ -134,11 +134,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787409800,
-        "narHash": "sha256-vdK6PpW2Rk3gzrUOdvnm9f++7f/VEart5RpaUMfxCgw=",
+        "lastModified": 1787416597,
+        "narHash": "sha256-RTGYC74BgjuWZo/XVGldnjHBHZlhKUNCV0R8KWf/uE0=",
         "ref": "main",
-        "rev": "3d719fab70f0424e73343f2a4c91337ed2f16dbc",
-        "revCount": 33,
+        "rev": "c44d7904dd97cbf7ff7fa957ed17c76b456d873b",
+        "revCount": 34,
         "type": "git",
         "url": "https://github.com/luynrs/justray"
       },
