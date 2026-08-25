@@ -1,6 +1,6 @@
 _: {
   flake.guiApps = {
-    terminal = "ghostty";
+    terminal = "foot";
     explorer = "nautilus";
     browser = "firefox";
     playback = "mpv";

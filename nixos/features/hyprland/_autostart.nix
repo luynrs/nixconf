@@ -28,7 +28,7 @@ in
       "window.active"
       (inline ''
         function(win)
-          if win and win.class == "com.mitchellh.ghostty" then
+          if win and win.class == "foot" then
             hl.exec_cmd("hyprctl switchxkblayout all 0")
           end
         end

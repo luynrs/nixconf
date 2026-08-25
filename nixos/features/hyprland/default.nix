@@ -51,7 +51,7 @@
             _var = "SUPER";
           };
           terminal = {
-            _var = "${apps.terminal} +new-window";
+            _var = apps.terminal;
           };
           fileManager = {
             _var = apps.explorer;
@@ -101,8 +101,9 @@
 
               blur = {
                 enabled = true;
-                size = 1;
-                passes = 4;
+                size = 8;
+                passes = 3;
+                new_optimizations = true;
                 vibrancy = 0.1696;
               };
             };

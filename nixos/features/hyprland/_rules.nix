@@ -79,7 +79,12 @@
       center = true;
     }
     {
-      match.class = "^(org\\.gnome\\.Loupe|mpv)$";
+      match.class = "^(imv|mpv)$";
+      float = true;
+      center = true;
+    }
+    {
+      match.title = "^Select what to share$";
       float = true;
       center = true;
     }

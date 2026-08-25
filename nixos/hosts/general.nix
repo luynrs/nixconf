@@ -23,7 +23,7 @@
         inputs.justray.homeManagerModules.default
         self.homeModules.hyprland
         self.homeModules.caelestia
-        self.homeModules.ghostty
+        self.homeModules.foot
         self.homeModules.fish
         self.homeModules.starship
         self.homeModules.tools

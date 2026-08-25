@@ -35,10 +35,7 @@
               "--new-window"
             ];
             playback = [ apps.playback ];
-            terminal = [
-              apps.terminal
-              "--gtk-single-instance=true"
-            ];
+            terminal = [ apps.terminal ];
           };
           idle.timeouts = [
             {
@@ -120,7 +117,9 @@
 
         launcher = {
           hiddenApps = [
-            "com.mitchellh.${apps.terminal}"
+            "${apps.terminal}"
+            "${apps.terminal}client"
+            "${apps.terminal}-server"
             "kvantummanager"
           ];
           useFuzzy.apps = true;
@@ -219,7 +218,6 @@
         cli.settings = {
           theme.postHook = ''
             hyprctl reload
-            systemctl --user reload app-com.mitchellh.${apps.terminal}.service || true
           '';
           record.extraArgs = [
             "-k"
@@ -333,42 +331,53 @@
         vimcmd_symbol = "[❮](bold #{{ lavender.hex }})"
       '';
 
-      xdg.configFile."caelestia/templates/ghostty.conf".text = ''
-        background = #{{ background.hex }}
-        foreground = #{{ onBackground.hex }}
-        cursor-color = #{{ primary.hex }}
-        cursor-text = #{{ onPrimary.hex }}
-        selection-background = #{{ primary.hex }}
-        selection-foreground = #{{ onPrimary.hex }}
-        palette = 0=#{{ term0.hex }}
-        palette = 1=#{{ term1.hex }}
-        palette = 2=#{{ term2.hex }}
-        palette = 3=#{{ term3.hex }}
-        palette = 4=#{{ term4.hex }}
-        palette = 5=#{{ term5.hex }}
-        palette = 6=#{{ term6.hex }}
-        palette = 7=#{{ term7.hex }}
-        palette = 8=#{{ term8.hex }}
-        palette = 9=#{{ term9.hex }}
-        palette = 10=#{{ term10.hex }}
-        palette = 11=#{{ term11.hex }}
-        palette = 12=#{{ term12.hex }}
-        palette = 13=#{{ term13.hex }}
-        palette = 14=#{{ term14.hex }}
-        palette = 15=#{{ term15.hex }}
+      xdg.configFile."caelestia/templates/foot.ini".text = ''
+        [colors-dark]
+        alpha = 0.5
+        blur = yes
+        background = {{ background.hex }}
+        foreground = {{ onBackground.hex }}
+        cursor = {{ onPrimary.hex }} {{ primary.hex }}
+        selection-background = {{ primary.hex }}
+        selection-foreground = {{ onPrimary.hex }}
+        regular0 = {{ term0.hex }}
+        regular1 = {{ term1.hex }}
+        regular2 = {{ term2.hex }}
+        regular3 = {{ term3.hex }}
+        regular4 = {{ term4.hex }}
+        regular5 = {{ term5.hex }}
+        regular6 = {{ term6.hex }}
+        regular7 = {{ term7.hex }}
+        bright0 = {{ term8.hex }}
+        bright1 = {{ term9.hex }}
+        bright2 = {{ term10.hex }}
+        bright3 = {{ term11.hex }}
+        bright4 = {{ term12.hex }}
+        bright5 = {{ term13.hex }}
+        bright6 = {{ term14.hex }}
+        bright7 = {{ term15.hex }}
       '';
 
       home.activation.caelestiaShellConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         target="${config.xdg.configHome}/caelestia/shell.json"
         mkdir -p "$(dirname "$target")"
-        cat > "$target" <<'SHELL_JSON'
+        tmp="$(mktemp "$(dirname "$target")/.shell.json.XXXXXX")"
+        cat > "$tmp" <<'SHELL_JSON'
         ${builtins.toJSON shellSettings}
         SHELL_JSON
+        mv -f "$tmp" "$target"
       '';
 
-      home.activation.caelestiaScheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        if [ ! -e "${config.xdg.stateHome}/caelestia/scheme.json" ]; then
-          ${config.programs.caelestia.cli.package}/bin/caelestia scheme set -n catppuccin -f mocha -m dark || true
+      home.activation.caelestiaScheme = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        cli=${config.programs.caelestia.cli.package}/bin/caelestia
+        scheme="${config.xdg.stateHome}/caelestia/scheme.json"
+        if [ ! -e "$scheme" ]; then
+          "$cli" scheme set -n dynamic || true
+        else
+          "$cli" scheme set \
+            -n "$(${pkgs.jq}/bin/jq -r .name "$scheme")" \
+            -f "$(${pkgs.jq}/bin/jq -r .flavour "$scheme")" \
+            -m "$(${pkgs.jq}/bin/jq -r .mode "$scheme")" || true
         fi
       '';
 

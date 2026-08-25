@@ -2,7 +2,7 @@
 {
   flake.homeModules.media = { pkgs, ... }: {
     home.packages = with pkgs; [
-      loupe
+      imv
       mpv
     ];
 
@@ -32,7 +32,7 @@
             "audio/wav"
           ];
         in
-        (lib.genAttrs images (_: "org.gnome.Loupe.desktop"))
+        (lib.genAttrs images (_: "imv.desktop"))
         // (lib.genAttrs videos (_: "mpv.desktop"))
         // (lib.genAttrs audio (_: "mpv.desktop"))
         // {
