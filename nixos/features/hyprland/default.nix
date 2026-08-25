@@ -22,7 +22,17 @@
     { pkgs, lib, ... }:
     let
       apps = self.guiApps;
-      inline = lib.generators.mkLuaInline;
+      fromScheme =
+        body:
+        lib.generators.mkLuaInline ''
+          (function()
+            local ok, s = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/scheme/current.lua")
+            if not ok or not s then
+              return
+            end
+            ${body}
+          end)()
+        '';
       animations = import ./_animations.nix;
       rules = import ./_rules.nix { inherit pkgs; };
       binds = import ./_binds.nix { inherit lib; };
@@ -32,7 +42,6 @@
       home.packages = [
         pkgs.hyprpicker
         pkgs.cliphist
-        pkgs.fuzzel
         pkgs.wl-clipboard
       ];
 
@@ -69,23 +78,17 @@
               gaps_out = 8;
               border_size = 1;
               col.active_border = {
-                colors = inline ''
-                  (function()
-                    local ok, s = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/scheme/current.lua")
-                    if ok and s and s.primary and s.secondary then
-                      return { "rgba(" .. s.primary .. "ee)", "rgba(" .. s.secondary .. "ee)" }
-                    end
-                  end)()
+                colors = fromScheme ''
+                  if s.primary and s.secondary then
+                    return { "rgba(" .. s.primary .. "ee)", "rgba(" .. s.secondary .. "ee)" }
+                  end
                 '';
                 angle = 45;
               };
-              col.inactive_border = inline ''
-                (function()
-                  local ok, s = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/scheme/current.lua")
-                  if ok and s and s.outlineVariant then
-                    return "rgba(" .. s.outlineVariant .. "aa)"
-                  end
-                end)()
+              col.inactive_border = fromScheme ''
+                if s.outlineVariant then
+                  return "rgba(" .. s.outlineVariant .. "aa)"
+                end
               '';
               allow_tearing = false;
               layout = "dwindle";
@@ -101,10 +104,13 @@
 
               blur = {
                 enabled = true;
-                size = 8;
+                size = 12;
                 passes = 3;
                 new_optimizations = true;
                 vibrancy = 0.1696;
+
+                popups = true;
+                special = true;
               };
             };
 
@@ -128,13 +134,10 @@
               mouse_move_enables_dpms = true;
               key_press_enables_dpms = true;
 
-              background_color = inline ''
-                (function()
-                  local ok, s = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/scheme/current.lua")
-                  if ok and s and s.surfaceContainer then
-                    return "rgb(" .. s.surfaceContainer .. ")"
-                  end
-                end)()
+              background_color = fromScheme ''
+                if s.surfaceContainer then
+                  return "rgb(" .. s.surfaceContainer .. ")"
+                end
               '';
             };
           };

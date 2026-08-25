@@ -13,6 +13,8 @@
       apps = guiApps;
       upstream = inputs.caelestia-shell;
 
+      alpha = 0.6;
+
       caelestiaCli = upstream.inputs.caelestia-cli.packages.${system}.default.overrideAttrs (old: {
         src = pkgs.applyPatches {
           name = "caelestia-cli-src";
@@ -24,7 +26,11 @@
       shellSettings = {
         appearance = {
           deformScale = 0;
-          transparency.enabled = true;
+          transparency = {
+            enabled = true;
+            base = alpha;
+            layers = 0.4;
+          };
         };
 
         general = {
@@ -333,7 +339,7 @@
 
       xdg.configFile."caelestia/templates/foot.ini".text = ''
         [colors-dark]
-        alpha = 0.5
+        alpha = ${builtins.toJSON alpha}
         blur = yes
         background = {{ background.hex }}
         foreground = {{ onBackground.hex }}
