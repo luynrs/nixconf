@@ -49,6 +49,8 @@
       nix.optimise.automatic = true;
 
       nixpkgs.config.allowUnfree = true;
+      services.flatpak.enable = true;
+
       nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
       zramSwap.enable = true;
@@ -57,6 +59,7 @@
       services.gvfs.enable = true;
       services.upower.enable = true;
       services.speechd.enable = false;
+
 
       users.users.luynar = {
         isNormalUser = true;
