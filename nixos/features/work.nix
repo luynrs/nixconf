@@ -13,7 +13,7 @@ _: {
       ];
 
       xdg.configFile."opencode/opencode.json".source = ./work/opencode.json;
-      xdg.configFile."opencode/instructions.md".source = ./work/opencode-instructions.md;
+      xdg.configFile."opencode/AGENTS.md".source = ./work/opencode-agents.md;
       xdg.configFile."opencode/tui.json".source = ./work/tui.json;
       xdg.configFile."opencode/command/commit.md".source = ./work/command-commit.md;
 
