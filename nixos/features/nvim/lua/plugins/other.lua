@@ -1,5 +1,30 @@
 local telescope = require("telescope")
 local actions = require("telescope.actions")
+local tree = require("nvim-tree")
+local tree_api = require("nvim-tree.api")
+
+tree.setup({
+	view = {
+		width = 30,
+	},
+	renderer = {
+		group_empty = true,
+		highlight_git = "name",
+	},
+	filters = {
+		dotfiles = false,
+	},
+	actions = {
+		open_file = {
+			quit_on_open = false,
+			resize_window = false,
+		},
+	},
+	update_focused_file = {
+		enable = true,
+		update_root = true,
+	},
+})
 
 telescope.setup({
 	defaults = {
@@ -52,6 +77,18 @@ vim.api.nvim_set_hl(0, "TelescopeSelection", { reverse = true })
 vim.api.nvim_set_hl(0, "TelescopeMatching", { bold = false, italic = false })
 
 local k = vim.keymap.set
+k("n", "<leader>e", function()
+	if tree_api.tree.is_visible() then
+		tree_api.tree.close()
+	else
+		tree_api.tree.open()
+	end
+end)
+k("n", "<leader>E", function()
+	tree_api.tree.find_file({ open = true, focus = true })
+end)
+k("n", "<leader>bb", "<cmd>buffer #<cr>")
+k("n", "<leader>bd", "<cmd>bdelete<cr>")
 k("n", "<leader>ff", "<cmd>Telescope find_files<cr>")
 k("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
 k("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>")

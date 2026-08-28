@@ -289,25 +289,26 @@
       xdg.configFile."caelestia/templates/starship.toml".text = ''
         add_newline = false
 
-        format = "$directory$git_branch$git_status$nix_shell$cmd_duration\n$character"
+        format = "\n$cmd_duration $directory$git_branch\n$character"
 
         [directory]
-        style = "bold #{{ blue.hex }}"
-        format = "[$path]($style) "
-        truncation_length = 3
-        truncate_to_repo = true
-        home_symbol = "~"
-        read_only = " "
-        read_only_style = "bold #{{ red.hex }}"
+        home_symbol = " "
+        read_only = "  "
+        style = "bold fg:#{{ blue.hex }} bg:#{{ surfaceContainer.hex }}"
+        truncation_length = 2
+        truncation_symbol = ".../"
+        format = "[](fg:#{{ surfaceContainer.hex }})[󰉋 → $path]($style)[](fg:#{{ surfaceContainer.hex }})"
 
         [git_branch]
-        symbol = "  "
-        style = "bold #{{ mauve.hex }}"
-        format = "[$symbol$branch]($style) "
+        style = "bold fg:#{{ mauve.hex }} bg:#{{ surfaceContainer.hex }}"
+        symbol = "󰘬"
+        truncation_length = 12
+        truncation_symbol = ""
+        format = " 󰜥 [](fg:#{{ surfaceContainer.hex }})[$symbol $branch(:$remote_branch)]($style)[](fg:#{{ surfaceContainer.hex }})"
 
         [git_status]
-        style = "bold #{{ yellow.hex }}"
-        format = "([$all_status$ahead_behind]($style) )"
+        style = "bold fg:#{{ yellow.hex }} bg:#{{ surfaceContainer.hex }}"
+        format = "[](fg:#{{ surfaceContainer.hex }})[ $all_status$ahead_behind ]($style)[](fg:#{{ surfaceContainer.hex }}) "
         conflicted = "="
         ahead = "⇡"
         behind = "⇣"
@@ -320,16 +321,16 @@
         deleted = "✕"
 
         [nix_shell]
-        symbol = "  "
-        style = "bold #{{ teal.hex }}"
-        format = "[$symbol$name]($style) "
+        symbol = "❄ "
+        style = "bold fg:#{{ teal.hex }} bg:#{{ surfaceContainer.hex }}"
+        format = "[](fg:#{{ surfaceContainer.hex }})[ $symbol$name ]($style)[](fg:#{{ surfaceContainer.hex }}) "
         impure_msg = ""
         pure_msg = ""
 
         [cmd_duration]
-        min_time = 2000
-        style = "#{{ surface2.hex }}"
-        format = "[$duration]($style) "
+        min_time = 0
+        style = "bold fg:#{{ lavender.hex }} bg:#{{ surfaceContainer.hex }}"
+        format = "[](fg:#{{ surfaceContainer.hex }})[󰪢 $duration]($style)[](fg:#{{ surfaceContainer.hex }})"
 
         [character]
         success_symbol = "[❯](bold #{{ green.hex }})"

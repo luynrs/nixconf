@@ -4,6 +4,9 @@ local opts = { noremap = true, silent = true }
 keymap("v", "<Tab>", ">>gv", opts)
 keymap("v", "<S-Tab>", "<<gv", opts)
 
+keymap("n", "<Tab>", "<cmd>bnext<cr>", opts)
+keymap("n", "<S-Tab>", "<cmd>bprevious<cr>", opts)
+
 keymap({ "n", "v", "o" }, "р", "h", opts)
 keymap({ "n", "v", "o" }, "о", "j", opts)
 keymap({ "n", "v", "o" }, "л", "k", opts)

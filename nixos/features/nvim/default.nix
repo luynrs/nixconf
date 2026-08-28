@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  flake.homeModules.nvim = { pkgs, ... }: {
+  flake.homeModules.nvim = { config, pkgs, ... }: {
     imports = [ inputs.nixvim.homeModules.nixvim ];
 
     programs.nixvim = {
@@ -43,6 +43,7 @@
         lazydev-nvim
         plenary-nvim
         nvim-treesitter
+        nvim-tree-lua
         telescope-nvim
         lualine-nvim
         alpha-nvim
@@ -59,6 +60,47 @@
         "lua/plugins/lualine.lua".source = ./lua/plugins/lualine.lua;
         "lua/plugins/other.lua".source = ./lua/plugins/other.lua;
       };
+    };
+
+    xdg.desktopEntries.nvim = {
+      name = "Neovim";
+      genericName = "Text Editor";
+      exec = "${pkgs.foot}/bin/foot -e ${config.programs.nixvim.build.package}/bin/nvim %F";
+      terminal = false;
+      categories = [
+        "Utility"
+        "TextEditor"
+        "Development"
+      ];
+      mimeType = [
+        "text/plain"
+        "text/markdown"
+        "text/x-nix"
+        "text/x-python"
+        "text/x-shellscript"
+        "text/x-csrc"
+        "text/x-c++src"
+        "text/x-rust"
+        "text/x-go"
+        "application/json"
+        "application/toml"
+        "application/x-yaml"
+      ];
+    };
+
+    xdg.mimeApps.defaultApplications = {
+      "text/plain" = "nvim.desktop";
+      "text/markdown" = "nvim.desktop";
+      "text/x-nix" = "nvim.desktop";
+      "text/x-shellscript" = "nvim.desktop";
+      "text/x-python" = "nvim.desktop";
+      "text/x-rust" = "nvim.desktop";
+      "text/x-csrc" = "nvim.desktop";
+      "text/x-c++src" = "nvim.desktop";
+      "text/x-go" = "nvim.desktop";
+      "application/json" = "nvim.desktop";
+      "application/toml" = "nvim.desktop";
+      "application/x-yaml" = "nvim.desktop";
     };
   };
 }

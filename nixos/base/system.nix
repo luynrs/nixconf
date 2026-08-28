@@ -60,7 +60,6 @@
       services.upower.enable = true;
       services.speechd.enable = false;
 
-
       users.users.luynar = {
         isNormalUser = true;
         description = "luynar";
