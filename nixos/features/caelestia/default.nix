@@ -251,7 +251,7 @@
               }
             }/nix"
             {
-              inherit (upstream.inputs) m3shapes;
+              m3shapes = upstream.inputs.m3shapes.packages.${system}.default;
               inherit (upstream) rev;
               stdenv = pkgs.clangStdenv;
               quickshell = upstream.inputs.quickshell.packages.${system}.default.override {
@@ -387,34 +387,5 @@
             -m "$(${pkgs.jq}/bin/jq -r .mode "$scheme")" || true
         fi
       '';
-
-      xdg.configFile."caelestia/shell-tokens.json".text =
-        let
-          simpleCurve = [
-            0.4
-            0
-            0.2
-            1
-            1
-            1
-          ];
-          curveNames = [
-            "emphasized"
-            "emphasizedAccel"
-            "emphasizedDecel"
-            "standard"
-            "standardAccel"
-            "standardDecel"
-            "expressiveFastSpatial"
-            "expressiveDefaultSpatial"
-            "expressiveSlowSpatial"
-            "expressiveFastEffects"
-            "expressiveDefaultEffects"
-            "expressiveSlowEffects"
-          ];
-        in
-        builtins.toJSON {
-          appearance.curves = lib.genAttrs curveNames (_: simpleCurve);
-        };
     };
 }

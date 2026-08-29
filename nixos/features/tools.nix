@@ -11,6 +11,7 @@
       bun
       posting
       gh
+      antigravity-cli
 
       inputs.justssh.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
