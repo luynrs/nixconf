@@ -23,6 +23,7 @@ _: {
           name = "luynrs";
           email = "157303229+luynrs@users.noreply.github.com";
         };
+        settings.credential."https://github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
       };
 
       programs.zed-editor = {
