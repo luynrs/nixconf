@@ -56,6 +56,8 @@
       zramSwap.enable = true;
       services.fstrim.enable = true;
 
+      services.locate.enable = true;
+
       services.gvfs.enable = true;
       services.upower.enable = true;
       services.speechd.enable = false;

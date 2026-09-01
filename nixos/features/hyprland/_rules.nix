@@ -34,7 +34,7 @@
       no_initial_focus = true;
     }
     {
-      match.class = "^vesktop$";
+      match.class = "^equibop$";
       workspace = "2 silent";
       no_initial_focus = true;
       focus_on_activate = false;

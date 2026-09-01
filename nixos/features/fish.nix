@@ -10,6 +10,8 @@ _: {
       shellAliases = {
         clear = "printf '\\033[2J\\033[3J\\033[1;1H'";
         ls = "eza --icons=auto";
+        find = "plocate";
+        fd = "plocate";
       };
       interactiveShellInit = ''
         if test -f "$HOME/.local/state/caelestia/sequences.txt"

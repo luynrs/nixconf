@@ -1158,7 +1158,7 @@ index 48759b50..279b86bc 100644
  
 +    function focusApp(): void {
 +        const app = root.modelData.appName.toLowerCase();
-+        if (["discord", "vesktop", "ayugram", "telegram"].some(n => app.includes(n)))
++        if (["discord", "equibop", "ayugram", "telegram"].some(n => app.includes(n)))
 +            Hypr.dispatch(Hypr.usingLua ? 'hl.dispatch(hl.dsp.focus({ workspace = "2" }))' : "workspace 2");
 +    }
 +

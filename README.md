@@ -39,7 +39,7 @@ nix fmt                                       # форматирование (ni
 `Tab` / `Shift + Tab` — следующий/предыдущий файл, `Space + BB` — предыдущий файл,
 `Space + BD` — закрыть текущий файл, `Space + FF` — найти файл.
 
-Приложения закреплены по воркспейсам: firefox=1, vesktop/ayugram=2, zed=3, игры (`steam_app_*`)=4, steam=5.
+Приложения закреплены по воркспейсам: firefox=1, equibop/ayugram=2, zed=3, игры (`steam_app_*`)=4, steam=5.
 
 ## Структура
 
