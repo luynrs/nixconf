@@ -5,9 +5,13 @@
 }:
 {
   flake.nixosModules.general = _: {
-    imports = [ inputs.home-manager.nixosModules.default ];
+    imports = [
+      inputs.home-manager.nixosModules.default
+      inputs.justray.nixosModules.default
+    ];
 
     programs.gpu-screen-recorder.enable = true;
+    programs.justray.enable = true;
 
     home-manager = {
       useGlobalPkgs = true;
@@ -37,7 +41,10 @@
         self.homeModules.nvim
       ];
 
-      services.justray.enable = true;
+      services.justray = {
+        enable = true;
+        execPath = "/run/wrappers/bin/justrayd";
+      };
 
       home.stateVersion = "26.05";
 

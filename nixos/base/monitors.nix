@@ -26,10 +26,6 @@
                 type = lib.types.int;
                 default = 0;
               };
-              enabled = lib.mkOption {
-                type = lib.types.bool;
-                default = true;
-              };
             };
           }
         );

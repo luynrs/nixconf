@@ -1,24 +1,26 @@
 { inputs, ... }:
 {
-  flake.homeModules.tools = { pkgs, config, ... }: {
-    home.packages = with pkgs; [
-      eza
-      procps
-      nautilus
+  flake.homeModules.tools =
+    { pkgs, config, ... }:
+    {
+      home.packages = with pkgs; [
+        eza
+        procps
+        nautilus
 
-      # DEVELOPMENT
-      nodejs
-      bun
-      posting
-      gh
-      antigravity-cli
+        # DEVELOPMENT
+        nodejs
+        bun
+        posting
+        gh
+        antigravity-cli
 
-      inputs.justssh.packages.${pkgs.stdenv.hostPlatform.system}.default
-    ];
+        inputs.justssh.packages.${pkgs.stdenv.hostPlatform.system}.default
+      ];
 
-    programs.nh = {
-      enable = true;
-      flake = "${config.home.homeDirectory}/nixconf";
+      programs.nh = {
+        enable = true;
+        flake = "${config.home.homeDirectory}/nixconf";
+      };
     };
-  };
 }

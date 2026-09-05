@@ -8,7 +8,7 @@
         mode = "${toString m.width}x${toString m.height}@${toString m.refreshRate}";
         position = "${toString m.x}x${toString m.y}";
         scale = 1;
-      }) (lib.filterAttrs (_: m: m.enabled) config.preferences.monitors);
+      }) config.preferences.monitors;
     in
     {
       programs.hyprland.enable = true;

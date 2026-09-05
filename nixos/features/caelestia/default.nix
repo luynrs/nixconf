@@ -9,8 +9,7 @@
     }:
     let
       inherit (pkgs.stdenv.hostPlatform) system;
-      inherit (self) guiApps;
-      apps = guiApps;
+      apps = self.guiApps;
       upstream = inputs.caelestia-shell;
 
       alpha = 0.6;
