@@ -1,4 +1,5 @@
-# nixconf
+
+#A LOT OF CONFIG WAS VIBECODED 🥀
 
 ## Rebuild
 
