@@ -66,6 +66,22 @@
         gopls
       ];
 
+      programs.nix-ld = {
+        enable = true;
+        libraries = with pkgs; [
+          stdenv.cc.cc.lib
+          zlib
+          openssl
+          curl
+          glib
+        ];
+      };
+
+      environment.sessionVariables = {
+        SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
+        NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
+      };
+
       services.locate.enable = true;
 
       services.gvfs.enable = true;

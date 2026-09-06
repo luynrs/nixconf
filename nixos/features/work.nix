@@ -2,20 +2,7 @@ _: {
   flake.homeModules.work =
     { pkgs, ... }:
     {
-      home.packages = [
-        (pkgs.writeShellScriptBin "opencode" ''
-          if [ $# -eq 0 ]; then
-            exec "${pkgs.opencode}/bin/opencode" --auto
-          else
-            exec "${pkgs.opencode}/bin/opencode" "$@"
-          fi
-        '')
-      ];
-
-      xdg.configFile."opencode/opencode.json".source = ./work/opencode.json;
-      xdg.configFile."opencode/AGENTS.md".source = ./work/opencode-agents.md;
-      xdg.configFile."opencode/tui.json".source = ./work/tui.json;
-      xdg.configFile."opencode/command/commit.md".source = ./work/command-commit.md;
+      xdg.configFile."zed/AGENTS.md".source = ./work/AGENTS.md;
 
       programs.git = {
         enable = true;
@@ -53,20 +40,28 @@ _: {
           project_panel = {
             button = true;
             dock = "left";
-            default_width = 250;
+            default_width = 260;
           };
 
-          agent = {
+          assistant = {
             button = true;
-            dock = "left";
-            default_width = 250;
+            dock = "right";
+            default_width = 260;
             flexible = false;
+            commit_message_instructions = ''
+              Review the currently staged changes (`git diff --cached`) and create a single git commit for them. Follow these rules:
+              - Use the Conventional Commits format: `type(scope): summary`
+              - Keep the summary under 72 characters, imperative mood, no trailing period
+              - Add a short body only if the "why" is not obvious from the diff
+              - Never commit secrets, credentials, or unrelated files
+              - Do not push after committing
+            '';
           };
 
           git_panel = {
             button = true;
             dock = "right";
-            default_width = 250;
+            default_width = 260;
           };
 
           outline_panel = {
@@ -76,6 +71,39 @@ _: {
           collaboration_panel = {
             button = false;
           };
+
+          agent_servers = {
+            codex = { };
+            antigravity-acp = { };
+          };
+
+          context_servers = {
+            context7 = {
+              url = "https://mcp.context7.com/mcp";
+            };
+          };
+        };
+      };
+
+      systemd.user.services.antigravity-acp = {
+        Unit = {
+          Description = "Antigravity ACP Warm Daemon";
+          After = [ "default.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.nodejs}/bin/node %h/.local/share/zed/external_agents/registry/antigravity-acp/v_1.1.1_c5752c93158aa0bc_eef079d17742fe39/daemon/daemon.js";
+          Restart = "always";
+          RestartSec = 2;
+          Environment = [
+            "NIX_LD=/run/current-system/sw/share/nix-ld/lib/ld.so"
+            "NIX_LD_LIBRARY_PATH=/run/current-system/sw/share/nix-ld/lib"
+            "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+            "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+          ];
+        };
+        Install = {
+          WantedBy = [ "default.target" ];
         };
       };
     };

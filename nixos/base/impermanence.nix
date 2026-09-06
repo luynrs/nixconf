@@ -65,15 +65,12 @@
           ".config/justray"
           ".local/share/justray"
 
-          # Разработка и AI (Opencode, Zed, GitHub, Antigravity)
-          ".gemini"
-          ".local/share/opencode"
-          ".config/opencode"
+          # Разработка и AI (Zed, GitHub, Gemini/Antigravity)
           ".local/share/zed"
           ".config/zed"
           ".config/gh"
-          ".config/antigravity"
           ".config/justssh"
+          ".gemini"
 
           # Игры
           ".local/share/Steam"
