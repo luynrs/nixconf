@@ -68,29 +68,25 @@ Wallpapers/                      обои для рофл-свитчера
 
 ### 1. Дуалбут (сохраняя Windows на одном SSD)
 
-Чтобы Disko не стёр Windows, он настроен на разделы `p5` (1G boot) и `p6` (root).
-Создать сами границы разделов в свободном месте (400GB) можно заранее в Windows через «Управление дисками» / PowerShell, либо одной строкой в инсталляторе:
-
-```bash
-# Если разделы 5 и 6 ещё не созданы в неразмеченном месте (разово):
-sudo sgdisk -n 5:0:+1G -t 5:ef00 /dev/nvme0n1 && sudo sgdisk -n 6:0:0 -t 6:8300 /dev/nvme0n1
-
-# 1. Disko форматирует, создаёт btrfs subvolumes, tmpfs и монтирует всё в /mnt:
-sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- \
-  --mode disko --flake github:luynrs/nixconf#luynar
-
-# 2. Установка системы:
-sudo nixos-install --flake github:luynrs/nixconf#luynar --no-root-passwd
-```
+1. Делаем раздел 5 загрузочным EFI:
+   ```bash
+   sudo sgdisk -t 5:ef00 /dev/nvme0n1
+   ```
+2. Форматируем и монтируем разделы через Disko:
+   ```bash
+   sudo nix run github:nix-community/disko -- -m format,mount --flake github:luynrs/nixconf#luynar
+   ```
+3. Ставим систему:
+   ```bash
+   sudo nixos-install --flake github:luynrs/nixconf#luynar --no-root-passwd
+   ```
 
 ### 2. Полный вайп диска (когда решишь снести Windows)
 
-1. В `nixos/hosts/main/configuration.nix` поставь `preferences.disko.dualboot = false;`
-2. Запусти те же 2 команды:
+1. В `nixos/hosts/main/configuration.nix` убери строчку `preferences.disko.dualboot = true;`
+2. Запусти:
    ```bash
-   sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- \
-     --mode disko --flake github:luynrs/nixconf#luynar
-
+   sudo nix run github:nix-community/disko -- -m disko --flake github:luynrs/nixconf#luynar
    sudo nixos-install --flake github:luynrs/nixconf#luynar --no-root-passwd
    ```
 
