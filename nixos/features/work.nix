@@ -53,20 +53,20 @@ _: {
           project_panel = {
             button = true;
             dock = "left";
-            default_width = 260;
+            default_width = 250;
           };
 
           agent = {
             button = true;
             dock = "left";
-            default_width = 440;
+            default_width = 250;
             flexible = false;
           };
 
           git_panel = {
             button = true;
             dock = "right";
-            default_width = 360;
+            default_width = 250;
           };
 
           outline_panel = {
