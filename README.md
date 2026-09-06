@@ -32,7 +32,7 @@ nix fmt                                       # форматирование (ni
 | `PRINT`                | Скрин всего (в буфер)             |
 | `SUPER + SHIFT + C`    | Пайпетка (цвет)                   |
 | `SUPER + 1..0`         | Воркспейсы (с SHIFT — перенос)    |
-| `SUPER + стрелки`      | Фокус                            |
+| `SUPER + стрелки`      | Фокус                             |
 | `XF86Audio*`           | Громкость/яркость/медиа           |
 
 В nvim: `Space + E` — дерево проекта, `Space + Shift + E` — найти текущий файл,
@@ -45,7 +45,7 @@ nix fmt                                       # форматирование (ni
 
 ```
 flake.nix                        собирает *.nix во всём репо автоматически (кроме _префиксных)
-nixos/base/                      база: система, пользователь, keymap, мониторы
+nixos/base/                      база: система, disko, impermanence, пользователь, keymap, мониторы
 nixos/extra/                     опциональное железо (gpu-amd, gpu-nvidia, openrgb)
 nixos/features/<name>/           каждая фича: default.nix + конфиги рядом
 nixos/features/nvim/             nvim на nixvim (плагины из Nix, Lua-конфиг в lua/)
@@ -57,63 +57,47 @@ Wallpapers/                      обои для рофл-свитчера
 Файлы с `_` в начале имени (`_binds.nix`, `_rules.nix`, ...) не импортируются автоматически —
 это не самостоятельные flake-модули, а куски, которые явно подключают другие файлы.
 
-## Установка (любой хост)
+## Архитектура
 
-Одна и та же процедура для десктопа, ноута и любой следующей машины — меняется только
-`$HOST`. Разметка ручная, обычный ext4 (`/boot` — vfat ESP, `/` — ext4):
+- **Корень (`/`)**: `tmpfs` (RAM). Стирается при перезагрузке.
+- **Хранилище (Btrfs)**: `@nix` (`/nix`), `@persist` (`/persist`), `@log` (`/var/log`).
+- **Персистентность (`impermanence`)**: всё сохраняемое лежит в `/persist` (сеть, ssh-ключи, `~/.ssh`, браузер, проекты, стим и т.д.).
+
+## Установка
+
+### 1. Дуалбут (сохраняя Windows на одном SSD)
+
+Чтобы Disko не стёр Windows, он настроен на разделы `p5` (1G boot) и `p6` (root).
+Создать сами границы разделов в свободном месте (400GB) можно заранее в Windows через «Управление дисками» / PowerShell, либо одной строкой в инсталляторе:
 
 ```bash
-# 1. Разметка — пример для GPT/UEFI, замени /dev/nvme0n1 на свой диск
-sudo parted /dev/nvme0n1 -- mklabel gpt
-sudo parted /dev/nvme0n1 -- mkpart ESP fat32 1MiB 1GiB
-sudo parted /dev/nvme0n1 -- set 1 esp on
-sudo parted /dev/nvme0n1 -- mkpart primary ext4 1GiB 100%
-sudo mkfs.fat -F32 -n boot /dev/nvme0n1p1
-sudo mkfs.ext4 -L nixos /dev/nvme0n1p2
-sudo mount /dev/nvme0n1p2 /mnt
-sudo mkdir -p /mnt/boot
-sudo mount /dev/nvme0n1p1 /mnt/boot
+# Если разделы 5 и 6 ещё не созданы в неразмеченном месте (разово):
+sudo sgdisk -n 5:0:+1G -t 5:ef00 /dev/nvme0n1 && sudo sgdisk -n 6:0:0 -t 6:8300 /dev/nvme0n1
 
-# 2. Конфиг + имя хоста (совпадает с nixos/hosts/<host>/ и nixosConfigurations.<host>)
-git clone https://github.com/luynrs/nixconf.git /mnt/root/nixconf
-cd /mnt/root/nixconf
-HOST=laptop
+# 1. Disko форматирует, создаёт btrfs subvolumes, tmpfs и монтирует всё в /mnt:
+sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- \
+  --mode disko --flake github:luynrs/nixconf#luynar
 
-# ВАЖНО: инпут justxray тянется по git+ssh, так что в инсталляторе нужен ssh-ключ
-# от github, иначе шаг 4 упадёт на резолве инпутов:
-#   mkdir -p ~/.ssh && cp /путь/к/id_ed25519 ~/.ssh/ && chmod 600 ~/.ssh/id_ed25519
-
-# 3. hardware-configuration.nix — один готовый кусок вывода nixos-generate-config,
-# обёрнутый в нужное имя модуля, никакой ручной разборки полей
-mkdir -p nixos/hosts/$HOST
-{ echo "{ flake.nixosModules.$HOST ="; nixos-generate-config --root /mnt --show-hardware-config; echo "; }"; } \
-  > nixos/hosts/$HOST/hardware-configuration.nix
-
-# 4. Установка
-sudo nixos-install --flake .#$HOST
+# 2. Установка системы:
+sudo nixos-install --flake github:luynrs/nixconf#luynar --no-root-passwd
 ```
 
-Для `main`/`laptop` `configuration.nix` уже в репо. Для нового хоста скопируй
-`nixos/hosts/laptop/configuration.nix` рядом и поправь `preferences`/железные модули
-(`gpu-amd` vs `gpu-nvidia`, `openrgb` и т.п.) под новую машину.
+### 2. Полный вайп диска (когда решишь снести Windows)
 
-На ноуте отдельно после установки: `lspci | grep -E "VGA|3D"` → впиши bus ID в
-`amdgpuBusId`/`nvidiaBusId` в `nixos/extra/gpu-nvidia.nix` (текущий ноут — AMD iGPU +
-Nvidia dGPU; на Intel-машине переименуй ключ в `intelBusId`), и поправь
-`preferences.monitors."eDP-1"` в `nixos/hosts/laptop/configuration.nix`, если разрешение
-не 1920x1080.
+1. В `nixos/hosts/main/configuration.nix` поставь `preferences.disko.dualboot = false;`
+2. Запусти те же 2 команды:
+   ```bash
+   sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- \
+     --mode disko --flake github:luynrs/nixconf#luynar
 
-После первой загрузки — репо в `~/nixconf` (так его ждёт `programs.nh.flake`), закоммить.
+   sudo nixos-install --flake github:luynrs/nixconf#luynar --no-root-passwd
+   ```
 
-Дальше на любой из машин просто:
+После первой загрузки:
 
 ```bash
 nh os switch
 ```
-
-Без флагов и без `#host` — `nh` берёт хост по `networking.hostName`, а он у каждой машины
-уже свой (`luynar` на десктопе, `laptop` на ноуте) и совпадает с именем в
-`nixosConfigurations`, так что один и тот же алиас работает одинаково везде.
 
 ## Темизация
 
@@ -148,12 +132,3 @@ git apply ~/nixconf/nixos/features/caelestia/shell.patch
 git add -A -N && git diff > ~/nixconf/nixos/features/caelestia/shell.patch
 cd ~/nixconf && nh home switch
 ```
-
-Если после `nix flake update caelestia-shell` патч перестал накладываться — это ровно то,
-чего мы хотим: апстрим уехал, конфликт виден при сборке, а не молча в рантайме. Разрешается
-тем же `git apply -3` в клоне выше.
-
-## Мусор
-
-`nix.gc` (еженедельно, `--delete-older-than 14d`) и `nix.optimise` включены в
-`nixos/base/system.nix`, руками чистить не надо. Разово: `nh clean all`.

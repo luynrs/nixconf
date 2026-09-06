@@ -21,6 +21,8 @@
     ];
 
     preferences = {
+      disko.dualboot = true;
+
       monitors."DP-1" = {
         width = 1920;
         height = 1080;

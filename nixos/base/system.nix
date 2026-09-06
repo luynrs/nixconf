@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 {
   flake.nixosModules.base =
     {
@@ -7,6 +7,11 @@
       ...
     }:
     {
+      imports = [
+        self.nixosModules.disko
+        self.nixosModules.impermanence
+      ];
+
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
       boot.loader.timeout = 1;
@@ -24,6 +29,7 @@
       networking.networkmanager.enable = true;
 
       time.timeZone = "Europe/Moscow";
+      time.hardwareClockInLocalTime = lib.mkDefault true;
       i18n.defaultLocale = "en_US.UTF-8";
       console.keyMap = "us";
 

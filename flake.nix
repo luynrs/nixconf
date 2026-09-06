@@ -3,6 +3,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     treefmt-nix.url = "github:numtide/treefmt-nix";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    impermanence.url = "github:nix-community/impermanence";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,7 +22,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     justray = {
-      url = "path:/home/luynar/Projects/justxray";
+      url = "github:luynrs/justray";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     caelestia-shell = {
