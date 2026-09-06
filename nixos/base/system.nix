@@ -14,7 +14,7 @@
 
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
-      boot.loader.timeout = 1;
+      boot.loader.timeout = 0;
       boot.kernelParams = [
         "quiet"
         "splash"
@@ -55,12 +55,16 @@
       nix.optimise.automatic = true;
 
       nixpkgs.config.allowUnfree = true;
-      services.flatpak.enable = true;
 
       nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
       zramSwap.enable = true;
       services.fstrim.enable = true;
+
+      environment.systemPackages = with pkgs; [
+        go
+        gopls
+      ];
 
       services.locate.enable = true;
 
@@ -71,7 +75,7 @@
       users.users.luynar = {
         isNormalUser = true;
         description = "luynar";
-        initialPassword = "justloginme";
+        hashedPassword = "$6$Vz0gDiMZEBwLvMEo$Woh4mJnlouv1uCPQotwxyOBGJPRPhCFTI2ijgwiRYezdzizD03xcdDghXtTUF2Rn5Jpek7gFP1vOW4Pi2LO.01";
         extraGroups = [
           "wheel"
           "networkmanager"
@@ -91,7 +95,7 @@
       services.greetd = {
         enable = true;
         settings.default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --cmd start-hyprland";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session -u luynar --cmd start-hyprland";
           user = "greeter";
         };
       };

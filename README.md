@@ -124,8 +124,8 @@ nix-значения, а шаблоны, которые перерисовыва
 ```bash
 REV=$(nix eval --raw --impure --expr '(builtins.getFlake (toString ./.)).inputs.caelestia-shell.rev')
 git clone https://github.com/caelestia-dots/shell /tmp/cael && cd /tmp/cael && git checkout $REV
-git apply ~/nixconf/nixos/features/caelestia/shell.patch
+git apply ~/.config/nixconf/nixos/features/caelestia/shell.patch
 # правим QML/C++, git add -N для новых файлов
-git add -A -N && git diff > ~/nixconf/nixos/features/caelestia/shell.patch
-cd ~/nixconf && nh home switch
+git add -A -N && git diff > ~/.config/nixconf/nixos/features/caelestia/shell.patch
+cd ~/.config/nixconf && nh home switch
 ```

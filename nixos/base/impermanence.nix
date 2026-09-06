@@ -10,13 +10,21 @@
         "/var/lib/nixos"
         "/var/lib/systemd"
         "/var/lib/bluetooth"
-        "/etc/NetworkManager/system-connections"
+        "/var/lib/NetworkManager"
+        "/var/lib/OpenRGB"
         "/var/lib/justray"
+        {
+          directory = "/var/cache/tuigreet";
+          user = "greeter";
+          group = "greeter";
+          mode = "0755";
+        }
+        "/etc/NetworkManager/system-connections"
+        "/etc/lact"
       ];
 
       files = [
         "/etc/machine-id"
-        "/etc/adjtime"
       ];
 
       users.luynar = {
@@ -29,9 +37,13 @@
           "Videos"
           "Music"
 
+          ".config/nixconf"
+
           # Ключи и авторизация
           ".ssh"
           ".gnupg"
+          ".pki"
+          ".local/share/pki"
           ".local/share/keyrings"
 
           # Shell и окружение
@@ -39,9 +51,12 @@
           ".local/share/zoxide"
           ".local/share/direnv"
           ".local/share/nix"
+          ".local/state/nix"
+          ".local/state/home-manager"
 
           # Браузер и мессенджеры
           ".mozilla"
+          ".config/mozilla"
           ".config/equibop"
           ".local/share/AyuGramDesktop"
           ".local/share/TelegramDesktop"
@@ -50,7 +65,8 @@
           ".config/justray"
           ".local/share/justray"
 
-          # Разработка и AI (Opencode, Zed, GitHub)
+          # Разработка и AI (Opencode, Zed, GitHub, Antigravity)
+          ".gemini"
           ".local/share/opencode"
           ".config/opencode"
           ".local/share/zed"
@@ -63,9 +79,14 @@
           ".local/share/Steam"
           ".steam"
 
-          # Caelestia и звук
+          # Системное состояние, рабочий стол и звук
+          ".config/dconf"
+          ".config/pulse"
+          ".config/hypr/scheme"
+          ".local/share/applications"
           ".local/state/caelestia"
           ".local/state/wireplumber"
+          ".cache/cliphist"
         ];
       };
     };

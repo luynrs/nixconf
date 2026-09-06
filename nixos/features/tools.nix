@@ -9,6 +9,8 @@
         nautilus
 
         # DEVELOPMENT
+        go
+        gopls
         nodejs
         bun
         posting
@@ -20,7 +22,7 @@
 
       programs.nh = {
         enable = true;
-        flake = "${config.home.homeDirectory}/nixconf";
+        flake = "${config.home.homeDirectory}/.config/nixconf";
       };
     };
 }

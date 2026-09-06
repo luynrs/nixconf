@@ -13,6 +13,10 @@
       ];
 
       home.activation.seedEquibopPlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        mkdir -p "$HOME/.config/equibop/settings"
+        if [ ! -f "$HOME/.config/equibop/settings/settings.json" ]; then
+          echo '{}' > "$HOME/.config/equibop/settings/settings.json"
+        fi
         ${pkgs.jq}/bin/jq \
           '.plugins.FakeNitro.enabled = true |
            .plugins.VolumeBooster.enabled = true |

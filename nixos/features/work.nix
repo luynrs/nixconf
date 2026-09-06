@@ -32,12 +32,50 @@ _: {
         extensions = [
           "nix"
           "golang"
+          "colored-zed-icons-theme"
         ];
 
         userSettings = {
           base_keymap = "VSCode";
 
-          theme = "Caelestia";
+          theme = {
+            mode = "system";
+            light = "Caelestia";
+            dark = "Caelestia";
+          };
+
+          icon_theme = {
+            mode = "system";
+            light = "Colored Zed Icons Theme Light";
+            dark = "Colored Zed Icons Theme Dark";
+          };
+
+          project_panel = {
+            button = true;
+            dock = "left";
+            default_width = 260;
+          };
+
+          agent = {
+            button = true;
+            dock = "left";
+            default_width = 440;
+            flexible = false;
+          };
+
+          git_panel = {
+            button = true;
+            dock = "right";
+            default_width = 360;
+          };
+
+          outline_panel = {
+            button = false;
+          };
+
+          collaboration_panel = {
+            button = false;
+          };
         };
       };
     };

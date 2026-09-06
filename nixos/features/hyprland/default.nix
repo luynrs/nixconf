@@ -23,14 +23,14 @@
     let
       apps = self.guiApps;
       fromScheme =
-        body:
+        fallback: body:
         lib.generators.mkLuaInline ''
           (function()
             local ok, s = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/scheme/current.lua")
-            if not ok or not s then
-              return
+            if ok and s then
+              ${body}
             end
-            ${body}
+            return ${fallback}
           end)()
         '';
       animations = import ./_animations.nix;
@@ -78,14 +78,14 @@
               gaps_out = 8;
               border_size = 1;
               col.active_border = {
-                colors = fromScheme ''
+                colors = fromScheme ''{ "rgba(b4befeee)", "rgba(cba6f7ee)" }'' ''
                   if s.primary and s.secondary then
                     return { "rgba(" .. s.primary .. "ee)", "rgba(" .. s.secondary .. "ee)" }
                   end
                 '';
                 angle = 45;
               };
-              col.inactive_border = fromScheme ''
+              col.inactive_border = fromScheme ''"rgba(6c7086aa)"'' ''
                 if s.outlineVariant then
                   return "rgba(" .. s.outlineVariant .. "aa)"
                 end
@@ -134,7 +134,7 @@
               mouse_move_enables_dpms = true;
               key_press_enables_dpms = true;
 
-              background_color = fromScheme ''
+              background_color = fromScheme ''"rgb(1e1e2e)"'' ''
                 if s.surfaceContainer then
                   return "rgb(" .. s.surfaceContainer .. ")"
                 end
