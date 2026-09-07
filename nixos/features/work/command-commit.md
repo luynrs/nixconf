@@ -1,4 +1,5 @@
 ---
+name: commit
 description: Commit staged changes with a conventional commit message
 ---
 Review the currently staged changes (`git diff --cached`) and create a single

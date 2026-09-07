@@ -61,11 +61,6 @@
       zramSwap.enable = true;
       services.fstrim.enable = true;
 
-      environment.systemPackages = with pkgs; [
-        go
-        gopls
-      ];
-
       programs.nix-ld = {
         enable = true;
         libraries = with pkgs; [

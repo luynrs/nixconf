@@ -369,6 +369,22 @@
         "type": "github"
       }
     },
+    "ponytail": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788798420,
+        "narHash": "sha256-LPNMyHsri3+eeDmphEAKL1JgoRE4dLIPfZ4XZ+xu5UY=",
+        "owner": "DietrichGebert",
+        "repo": "ponytail",
+        "rev": "356918eba965ee1eac64bd3a7f0dd02108350de5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DietrichGebert",
+        "repo": "ponytail",
+        "type": "github"
+      }
+    },
     "quickshell": {
       "inputs": {
         "nixpkgs": [
@@ -402,6 +418,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
         "nur": "nur",
+        "ponytail": "ponytail",
         "treefmt-nix": "treefmt-nix"
       }
     },
