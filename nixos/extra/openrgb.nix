@@ -7,7 +7,7 @@ in
     { pkgs, ... }:
     let
       applyMainboard = ''
-        ${pkgs.openrgb}/bin/openrgb --device "B650" --mode static --color ${rgb} 2>/dev/null || true
+        ${pkgs.openrgb}/bin/openrgb --device "B650" --zone 0 --size 60 --zone 1 --size 60 --mode static --color ${rgb} 2>/dev/null || true
       '';
 
       applyDramOff = ''
@@ -43,7 +43,13 @@ in
           StandardError = "null";
         };
         script = ''
-          ${pkgs.openrgb}/bin/openrgb --list-devices 2>&1 | grep -q "Connected to server" || true
+          OPENRGB=${pkgs.openrgb}/bin/openrgb
+          for _ in $(seq 1 30); do
+            if "$OPENRGB" --list-devices 2>/dev/null | grep -q "B650"; then
+              break
+            fi
+            sleep 1
+          done
           ${applyMainboard}
           ${applyDramOff}
         '';
