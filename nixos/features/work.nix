@@ -56,31 +56,23 @@
           };
 
           project_panel = {
-            button = true;
             dock = "left";
             default_width = 260;
           };
 
           assistant = {
-            button = true;
             dock = "right";
             default_width = 260;
             flexible = false;
           };
 
           git_panel = {
-            button = true;
             dock = "right";
             default_width = 260;
           };
 
-          outline_panel = {
-            button = false;
-          };
-
-          collaboration_panel = {
-            button = false;
-          };
+          outline_panel.button = false;
+          collaboration_panel.button = false;
         };
       };
     };

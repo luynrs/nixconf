@@ -72,11 +72,6 @@
         ];
       };
 
-      environment.sessionVariables = {
-        SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
-        NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
-      };
-
       services.locate.enable = true;
 
       services.gvfs.enable = true;
@@ -85,7 +80,6 @@
 
       users.users.luynar = {
         isNormalUser = true;
-        description = "luynar";
         hashedPassword = "$6$Vz0gDiMZEBwLvMEo$Woh4mJnlouv1uCPQotwxyOBGJPRPhCFTI2ijgwiRYezdzizD03xcdDghXtTUF2Rn5Jpek7gFP1vOW4Pi2LO.01";
         extraGroups = [
           "wheel"

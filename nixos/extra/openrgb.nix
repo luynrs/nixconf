@@ -1,24 +1,6 @@
-_:
-let
-  rgb = "7C3AED";
-in
-{
+_: {
   flake.nixosModules.openrgb =
     { pkgs, ... }:
-    let
-      applyMainboard = ''
-        ${pkgs.openrgb}/bin/openrgb --device "B650" --zone 0 --size 60 --zone 1 --size 60 --mode static --color ${rgb} 2>/dev/null || true
-      '';
-
-      applyDramOff = ''
-        OPENRGB=${pkgs.openrgb}/bin/openrgb
-        while read -r line; do
-          if [[ "$line" =~ ^([0-9]+):\ ENE\ DRAM ]]; then
-            "$OPENRGB" --device "''${BASH_REMATCH[1]}" --mode off 2>/dev/null || true
-          fi
-        done < <("$OPENRGB" --list-devices 2>/dev/null)
-      '';
-    in
     {
       services.hardware.openrgb = {
         enable = true;
@@ -28,53 +10,16 @@ in
       boot.kernelParams = [ "acpi_enforce_resources=lax" ];
 
       systemd.services.openrgb-static-color = {
-        description = "Static purple mainboard, RAM off";
+        description = "Apply static RGB";
         after = [ "openrgb.service" ];
         wants = [ "openrgb.service" ];
         wantedBy = [ "multi-user.target" ];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          Restart = "on-failure";
-          RestartSec = 1;
-          StartLimitIntervalSec = 60;
-          StartLimitBurst = 30;
-          StandardOutput = "null";
-          StandardError = "null";
-        };
+        serviceConfig.Type = "oneshot";
+        path = [ pkgs.openrgb ];
         script = ''
-          OPENRGB=${pkgs.openrgb}/bin/openrgb
-          for _ in $(seq 1 30); do
-            if "$OPENRGB" --list-devices 2>/dev/null | grep -q "B650"; then
-              break
-            fi
-            sleep 1
-          done
-          ${applyMainboard}
-          ${applyDramOff}
+          openrgb --device "B650" --zone 0 --size 60 --zone 1 --size 60 --mode static --color 7C3AED 2>/dev/null || true
+          openrgb --device "ENE DRAM" --mode off 2>/dev/null || true
         '';
-      };
-
-      systemd.services.openrgb-resume = {
-        description = "Re-apply mainboard RGB after resume";
-        after = [
-          "openrgb.service"
-          "suspend.target"
-          "hibernate.target"
-          "hybrid-sleep.target"
-        ];
-        wants = [ "openrgb.service" ];
-        wantedBy = [
-          "suspend.target"
-          "hibernate.target"
-          "hybrid-sleep.target"
-        ];
-        serviceConfig = {
-          Type = "oneshot";
-          StandardOutput = "null";
-          StandardError = "null";
-        };
-        script = applyMainboard;
       };
     };
 }

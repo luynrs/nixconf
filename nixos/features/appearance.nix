@@ -49,7 +49,7 @@ _: {
           color-scheme = "prefer-dark";
           gtk-theme = "adw-gtk3-dark";
           icon-theme = "MoreWaita";
-          enable-animations = false;
+          enable-animations = true;
         };
       };
     };

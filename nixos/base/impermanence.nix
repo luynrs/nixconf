@@ -71,6 +71,19 @@
           ".config/gh"
           ".config/justssh"
           ".gemini"
+          ".codex"
+
+          # Языки и тулчейны (Go, TS/JS, C/C++)
+          "go"
+          ".cache/go-build"
+          ".cache/gopls"
+          ".cache/golangci-lint"
+          ".cache/goimports"
+          ".npm"
+          ".cache/yarn"
+          ".cache/pnpm"
+          ".cache/clangd"
+          ".cache/ccache"
 
           # Игры
           ".local/share/Steam"
@@ -81,9 +94,14 @@
           ".config/pulse"
           ".config/hypr/scheme"
           ".local/share/applications"
+          ".local/share/gvfs-metadata"
           ".local/state/caelestia"
           ".local/state/wireplumber"
           ".cache/cliphist"
+        ];
+
+        files = [
+          ".config/gtk-3.0/bookmarks"
         ];
       };
     };

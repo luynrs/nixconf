@@ -41,10 +41,12 @@
         self.homeModules.nvim
       ];
 
-      services.justray = {
+      xdg.userDirs = {
         enable = true;
-        execPath = "/run/wrappers/bin/justrayd";
+        createDirectories = true;
       };
+
+      services.justray.enable = true;
 
       home.stateVersion = "26.05";
 
