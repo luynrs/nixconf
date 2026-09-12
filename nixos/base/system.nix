@@ -25,8 +25,24 @@
         theme = "bgrt";
       };
 
+      boot.kernelModules = [
+        "tcp_bbr"
+        "sch_cake"
+      ];
+
+      boot.kernel.sysctl = {
+        "vm.swappiness" = 180;
+        "vm.watermark_boost_factor" = 0;
+        "vm.watermark_scale_factor" = 125;
+        "vm.page-cluster" = 0;
+
+        "net.core.default_qdisc" = "cake";
+        "net.ipv4.tcp_congestion_control" = "bbr";
+      };
+
       networking.hostName = lib.mkDefault "luynar";
       networking.networkmanager.enable = true;
+      networking.nftables.enable = true;
 
       time.timeZone = "Europe/Moscow";
       time.hardwareClockInLocalTime = lib.mkDefault true;
@@ -58,8 +74,11 @@
 
       nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
-      zramSwap.enable = true;
-      services.earlyoom.enable = true;
+      zramSwap = {
+        enable = true;
+        algorithm = "zstd";
+      };
+      security.rtkit.enable = true;
       services.fstrim.enable = true;
 
       programs.nix-ld = {
@@ -72,8 +91,6 @@
           glib
         ];
       };
-
-      services.locate.enable = true;
 
       services.gvfs.enable = true;
       services.upower.enable = true;

@@ -65,6 +65,7 @@
     xdg.desktopEntries.nvim = {
       name = "Neovim";
       genericName = "Text Editor";
+      icon = "nvim";
       exec = "${pkgs.foot}/bin/foot -e ${config.programs.nixvim.build.package}/bin/nvim %F";
       terminal = false;
       categories = [

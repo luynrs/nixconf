@@ -93,6 +93,7 @@
           ".config/pulse"
           ".config/hypr/scheme"
           ".local/share/applications"
+          ".local/share/icons"
           ".local/share/gvfs-metadata"
           ".local/state/caelestia"
           ".local/state/wireplumber"

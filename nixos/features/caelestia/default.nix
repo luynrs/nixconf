@@ -221,9 +221,12 @@
         cli.enable = true;
         cli.package = caelestiaCli;
         cli.settings = {
-          theme.postHook = ''
-            hyprctl reload
-          '';
+          theme = {
+            iconTheme = "MoreWaita";
+            postHook = ''
+              hyprctl reload
+            '';
+          };
           record.extraArgs = [
             "-k"
             "av1"

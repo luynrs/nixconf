@@ -4,6 +4,7 @@
     { pkgs, config, ... }:
     {
       home.packages = with pkgs; [
+        fd
         eza
         procps
         nautilus

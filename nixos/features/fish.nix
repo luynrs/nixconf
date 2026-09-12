@@ -13,15 +13,6 @@ _: {
         zeditor = "zed";
       };
 
-      functions = {
-        fd = ''
-          if test (count $argv) -eq 0
-              echo "Usage: fd <pattern>"
-              return 1
-          end
-          plocate -0 $argv | xargs -0 -r eza -d --icons=auto
-        '';
-      };
       interactiveShellInit = ''
         if test -f "$HOME/.local/state/caelestia/sequences.txt"
             cat "$HOME/.local/state/caelestia/sequences.txt"
@@ -41,6 +32,12 @@ _: {
             source "$HOME/.local/state/caelestia/theme/fish-colors.fish"
         end
       '';
+    };
+
+    programs.zoxide = {
+      enable = true;
+      enableFishIntegration = true;
+      options = [ "--cmd cd" ];
     };
   };
 }

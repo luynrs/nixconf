@@ -6,5 +6,7 @@ _: {
 
     xdg.configFile."fastfetch/config.jsonc".source =
       config.lib.file.mkOutOfStoreSymlink "${config.xdg.stateHome}/caelestia/theme/fastfetch.jsonc";
+
+    xdg.configFile."fastfetch/logo.png".source = ./logo.png;
   };
 }
