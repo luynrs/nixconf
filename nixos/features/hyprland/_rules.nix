@@ -29,7 +29,7 @@
 
   window_rule = [
     {
-      match.class = "^firefox$";
+      match.class = "^(chromium-browser|Chromium-browser|chromium)$";
       workspace = "1 silent";
       no_initial_focus = true;
     }

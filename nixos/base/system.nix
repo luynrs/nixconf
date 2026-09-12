@@ -59,6 +59,7 @@
       nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
       zramSwap.enable = true;
+      services.earlyoom.enable = true;
       services.fstrim.enable = true;
 
       programs.nix-ld = {

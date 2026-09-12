@@ -2,7 +2,7 @@ _: {
   flake.guiApps = {
     terminal = "foot";
     explorer = "nautilus";
-    browser = "firefox";
+    browser = "chromium";
     playback = "mpv";
   };
 }

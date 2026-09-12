@@ -32,7 +32,7 @@
         self.homeModules.starship
         self.homeModules.tools
         self.homeModules.work
-        self.homeModules.firefox
+        self.homeModules.browser
         self.homeModules.media
         self.homeModules.socials
         self.homeModules.btop

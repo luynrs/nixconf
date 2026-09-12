@@ -55,8 +55,7 @@
           ".local/state/home-manager"
 
           # Браузер и мессенджеры
-          ".mozilla"
-          ".config/mozilla"
+          ".config/chromium"
           ".config/equibop"
           ".local/share/AyuGramDesktop"
           ".local/share/TelegramDesktop"
