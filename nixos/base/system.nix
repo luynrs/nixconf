@@ -124,9 +124,9 @@
       };
 
       fonts.packages = with pkgs; [
+        geist-font
         nerd-fonts.jetbrains-mono
         jetbrains-mono
-        inter
         noto-fonts
         noto-fonts-color-emoji
       ];
@@ -134,7 +134,7 @@
       fonts.fontconfig = {
         defaultFonts = {
           sansSerif = [
-            "Inter"
+            "Geist"
             "Noto Sans"
           ];
           serif = [ "Noto Serif" ];

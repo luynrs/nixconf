@@ -216,11 +216,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789244958,
-        "narHash": "sha256-Ick2eGJlyQeXKdR0mfBqdewbtm+cvzTlhd3pTYzkI+Y=",
+        "lastModified": 1789283005,
+        "narHash": "sha256-hxtGoEjgtNZhDqJ7gxl5n7kDT4OJLY1cbTJyo87VHEc=",
         "owner": "luynrs",
         "repo": "justray",
-        "rev": "2c952110ca589cda0e66a14ec2d768d9423f4652",
+        "rev": "9c9cafabe58ddafca3e27812e08bf6bd804d2791",
         "type": "github"
       },
       "original": {

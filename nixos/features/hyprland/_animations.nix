@@ -78,51 +78,51 @@ let
     {
       leaf = "border";
       enabled = true;
-      speed = 5.39;
+      speed = 5;
       bezier = "easeOutQuint";
     }
     {
       leaf = "windows";
       enabled = true;
-      speed = 4.79;
+      speed = 5;
       bezier = "easeOutQuint";
     }
     {
       leaf = "windowsIn";
       enabled = true;
-      speed = 4.1;
+      speed = 4;
       bezier = "easeOutQuint";
-      style = "popin 87%";
+      style = "popin 90%";
     }
     {
       leaf = "windowsOut";
       enabled = true;
-      speed = 1.49;
+      speed = 2;
       bezier = "linear";
-      style = "popin 87%";
+      style = "popin 90%";
     }
     {
       leaf = "fadeIn";
       enabled = true;
-      speed = 1.73;
+      speed = 2;
       bezier = "almostLinear";
     }
     {
       leaf = "fadeOut";
       enabled = true;
-      speed = 1.46;
+      speed = 2;
       bezier = "almostLinear";
     }
     {
       leaf = "fade";
       enabled = true;
-      speed = 3.03;
+      speed = 3;
       bezier = "quick";
     }
     {
       leaf = "layers";
       enabled = true;
-      speed = 3.81;
+      speed = 4;
       bezier = "easeOutQuint";
     }
     {
@@ -135,40 +135,40 @@ let
     {
       leaf = "layersOut";
       enabled = true;
-      speed = 1.5;
+      speed = 2;
       bezier = "linear";
       style = "fade";
     }
     {
       leaf = "fadeLayersIn";
       enabled = true;
-      speed = 1.79;
+      speed = 2;
       bezier = "almostLinear";
     }
     {
       leaf = "fadeLayersOut";
       enabled = true;
-      speed = 1.39;
+      speed = 2;
       bezier = "almostLinear";
     }
     {
       leaf = "workspaces";
       enabled = true;
-      speed = 3.8;
+      speed = 4;
       bezier = "easeOutQuint";
       style = "slidevert";
     }
     {
       leaf = "workspacesIn";
       enabled = true;
-      speed = 3.8;
+      speed = 4;
       bezier = "easeOutQuint";
       style = "slidevert";
     }
     {
       leaf = "workspacesOut";
       enabled = true;
-      speed = 3.8;
+      speed = 4;
       bezier = "easeOutQuint";
       style = "slidevert";
     }
