@@ -24,11 +24,17 @@
 
       programs.git = {
         enable = true;
-        settings.user = {
-          name = "luynrs";
-          email = "157303229+luynrs@users.noreply.github.com";
+        settings = {
+          user = {
+            name = "luynrs";
+            email = "157303229+luynrs@users.noreply.github.com";
+            signingkey = "~/.ssh/id_ed25519.pub";
+          };
+          commit.gpgsign = true;
+          tag.gpgsign = true;
+          gpg.format = "ssh";
+          credential."https://github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
         };
-        settings.credential."https://github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
       };
 
       programs.zed-editor = {
