@@ -1,4 +1,13 @@
 {
+  flake.nixosModules.browser = _: {
+    programs.chromium = {
+      enable = true;
+      extraOpts = {
+        "RestoreOnStartup" = 1;
+      };
+    };
+  };
+
   flake.homeModules.browser =
     { pkgs, ... }:
     {

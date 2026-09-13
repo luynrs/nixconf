@@ -8,6 +8,7 @@
     imports = [
       inputs.home-manager.nixosModules.default
       inputs.justray.nixosModules.default
+      self.nixosModules.browser
     ];
 
     programs.gpu-screen-recorder.enable = true;
