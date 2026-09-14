@@ -43,6 +43,9 @@
       networking.hostName = lib.mkDefault "luynar";
       networking.networkmanager.enable = true;
       networking.nftables.enable = true;
+      networking.firewall.trustedInterfaces = [ "tailscale0" ];
+
+      services.tailscale.enable = true;
 
       time.timeZone = "Europe/Moscow";
       time.hardwareClockInLocalTime = lib.mkDefault true;
