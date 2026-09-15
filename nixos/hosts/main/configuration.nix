@@ -9,11 +9,12 @@
   };
 
   flake.nixosModules.main = {
+    networking.hostName = "luynar";
+
     imports = [
       self.nixosModules.base
       self.nixosModules.general
       self.nixosModules.hyprland
-      self.nixosModules.fish
       self.nixosModules.openrgb
       self.nixosModules.gpuAmd
       self.nixosModules.gaming

@@ -13,7 +13,7 @@
         "/var/lib/NetworkManager"
         "/var/lib/OpenRGB"
         "/var/lib/justray"
-        "/var/lib/tailscale"
+        "/var/lib/netbird"
         {
           directory = "/var/cache/tuigreet";
           user = "greeter";

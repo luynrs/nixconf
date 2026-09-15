@@ -15,7 +15,6 @@
       self.nixosModules.base
       self.nixosModules.general
       self.nixosModules.hyprland
-      self.nixosModules.fish
       self.nixosModules.gpuNvidia
       self.nixosModules.gaming
       self.nixosModules.bluetooth

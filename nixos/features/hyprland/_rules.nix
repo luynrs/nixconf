@@ -6,22 +6,6 @@
       "${pkgs.xkeyboard_config}/share/X11/xkb/rules/base.lst"
     ]
     [
-      "XCURSOR_SIZE"
-      "24"
-    ]
-    [
-      "XCURSOR_THEME"
-      "Bibata-Modern-Classic"
-    ]
-    [
-      "HYPRCURSOR_SIZE"
-      "24"
-    ]
-    [
-      "HYPRCURSOR_THEME"
-      "Bibata-Modern-Classic"
-    ]
-    [
       "ELECTRON_OZONE_PLATFORM_HINT"
       "auto"
     ]

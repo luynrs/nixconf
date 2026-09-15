@@ -16,7 +16,6 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nur.url = "github:nix-community/NUR";
     justssh = {
       url = "github:luynrs/justssh";
       inputs.nixpkgs.follows = "nixpkgs";

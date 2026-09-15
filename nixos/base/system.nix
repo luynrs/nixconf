@@ -10,6 +10,7 @@
       imports = [
         self.nixosModules.disko
         self.nixosModules.impermanence
+        self.nixosModules.fish
       ];
 
       boot.loader.systemd-boot.enable = true;
@@ -25,27 +26,18 @@
         theme = "bgrt";
       };
 
-      boot.kernelModules = [
-        "tcp_bbr"
-        "sch_cake"
-      ];
-
       boot.kernel.sysctl = {
         "vm.swappiness" = 180;
-        "vm.watermark_boost_factor" = 0;
-        "vm.watermark_scale_factor" = 125;
-        "vm.page-cluster" = 0;
 
         "net.core.default_qdisc" = "cake";
         "net.ipv4.tcp_congestion_control" = "bbr";
       };
 
-      networking.hostName = lib.mkDefault "luynar";
       networking.networkmanager.enable = true;
       networking.nftables.enable = true;
-      networking.firewall.trustedInterfaces = [ "tailscale0" ];
+      networking.firewall.trustedInterfaces = [ "wt0" ];
 
-      services.tailscale.enable = true;
+      services.netbird.enable = true;
 
       time.timeZone = "Europe/Moscow";
       time.hardwareClockInLocalTime = lib.mkDefault true;
@@ -69,13 +61,11 @@
       nix.gc = {
         automatic = true;
         dates = "weekly";
-        options = "--delete-older-than 14d";
+        options = "--delete-older-than 3d";
       };
       nix.optimise.automatic = true;
 
       nixpkgs.config.allowUnfree = true;
-
-      nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
       zramSwap = {
         enable = true;
@@ -134,25 +124,14 @@
         noto-fonts-color-emoji
       ];
 
-      fonts.fontconfig = {
-        defaultFonts = {
-          sansSerif = [
-            "Geist"
-            "Noto Sans"
-          ];
-          serif = [ "Noto Serif" ];
-          monospace = [ "JetBrainsMono Nerd Font" ];
-          emoji = [ "Noto Color Emoji" ];
-        };
-        hinting = {
-          enable = true;
-          style = "slight";
-        };
-        antialias = true;
-        subpixel = {
-          rgba = "rgb";
-          lcdfilter = "default";
-        };
+      fonts.fontconfig.defaultFonts = {
+        sansSerif = [
+          "Geist"
+          "Noto Sans"
+        ];
+        serif = [ "Noto Serif" ];
+        monospace = [ "JetBrainsMono Nerd Font" ];
+        emoji = [ "Noto Color Emoji" ];
       };
 
       system.stateVersion = "26.05";
