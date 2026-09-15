@@ -112,6 +112,10 @@
             activeTrail = true;
             occupiedBg = false;
             shown = 5;
+            displayType = "text";
+            showWindows = false;
+            showWindowsOnSpecialWorkspaces = false;
+            maxWindowIcons = 0;
           };
         };
 

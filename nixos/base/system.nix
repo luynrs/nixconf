@@ -35,9 +35,9 @@
 
       networking.networkmanager.enable = true;
       networking.nftables.enable = true;
-      networking.firewall.trustedInterfaces = [ "wt0" ];
+      networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
-      services.netbird.enable = true;
+      services.tailscale.enable = true;
 
       time.timeZone = "Europe/Moscow";
       time.hardwareClockInLocalTime = lib.mkDefault true;
