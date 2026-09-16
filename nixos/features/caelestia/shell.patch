@@ -134,8 +134,10 @@ index db95b98..6f6ae52 100644
              return layout.implicitHeight + padding * 2;
          const pad = (Config.bar.tray.background ? Tokens.padding.extraSmall : 0) + padding;
 diff --git a/modules/bar/components/workspaces/Workspace.qml b/modules/bar/components/workspaces/Workspace.qml
-index 0acf373e..31325a4e 100644
-@@ -4,12 +4,10 @@
+index f55861f..76ba53e 100644
+--- a/modules/bar/components/workspaces/Workspace.qml
++++ b/modules/bar/components/workspaces/Workspace.qml
+@@ -4,12 +4,10 @@ import QtQuick
  import QtQuick.Layouts
  import Quickshell
  import Quickshell.Hyprland
@@ -148,11 +150,11 @@ index 0acf373e..31325a4e 100644
  
  Item {
      id: root
-@@ -21,30 +19,19 @@
+@@ -28,30 +26,19 @@ Item {
  
-     readonly property list<HyprlandToplevel> toplevels: Hypr.toplevelsForWs(ws)
+     readonly property list<HyprlandToplevel> toplevels: Hypr.toplevelsForWs(ws, GlobalConfig.bar.workspaces.ignoredTags)
      readonly property bool isOccupied: toplevels.length > 0
--    readonly property bool hasWindows: isOccupied && Config.bar.workspaces.showWindows && Config.bar.workspaces.maxWindowIcons > 0
+-    readonly property bool hasWindows: isOccupied && showWindows && Config.bar.workspaces.maxWindowIcons > 0
      readonly property bool focused: activeWsId === ws
 -    readonly property list<int> focusedShapeList: [MaterialShape.Slanted, MaterialShape.Oval, MaterialShape.Pill, MaterialShape.Triangle, MaterialShape.Arrow, MaterialShape.Diamond, MaterialShape.Pentagon, MaterialShape.Gem, MaterialShape.VerySunny, MaterialShape.Sunny, MaterialShape.Cookie4Sided, MaterialShape.Cookie6Sided, MaterialShape.Cookie7Sided, MaterialShape.Cookie9Sided, MaterialShape.Cookie12Sided, MaterialShape.Clover4Leaf, MaterialShape.SoftBurst, MaterialShape.Ghostish]
  
@@ -184,7 +186,7 @@ index 0acf373e..31325a4e 100644
      Behavior on LazyListView.visibleHeight {
          Anim {}
      }
-@@ -61,132 +48,34 @@
+@@ -68,190 +55,34 @@ Item {
          }
      }
  
@@ -217,34 +219,62 @@ index 0acf373e..31325a4e 100644
 -            animate: true
 -            text: {
 -                if (root.focused) {
--                    const label = Config.bar.workspaces.activeLabel;
+-                    const label = root.activeLabel;
 -                    if (label)
 -                        return label;
 -                }
 -
 -                if (root.focused || root.isOccupied) {
--                    const label = Config.bar.workspaces.occupiedLabel;
+-                    const label = root.occupiedLabel;
 -                    if (label)
 -                        return label;
 -                }
 -
--                const label = Config.bar.workspaces.label;
+-                const label = root.label;
 -                if (label)
 -                    return label;
 -
 -                const ws = Hypr.workspaces.values.find(w => w.id === root.ws);
--                const wsName = !ws || ws.name == root.ws ? root.ws : ws.name[0];
+-                const wsName = !ws || ws.name == root.ws ? root.ws : Hypr.trimWsName(ws.name)[0];
 -
 -                const capitalisation = Config.bar.workspaces.capitalisation;
 -                if (capitalisation === BarWorkspaceCapitalisation.Upper)
--                    return wsName.toString().toUpperCase();
+-                    return String(wsName).toUpperCase();
 -                else if (capitalisation === BarWorkspaceCapitalisation.Lower)
--                    return wsName.toString().toLowerCase();
+-                    return String(wsName).toLowerCase();
 -                return wsName;
 -            }
 -            color: Config.bar.workspaces.occupiedBg || root.isOccupied || root.focused ? Colours.palette.m3onSurface : Colours.layer(Colours.palette.m3outlineVariant, 2)
 -            verticalAlignment: Qt.AlignVCenter
 -            font.family: Tokens.font.workspaces
+-        }
+-    }
+-
+-    Component {
+-        id: iconComponent
+-
+-        MaterialIcon {
+-            fill: 1
+-            grade: 25
+-            text: iconCacher.icon
+-            color: Config.bar.workspaces.occupiedBg || root.isOccupied || root.focused ? Colours.palette.m3onSurface : Colours.layer(Colours.palette.m3outlineVariant, 2)
+-            verticalAlignment: Qt.AlignVCenter
+-
+-            WsIconCacher {
+-                id: iconCacher
+-            }
+-        }
+-    }
+-
+-    Component {
+-        id: iconLoaderComponent
+-
+-        Loader {
+-            sourceComponent: loaderIconCacher.icon ? iconComponent : textComponent
+-
+-            WsIconCacher {
+-                id: loaderIconCacher
+-            }
 -        }
 -    }
 -
@@ -255,19 +285,37 @@ index 0acf373e..31325a4e 100644
  
          anchors.fill: parent
 -        spacing: 0
- 
+-
 -        Loader {
 -            id: indicator
-+        horizontalAlignment: Text.AlignHCenter
-+        verticalAlignment: Text.AlignVCenter
  
 -            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
 -            Layout.preferredHeight: Tokens.sizes.bar.innerWidth - Tokens.padding.small
--            sourceComponent: Config.bar.workspaces.displayType === BarWorkspaceDisplay.Text ? textComponent : shapeComponent
+-            sourceComponent: {
+-                if (root.displayType === BarWorkspaceDisplay.Icons)
+-                    return iconLoaderComponent;
+-                if (root.displayType === BarWorkspaceDisplay.Text)
+-                    return textComponent;
+-                return shapeComponent;
++        horizontalAlignment: Text.AlignHCenter
++        verticalAlignment: Text.AlignVCenter
++
++        animate: true
++        text: {
++            const wsObj = Hypr.workspaces.values.find(w => w.id === root.ws);
++            const wsName = !wsObj || wsObj.name == root.ws ? root.ws : wsObj.name[0];
++            let displayName = wsName.toString();
++            const capitalisation = Config.bar.workspaces.capitalisation;
++            if (capitalisation === BarWorkspaceCapitalisation.Upper || capitalisation === "upper") {
++                displayName = displayName.toUpperCase();
++            } else if (capitalisation === BarWorkspaceCapitalisation.Lower || capitalisation === "lower") {
++                displayName = displayName.toLowerCase();
+             }
 -
 -            onItemChanged: root.updateShape()
--        }
--
++            return displayName;
+         }
+ 
 -        Loader {
 -            id: windows
 -
@@ -278,7 +326,7 @@ index 0acf373e..31325a4e 100644
 -            Layout.preferredHeight: root.hasWindows && item ? (item as LazyListView).layoutHeight : 0
 -
 -            visible: active
--            active: Config.bar.workspaces.showWindows && Config.bar.workspaces.maxWindowIcons > 0
+-            active: root.showWindows && Config.bar.workspaces.maxWindowIcons > 0
 -
 -            sourceComponent: LazyListView {
 -                spacing: 0
@@ -317,24 +365,35 @@ index 0acf373e..31325a4e 100644
 -                        Anim {}
 -                    }
 -                }
-+        animate: true
-+        text: {
-+            const wsObj = Hypr.workspaces.values.find(w => w.id === root.ws);
-+            const wsName = !wsObj || wsObj.name == root.ws ? root.ws : wsObj.name[0];
-+            let displayName = wsName.toString();
-+            const capitalisation = Config.bar.workspaces.capitalisation;
-+            if (capitalisation === BarWorkspaceCapitalisation.Upper || capitalisation === "upper") {
-+                displayName = displayName.toUpperCase();
-+            } else if (capitalisation === BarWorkspaceCapitalisation.Lower || capitalisation === "lower") {
-+                displayName = displayName.toLowerCase();
-             }
-+            return displayName;
-         }
-+
+-            }
+-        }
+-    }
+-
+-    component WsIconCacher: QtObject {
+-        id: cacher
+-
+-        property string name
+-        readonly property string icon: Icons.matchIconRuleList(Hypr.trimWsName(name), root.iconRules)
+-        readonly property HyprlandWorkspace wsObj: Hypr.workspaces.values.find(w => w.id === root.ws) ?? null
+-
+-        readonly property Connections conn: Connections {
+-            function onNameChanged(): void {
+-                cacher.updateName();
+-            }
+-
+-            target: cacher.wsObj
+-        }
+-
+-        function updateName(): void {
+-            if (wsObj)
+-                name = wsObj.name;
+-        }
 +        color: Config.bar.workspaces.occupiedBg || root.isOccupied || root.focused
 +            ? Colours.palette.m3onSurface
 +            : Colours.layer(Colours.palette.m3outlineVariant, 2)
-+
+ 
+-        onWsObjChanged: updateName()
+-        Component.onCompleted: updateName()
 +        font.family: Config.appearance.font.workspaces || "Rubik"
 +        font.pixelSize: 15
 +        font.weight: Font.Medium
