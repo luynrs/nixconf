@@ -63,17 +63,12 @@
           };
           clock = {
             background = true;
-            showDate = false;
             showIcon = false;
           };
-          popouts = {
-            activeWindow = false;
-            tray = true;
-          };
+          popouts.activeWindow = false;
           scrollActions = {
             brightness = false;
             volume = false;
-            workspaces = true;
           };
           showOnHover = false;
           statusIcons = [
@@ -104,25 +99,12 @@
           ];
           tray = {
             background = true;
-            compact = false;
             recolour = true;
           };
-          workspaces = {
-            activeIndicator = true;
-            activeTrail = true;
-            occupiedBg = false;
-            shown = 5;
-            displayType = "text";
-            showWindows = false;
-            showWindowsOnSpecialWorkspaces = false;
-            maxWindowIcons = 0;
-          };
+          workspaces.showWindowsOnSpecialWorkspaces = false;
         };
 
-        dashboard = {
-          performance.showBattery = false;
-          showOnHover = false;
-        };
+        dashboard.performance.showBattery = false;
 
         launcher = {
           hiddenApps = [
@@ -134,10 +116,7 @@
           useFuzzy.apps = true;
         };
 
-        notifs = {
-          defaultExpireTimeout = 3000;
-          openExpanded = false;
-        };
+        notifs.defaultExpireTimeout = 3000;
 
         sidebar = {
           showOnHover = true;
@@ -147,8 +126,8 @@
         services = {
           audioIncrement = 0.05;
           brightnessIncrement = 0.05;
-          useFahrenheit = false;
-          useTwelveHourClock = false;
+          weatherUnits = "celsius";
+          clockFormat = "twentyFourHour";
         };
 
         utilities = {
@@ -189,7 +168,6 @@
             dndChanged = false;
             gameModeChanged = false;
             kbLayoutChanged = false;
-            nowPlaying = false;
             numLockChanged = false;
           };
           vpn = {
