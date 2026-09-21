@@ -9,6 +9,10 @@
         source = ./work/AGENTS.md;
         force = true;
       };
+      xdg.configFile."zed/AGENTS.md" = {
+        source = ./work/AGENTS.md;
+        force = true;
+      };
       home.file.".gemini/config/skills/commit/SKILL.md" = {
         source = ./work/command-commit.md;
         force = true;
