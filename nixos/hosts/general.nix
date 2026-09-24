@@ -8,12 +8,14 @@
     imports = [
       inputs.home-manager.nixosModules.default
       inputs.justray.nixosModules.default
+      inputs.codex-desktop.nixosModules.default
       self.nixosModules.browser
       self.nixosModules.scheduler
     ];
 
     programs.gpu-screen-recorder.enable = true;
     programs.justray.enable = true;
+    programs.codexDesktopLinux.enable = true;
 
     home-manager = {
       useGlobalPkgs = true;

@@ -65,13 +65,16 @@
           ".config/justray"
           ".local/share/justray"
 
-          # Разработка и AI (Zed, GitHub, Gemini/Antigravity)
+          # Разработка и AI (Zed, GitHub, Gemini/Antigravity, Codex)
           ".local/share/zed"
           ".config/zed"
           ".config/gh"
           ".config/justssh"
           ".gemini"
           ".codex"
+          ".config/codex-desktop"
+          ".config/ChatGPT"
+          ".local/share/codex-desktop"
 
           # Языки и тулчейны (Go, TS/JS, C/C++)
           "go"

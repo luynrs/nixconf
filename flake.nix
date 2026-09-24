@@ -32,6 +32,10 @@
       url = "github:DietrichGebert/ponytail";
       flake = false;
     };
+    codex-desktop = {
+      url = "github:ilysenko/codex-desktop-linux";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
