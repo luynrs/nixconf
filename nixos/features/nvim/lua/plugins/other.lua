@@ -94,9 +94,34 @@ k("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
 k("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>")
 k("n", "<leader>fb", "<cmd>Telescope buffers<cr>")
 
-require("nvim-treesitter").setup({
-	highlight = { enable = true },
-	indent = { enable = true },
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = {
+		"bash",
+		"sh",
+		"c",
+		"cpp",
+		"css",
+		"go",
+		"html",
+		"javascript",
+		"javascriptreact",
+		"json",
+		"lua",
+		"markdown",
+		"nix",
+		"python",
+		"rust",
+		"toml",
+		"typescript",
+		"typescriptreact",
+		"vim",
+		"help",
+		"yaml",
+	},
+	callback = function()
+		vim.treesitter.start()
+		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+	end,
 })
 
 require("plugins.lsp")

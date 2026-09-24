@@ -15,11 +15,7 @@
       alpha = 0.6;
 
       caelestiaCli = upstream.inputs.caelestia-cli.packages.${system}.default.overrideAttrs (old: {
-        src = pkgs.applyPatches {
-          name = "caelestia-cli-src";
-          src = old.src;
-          patches = [ ./cli.patch ];
-        };
+        patches = (old.patches or [ ]) ++ [ ./cli.patch ];
       });
 
       shellSettings = {
@@ -132,6 +128,12 @@
 
         utilities = {
           enabled = false;
+          toasts = {
+            dndChanged = false;
+            gameModeChanged = false;
+            kbLayoutChanged = false;
+            numLockChanged = false;
+          };
         };
       };
     in
@@ -140,154 +142,151 @@
 
       programs.caelestia = {
         enable = true;
-        cli.enable = true;
-        cli.package = caelestiaCli;
-        cli.settings = {
-          theme = {
-            iconTheme = "MoreWaita";
-            postHook = ''
-              hyprctl reload
-            '';
+        cli = {
+          enable = true;
+          package = caelestiaCli;
+          settings = {
+            theme = {
+              iconTheme = "MoreWaita";
+              postHook = ''
+                hyprctl reload
+              '';
+            };
+            record.extraArgs = [
+              "-k"
+              "av1"
+              "-bm"
+              "cbr"
+              "-q"
+              "12000"
+            ];
           };
-          record.extraArgs = [
-            "-k"
-            "av1"
-            "-bm"
-            "cbr"
-            "-q"
-            "12000"
-          ];
         };
 
-        systemd.enable = false;
-
         package =
-          pkgs.callPackage
-            "${
-              pkgs.applyPatches {
-                name = "caelestia-shell-src";
-                src = upstream;
-                patches = [ ./shell.patch ];
-                patchFlags = [
-                  "-p1"
-                  "-E"
-                ];
-              }
-            }/nix"
-            {
-              m3shapes = upstream.inputs.m3shapes.packages.${system}.default;
-              inherit (upstream) rev;
-              stdenv = pkgs.clangStdenv;
-              quickshell = upstream.inputs.quickshell.packages.${system}.default.override {
-                withX11 = false;
-                withI3 = false;
-              };
-              caelestia-cli = caelestiaCli;
-              withCli = true;
+          (pkgs.callPackage "${upstream}/nix" {
+            m3shapes = upstream.inputs.m3shapes.packages.${system}.default;
+            inherit (upstream) rev;
+            stdenv = pkgs.clangStdenv;
+            quickshell = upstream.inputs.quickshell.packages.${system}.default.override {
+              withX11 = false;
+              withI3 = false;
             };
+            caelestia-cli = caelestiaCli;
+            withCli = true;
+          }).overrideAttrs
+            (old: {
+              patches = (old.patches or [ ]) ++ [ ./shell.patch ];
+              patchFlags = [
+                "-p1"
+                "-E"
+              ];
+            });
       };
 
-      xdg.configFile."caelestia/templates/fish-colors.fish".text = ''
-        # Unquoted, unprefixed hex: a leading "#" starts a fish comment.
-        set -g fish_color_normal {{ onSurface.hex }}
-        set -g fish_color_command {{ teal.hex }}
-        set -g fish_color_keyword {{ mauve.hex }}
-        set -g fish_color_quote {{ yellow.hex }}
-        set -g fish_color_redirection {{ onSurface.hex }}
-        set -g fish_color_end {{ peach.hex }}
-        set -g fish_color_error {{ red.hex }}
-        set -g fish_color_param {{ mauve.hex }}
-        set -g fish_color_comment {{ surface2.hex }}
-        set -g fish_color_selection --background={{ surface0.hex }}
-        set -g fish_color_search_match --background={{ surface0.hex }}
-        set -g fish_color_operator {{ green.hex }}
-        set -g fish_color_escape {{ mauve.hex }}
-        set -g fish_color_autosuggestion {{ surface2.hex }}
+      xdg.configFile = {
+        "caelestia/templates/fish-colors.fish".text = ''
+          # Unquoted, unprefixed hex: a leading "#" starts a fish comment.
+          set -g fish_color_normal {{ onSurface.hex }}
+          set -g fish_color_command {{ teal.hex }}
+          set -g fish_color_keyword {{ mauve.hex }}
+          set -g fish_color_quote {{ yellow.hex }}
+          set -g fish_color_redirection {{ onSurface.hex }}
+          set -g fish_color_end {{ peach.hex }}
+          set -g fish_color_error {{ red.hex }}
+          set -g fish_color_param {{ mauve.hex }}
+          set -g fish_color_comment {{ surface2.hex }}
+          set -g fish_color_selection --background={{ surface0.hex }}
+          set -g fish_color_search_match --background={{ surface0.hex }}
+          set -g fish_color_operator {{ green.hex }}
+          set -g fish_color_escape {{ mauve.hex }}
+          set -g fish_color_autosuggestion {{ surface2.hex }}
 
-        set -g fish_pager_color_progress {{ surface2.hex }}
-        set -g fish_pager_color_prefix {{ teal.hex }}
-        set -g fish_pager_color_completion {{ onSurface.hex }}
-        set -g fish_pager_color_description {{ surface2.hex }}
-      '';
+          set -g fish_pager_color_progress {{ surface2.hex }}
+          set -g fish_pager_color_prefix {{ teal.hex }}
+          set -g fish_pager_color_completion {{ onSurface.hex }}
+          set -g fish_pager_color_description {{ surface2.hex }}
+        '';
 
-      xdg.configFile."caelestia/templates/starship.toml".text = ''
-        add_newline = false
+        "caelestia/templates/starship.toml".text = ''
+          add_newline = false
 
-        format = "\n$cmd_duration $directory$git_branch\n$character"
+          format = "\n$cmd_duration $directory$git_branch\n$character"
 
-        [directory]
-        home_symbol = " "
-        read_only = "  "
-        style = "bold fg:#{{ blue.hex }} bg:#{{ surfaceContainer.hex }}"
-        truncation_length = 2
-        truncation_symbol = ".../"
-        format = "[](fg:#{{ surfaceContainer.hex }})[󰉋 → $path]($style)[](fg:#{{ surfaceContainer.hex }})"
+          [directory]
+          home_symbol = " "
+          read_only = "  "
+          style = "bold fg:#{{ blue.hex }} bg:#{{ surfaceContainer.hex }}"
+          truncation_length = 2
+          truncation_symbol = ".../"
+          format = "[](fg:#{{ surfaceContainer.hex }})[󰉋 → $path]($style)[](fg:#{{ surfaceContainer.hex }})"
 
-        [git_branch]
-        style = "bold fg:#{{ mauve.hex }} bg:#{{ surfaceContainer.hex }}"
-        symbol = "󰘬"
-        truncation_length = 12
-        truncation_symbol = ""
-        format = " 󰜥 [](fg:#{{ surfaceContainer.hex }})[$symbol $branch(:$remote_branch)]($style)[](fg:#{{ surfaceContainer.hex }})"
+          [git_branch]
+          style = "bold fg:#{{ mauve.hex }} bg:#{{ surfaceContainer.hex }}"
+          symbol = "󰘬"
+          truncation_length = 12
+          truncation_symbol = ""
+          format = " 󰜥 [](fg:#{{ surfaceContainer.hex }})[$symbol $branch(:$remote_branch)]($style)[](fg:#{{ surfaceContainer.hex }})"
 
-        [git_status]
-        style = "bold fg:#{{ yellow.hex }} bg:#{{ surfaceContainer.hex }}"
-        format = "[](fg:#{{ surfaceContainer.hex }})[ $all_status$ahead_behind ]($style)[](fg:#{{ surfaceContainer.hex }}) "
-        conflicted = "="
-        ahead = "⇡"
-        behind = "⇣"
-        diverged = "⇕"
-        untracked = "?"
-        stashed = "*"
-        modified = "!"
-        staged = "+"
-        renamed = "»"
-        deleted = "✕"
+          [git_status]
+          style = "bold fg:#{{ yellow.hex }} bg:#{{ surfaceContainer.hex }}"
+          format = "[](fg:#{{ surfaceContainer.hex }})[ $all_status$ahead_behind ]($style)[](fg:#{{ surfaceContainer.hex }}) "
+          conflicted = "="
+          ahead = "⇡"
+          behind = "⇣"
+          diverged = "⇕"
+          untracked = "?"
+          stashed = "*"
+          modified = "!"
+          staged = "+"
+          renamed = "»"
+          deleted = "✕"
 
-        [nix_shell]
-        symbol = "❄ "
-        style = "bold fg:#{{ teal.hex }} bg:#{{ surfaceContainer.hex }}"
-        format = "[](fg:#{{ surfaceContainer.hex }})[ $symbol$name ]($style)[](fg:#{{ surfaceContainer.hex }}) "
-        impure_msg = ""
-        pure_msg = ""
+          [nix_shell]
+          symbol = "❄ "
+          style = "bold fg:#{{ teal.hex }} bg:#{{ surfaceContainer.hex }}"
+          format = "[](fg:#{{ surfaceContainer.hex }})[ $symbol$name ]($style)[](fg:#{{ surfaceContainer.hex }}) "
+          impure_msg = ""
+          pure_msg = ""
 
-        [cmd_duration]
-        min_time = 0
-        style = "bold fg:#{{ lavender.hex }} bg:#{{ surfaceContainer.hex }}"
-        format = "[](fg:#{{ surfaceContainer.hex }})[󰪢 $duration]($style)[](fg:#{{ surfaceContainer.hex }})"
+          [cmd_duration]
+          min_time = 0
+          style = "bold fg:#{{ lavender.hex }} bg:#{{ surfaceContainer.hex }}"
+          format = "[](fg:#{{ surfaceContainer.hex }})[󰪢 $duration]($style)[](fg:#{{ surfaceContainer.hex }})"
 
-        [character]
-        success_symbol = "[❯](bold #{{ green.hex }})"
-        error_symbol = "[❯](bold #{{ red.hex }})"
-        vimcmd_symbol = "[❮](bold #{{ lavender.hex }})"
-      '';
+          [character]
+          success_symbol = "[❯](bold #{{ green.hex }})"
+          error_symbol = "[❯](bold #{{ red.hex }})"
+          vimcmd_symbol = "[❮](bold #{{ lavender.hex }})"
+        '';
 
-      xdg.configFile."caelestia/templates/foot.ini".text = ''
-        [colors-dark]
-        alpha = ${builtins.toJSON alpha}
-        blur = yes
-        background = {{ background.hex }}
-        foreground = {{ onBackground.hex }}
-        cursor = {{ onPrimary.hex }} {{ primary.hex }}
-        selection-background = {{ primary.hex }}
-        selection-foreground = {{ onPrimary.hex }}
-        regular0 = {{ term0.hex }}
-        regular1 = {{ term1.hex }}
-        regular2 = {{ term2.hex }}
-        regular3 = {{ term3.hex }}
-        regular4 = {{ term4.hex }}
-        regular5 = {{ term5.hex }}
-        regular6 = {{ term6.hex }}
-        regular7 = {{ term7.hex }}
-        bright0 = {{ term8.hex }}
-        bright1 = {{ term9.hex }}
-        bright2 = {{ term10.hex }}
-        bright3 = {{ term11.hex }}
-        bright4 = {{ term12.hex }}
-        bright5 = {{ term13.hex }}
-        bright6 = {{ term14.hex }}
-        bright7 = {{ term15.hex }}
-      '';
+        "caelestia/templates/foot.ini".text = ''
+          [colors-dark]
+          alpha = ${builtins.toJSON alpha}
+          blur = yes
+          background = {{ background.hex }}
+          foreground = {{ onBackground.hex }}
+          cursor = {{ onPrimary.hex }} {{ primary.hex }}
+          selection-background = {{ primary.hex }}
+          selection-foreground = {{ onPrimary.hex }}
+          regular0 = {{ term0.hex }}
+          regular1 = {{ term1.hex }}
+          regular2 = {{ term2.hex }}
+          regular3 = {{ term3.hex }}
+          regular4 = {{ term4.hex }}
+          regular5 = {{ term5.hex }}
+          regular6 = {{ term6.hex }}
+          regular7 = {{ term7.hex }}
+          bright0 = {{ term8.hex }}
+          bright1 = {{ term9.hex }}
+          bright2 = {{ term10.hex }}
+          bright3 = {{ term11.hex }}
+          bright4 = {{ term12.hex }}
+          bright5 = {{ term13.hex }}
+          bright6 = {{ term14.hex }}
+          bright7 = {{ term15.hex }}
+        '';
+      };
 
       home.activation.caelestiaShellConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         target="${config.xdg.configHome}/caelestia/shell.json"
@@ -303,12 +302,10 @@
         cli=${config.programs.caelestia.cli.package}/bin/caelestia
         scheme="${config.xdg.stateHome}/caelestia/scheme.json"
         if [ ! -e "$scheme" ]; then
-          "$cli" scheme set -n dynamic || true
+          # A fresh profile has no wallpaper for a dynamic scheme yet.
+          "$cli" scheme set -n catppuccin -f mocha -m dark
         else
-          "$cli" scheme set \
-            -n "$(${pkgs.jq}/bin/jq -r .name "$scheme")" \
-            -f "$(${pkgs.jq}/bin/jq -r .flavour "$scheme")" \
-            -m "$(${pkgs.jq}/bin/jq -r .mode "$scheme")" || true
+          "$cli" scheme set -m "$(${pkgs.jq}/bin/jq -r .mode "$scheme")"
         fi
       '';
     };

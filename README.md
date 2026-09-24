@@ -1,5 +1,4 @@
-
-# A LOT OF CONFIG WAS VIBECODED 🥀
+# nixconf
 
 ## Rebuild
 
@@ -7,7 +6,7 @@
 sudo nixos-rebuild switch --flake .#luynar   # десктоп
 sudo nixos-rebuild switch --flake .#laptop   # ноут
 # без #host — сама подхватит по имени машины, если оно совпадает с атрибутом
-nh home switch                                # или home-manager
+nh os switch                                  # включает Home Manager
 nix fmt                                       # форматирование (nixfmt)
 ```
 
@@ -55,8 +54,8 @@ Wallpapers/                      обои для рофл-свитчера
 1. В `nixos/hosts/main/configuration.nix` убери строчку `preferences.disko.dualboot = true;`
 2. Запусти:
    ```bash
-   sudo nix run github:nix-community/disko -- -m disko --flake github:luynrs/nixconf#luynar
-   sudo nixos-install --flake github:luynrs/nixconf#luynar --no-root-passwd
+   sudo nix run github:nix-community/disko -- -m disko --flake .#luynar
+   sudo nixos-install --flake .#luynar --no-root-passwd
    ```
 
 После первой загрузки:

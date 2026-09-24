@@ -22,6 +22,11 @@
 
     services.power-profiles-daemon.enable = true;
 
+    hardware.nvidia.prime = {
+      amdgpuBusId = "PCI:6:0:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
+
     preferences = {
       monitors."eDP-1" = {
         width = 1920;

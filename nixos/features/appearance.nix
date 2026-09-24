@@ -1,4 +1,4 @@
-_: {
+{
   flake.homeModules.appearance = { pkgs, ... }: {
     home.packages = [ pkgs.adwaita-icon-theme ];
 

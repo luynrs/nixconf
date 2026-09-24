@@ -46,7 +46,6 @@
 
       isNixModule = file: file.hasExt "nix" && file.name != "flake.nix" && !lib.hasPrefix "_" file.name;
 
-      importTree = path: toList (fileFilter isNixModule path);
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
@@ -55,12 +54,15 @@
         inputs.treefmt-nix.flakeModule
         inputs.home-manager.flakeModules.default
       ]
-      ++ importTree ./nixos;
+      ++ toList (fileFilter isNixModule ./nixos);
 
       perSystem = {
         treefmt = {
           projectRootFile = "flake.nix";
-          programs.nixfmt.enable = true;
+          programs = {
+            nixfmt.enable = true;
+            stylua.enable = true;
+          };
           settings.global.excludes = [ "**/hardware-configuration.nix" ];
         };
       };

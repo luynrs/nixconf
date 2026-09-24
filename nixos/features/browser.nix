@@ -1,5 +1,5 @@
 {
-  flake.nixosModules.browser = _: {
+  flake.nixosModules.browser = {
     programs.chromium = {
       enable = true;
       extraOpts = {

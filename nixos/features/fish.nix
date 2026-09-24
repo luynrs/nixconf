@@ -1,9 +1,9 @@
-_: {
+{
   flake.nixosModules.fish = {
     programs.fish.enable = true;
   };
 
-  flake.homeModules.fish = { ... }: {
+  flake.homeModules.fish = {
     programs.fish = {
       enable = true;
 
@@ -25,8 +25,6 @@ _: {
         function starship_transient_prompt_func
             starship module character
         end
-
-        set -g fish_transient_prompt 1
 
         if test -f "$HOME/.local/state/caelestia/theme/fish-colors.fish"
             source "$HOME/.local/state/caelestia/theme/fish-colors.fish"

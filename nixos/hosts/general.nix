@@ -4,7 +4,7 @@
   ...
 }:
 {
-  flake.nixosModules.general = _: {
+  flake.nixosModules.general = {
     imports = [
       inputs.home-manager.nixosModules.default
       inputs.justray.nixosModules.default
@@ -13,9 +13,13 @@
       self.nixosModules.scheduler
     ];
 
-    programs.gpu-screen-recorder.enable = true;
-    programs.justray.enable = true;
-    programs.codexDesktopLinux.enable = true;
+    programs = {
+      gpu-screen-recorder.enable = true;
+
+      justray.enable = true;
+
+      codexDesktopLinux.enable = true;
+    };
 
     home-manager = {
       useGlobalPkgs = true;
@@ -56,7 +60,7 @@
 
       home.activation.seedWallpapers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         mkdir -p "$HOME/Pictures/Wallpapers"
-        cp -n --no-preserve=mode ${../../Wallpapers}/* "$HOME/Pictures/Wallpapers/" 2>/dev/null || true
+        cp --update=none --no-preserve=mode ${../../Wallpapers}/* "$HOME/Pictures/Wallpapers/" 2>/dev/null || true
       '';
     };
 }

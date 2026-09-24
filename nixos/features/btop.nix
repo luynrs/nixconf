@@ -1,20 +1,14 @@
-_: {
+{
   flake.homeModules.btop =
     {
       pkgs,
-      lib,
       osConfig,
       ...
     }:
     {
       programs.btop = {
         enable = true;
-        package = lib.mkIf osConfig.services.lact.enable (
-          pkgs.writeShellScriptBin "btop" ''
-            export LD_LIBRARY_PATH="${pkgs.rocmPackages.rocm-smi}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-            exec "${pkgs.btop}/bin/btop" "$@"
-          ''
-        );
+        package = pkgs.btop.override { rocmSupport = osConfig.services.lact.enable; };
 
         settings = {
           color_theme = "caelestia";

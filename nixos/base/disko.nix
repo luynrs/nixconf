@@ -3,139 +3,91 @@
   flake.nixosModules.disko =
     { lib, config, ... }:
     let
-      cfg = config.preferences.disko;
+      rootFilesystem = {
+        type = "btrfs";
+        extraArgs = [ "-f" ];
+        subvolumes =
+          lib.mapAttrs
+            (_: mountpoint: {
+              inherit mountpoint;
+              mountOptions = [
+                "compress=zstd"
+                "noatime"
+              ];
+            })
+            {
+              "@nix" = "/nix";
+              "@persist" = "/persist";
+              "@log" = "/var/log";
+            };
+      };
+      bootFilesystem = {
+        type = "filesystem";
+        format = "vfat";
+        mountpoint = "/boot";
+        mountOptions = [ "umask=0077" ];
+      };
     in
     {
       imports = [ inputs.disko.nixosModules.disko ];
 
-      options.preferences.disko = {
-        dualboot = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = "Use dualboot partitions (p5/p6) instead of wiping the whole disk";
-        };
+      options.preferences.disko.dualboot = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Use dualboot partitions (p5/p6) instead of wiping the whole disk";
       };
 
       config = {
-        disko.devices =
-          if cfg.dualboot then
-            {
-              disk = {
+        disko.devices = {
+          disk =
+            if config.preferences.disko.dualboot then
+              {
                 boot = {
                   type = "disk";
                   device = "/dev/nvme0n1p5";
-                  content = {
-                    type = "filesystem";
-                    format = "vfat";
+                  content = bootFilesystem // {
                     extraArgs = [
                       "-F"
                       "32"
                     ];
-                    mountpoint = "/boot";
-                    mountOptions = [ "umask=0077" ];
                   };
                 };
                 root = {
                   type = "disk";
                   device = "/dev/nvme0n1p6";
+                  content = rootFilesystem;
+                };
+              }
+            else
+              {
+                main = {
+                  type = "disk";
+                  device = "/dev/nvme0n1";
                   content = {
-                    type = "btrfs";
-                    extraArgs = [ "-f" ];
-                    subvolumes = {
-                      "@nix" = {
-                        mountpoint = "/nix";
-                        mountOptions = [
-                          "compress=zstd"
-                          "noatime"
-                        ];
+                    type = "gpt";
+                    partitions = {
+                      ESP = {
+                        size = "1G";
+                        type = "EF00";
+                        content = bootFilesystem;
                       };
-                      "@persist" = {
-                        mountpoint = "/persist";
-                        mountOptions = [
-                          "compress=zstd"
-                          "noatime"
-                        ];
-                      };
-                      "@log" = {
-                        mountpoint = "/var/log";
-                        mountOptions = [
-                          "compress=zstd"
-                          "noatime"
-                        ];
+                      root = {
+                        size = "100%";
+                        content = rootFilesystem;
                       };
                     };
                   };
                 };
               };
-              nodev."/" = {
-                fsType = "tmpfs";
-                mountOptions = [
-                  "defaults"
-                  "size=4G"
-                  "mode=755"
-                ];
-              };
-            }
-          else
-            {
-              disk.main = {
-                type = "disk";
-                device = "/dev/nvme0n1";
-                content = {
-                  type = "gpt";
-                  partitions = {
-                    ESP = {
-                      size = "1G";
-                      type = "EF00";
-                      content = {
-                        type = "filesystem";
-                        format = "vfat";
-                        mountpoint = "/boot";
-                        mountOptions = [ "umask=0077" ];
-                      };
-                    };
-                    root = {
-                      size = "100%";
-                      content = {
-                        type = "btrfs";
-                        extraArgs = [ "-f" ];
-                        subvolumes = {
-                          "@nix" = {
-                            mountpoint = "/nix";
-                            mountOptions = [
-                              "compress=zstd"
-                              "noatime"
-                            ];
-                          };
-                          "@persist" = {
-                            mountpoint = "/persist";
-                            mountOptions = [
-                              "compress=zstd"
-                              "noatime"
-                            ];
-                          };
-                          "@log" = {
-                            mountpoint = "/var/log";
-                            mountOptions = [
-                              "compress=zstd"
-                              "noatime"
-                            ];
-                          };
-                        };
-                      };
-                    };
-                  };
-                };
-              };
-              nodev."/" = {
-                fsType = "tmpfs";
-                mountOptions = [
-                  "defaults"
-                  "size=4G"
-                  "mode=755"
-                ];
-              };
-            };
+          nodev."/" = {
+            fsType = "tmpfs";
+            mountOptions = [
+              "defaults"
+              "size=4G"
+              "mode=755"
+            ];
+          };
+        };
 
         fileSystems."/persist".neededForBoot = true;
         fileSystems."/var/log".neededForBoot = true;

@@ -32,6 +32,7 @@
       ];
 
       extraPlugins = with pkgs.vimPlugins; [
+        nvim-lspconfig
         nvim-cmp
         cmp-nvim-lsp
         cmp-buffer
@@ -42,7 +43,30 @@
         nvim-autopairs
         lazydev-nvim
         plenary-nvim
-        nvim-treesitter
+        (nvim-treesitter.withPlugins (
+          parsers: with parsers; [
+            bash
+            c
+            cpp
+            css
+            go
+            html
+            javascript
+            json
+            lua
+            markdown
+            markdown_inline
+            nix
+            python
+            rust
+            toml
+            tsx
+            typescript
+            vim
+            vimdoc
+            yaml
+          ]
+        ))
         nvim-tree-lua
         telescope-nvim
         lualine-nvim

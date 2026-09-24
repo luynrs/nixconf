@@ -3,29 +3,36 @@
   flake.homeModules.work =
     { pkgs, ... }:
     {
-      home.packages = [ pkgs.antigravity-cli ];
+      home = {
+        packages = [ pkgs.antigravity-cli ];
 
-      home.file.".gemini/config/rules/AGENTS.md" = {
-        source = ./work/AGENTS.md;
-        force = true;
+        file = {
+          ".gemini/config/rules/AGENTS.md" = {
+            source = ./work/AGENTS.md;
+            force = true;
+          };
+
+          ".gemini/config/skills/commit/SKILL.md" = {
+            source = ./work/command-commit.md;
+            force = true;
+          };
+
+          ".gemini/config/plugins/ponytail" = {
+            source = inputs.ponytail;
+            force = true;
+          };
+
+          ".gemini/config/mcp_config.json" = {
+            source = ./work/mcp_config.json;
+            force = true;
+          };
+        };
       };
+
       xdg.configFile."zed/AGENTS.md" = {
         source = ./work/AGENTS.md;
         force = true;
       };
-      home.file.".gemini/config/skills/commit/SKILL.md" = {
-        source = ./work/command-commit.md;
-        force = true;
-      };
-      home.file.".gemini/config/plugins/ponytail" = {
-        source = inputs.ponytail;
-        force = true;
-      };
-      home.file.".gemini/config/mcp_config.json" = {
-        source = ./work/mcp_config.json;
-        force = true;
-      };
-
       programs.git = {
         enable = true;
         settings = {

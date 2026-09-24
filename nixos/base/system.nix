@@ -1,4 +1,4 @@
-{ inputs, self, ... }:
+{ self, ... }:
 {
   flake.nixosModules.base =
     {
@@ -13,58 +13,91 @@
         self.nixosModules.fish
       ];
 
-      boot.loader.systemd-boot.enable = true;
-      boot.loader.efi.canTouchEfiVariables = true;
-      boot.loader.timeout = 0;
-      boot.kernelParams = [
-        "quiet"
-        "splash"
-      ];
+      boot = {
+        loader = {
+          systemd-boot.enable = true;
+          efi.canTouchEfiVariables = true;
+          timeout = 0;
+        };
 
-      boot.plymouth = {
-        enable = true;
-        theme = "bgrt";
+        kernelParams = [
+          "quiet"
+          "splash"
+        ];
+
+        plymouth = {
+          enable = true;
+          theme = "bgrt";
+        };
+
+        kernel.sysctl = {
+          "vm.swappiness" = 180;
+
+          "net.core.default_qdisc" = "cake";
+          "net.ipv4.tcp_congestion_control" = "bbr";
+        };
       };
 
-      boot.kernel.sysctl = {
-        "vm.swappiness" = 180;
-
-        "net.core.default_qdisc" = "cake";
-        "net.ipv4.tcp_congestion_control" = "bbr";
+      networking = {
+        networkmanager.enable = true;
+        nftables.enable = true;
+        firewall.trustedInterfaces = [ "tailscale0" ];
       };
 
-      networking.networkmanager.enable = true;
-      networking.nftables.enable = true;
-      networking.firewall.trustedInterfaces = [ "tailscale0" ];
+      services = {
+        tailscale.enable = true;
+        fstrim.enable = true;
+        gvfs.enable = true;
+        upower.enable = true;
+        speechd.enable = false;
 
-      services.tailscale.enable = true;
+        pipewire = {
+          enable = true;
+          alsa.enable = true;
+          pulse.enable = true;
+          wireplumber.enable = true;
+        };
+
+        greetd = {
+          enable = true;
+          settings.default_session = {
+            command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session -u luynar --cmd start-hyprland";
+            user = "greeter";
+          };
+        };
+      };
 
       time.timeZone = "Europe/Moscow";
       time.hardwareClockInLocalTime = lib.mkDefault true;
       i18n.defaultLocale = "en_US.UTF-8";
       console.keyMap = "us";
 
-      nix.package = pkgs.lix;
-      nix.settings = {
-        experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
-        substituters = [
-          "https://cache.nixos.org"
-          "https://nix-community.cachix.org"
-        ];
-        trusted-public-keys = [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        ];
+      nix = {
+        package = pkgs.lix;
+
+        settings = {
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ];
+          substituters = [
+            "https://cache.nixos.org"
+            "https://nix-community.cachix.org"
+          ];
+          trusted-public-keys = [
+            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          ];
+        };
+
+        gc = {
+          automatic = true;
+          dates = "weekly";
+          options = "--delete-older-than 3d";
+        };
+
+        optimise.automatic = true;
       };
-      nix.gc = {
-        automatic = true;
-        dates = "weekly";
-        options = "--delete-older-than 3d";
-      };
-      nix.optimise.automatic = true;
 
       nixpkgs.config.allowUnfree = true;
 
@@ -73,8 +106,6 @@
         algorithm = "zstd";
       };
       security.rtkit.enable = true;
-      services.fstrim.enable = true;
-
       programs.nix-ld = {
         enable = true;
         libraries = with pkgs; [
@@ -86,10 +117,6 @@
         ];
       };
 
-      services.gvfs.enable = true;
-      services.upower.enable = true;
-      services.speechd.enable = false;
-
       users.users.luynar = {
         isNormalUser = true;
         hashedPassword = "$6$Vz0gDiMZEBwLvMEo$Woh4mJnlouv1uCPQotwxyOBGJPRPhCFTI2ijgwiRYezdzizD03xcdDghXtTUF2Rn5Jpek7gFP1vOW4Pi2LO.01";
@@ -100,21 +127,6 @@
           "audio"
         ];
         shell = pkgs.fish;
-      };
-
-      services.pipewire = {
-        enable = true;
-        alsa.enable = true;
-        pulse.enable = true;
-        wireplumber.enable = true;
-      };
-
-      services.greetd = {
-        enable = true;
-        settings.default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session -u luynar --cmd start-hyprland";
-          user = "greeter";
-        };
       };
 
       fonts.packages = with pkgs; [

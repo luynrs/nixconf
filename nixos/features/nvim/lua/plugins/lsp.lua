@@ -9,14 +9,14 @@ local servers = {
 	"cssls",
 }
 
-local caps = require("cmp_nvim_lsp").default_capabilities()
-for _, s in ipairs(servers) do
-	vim.lsp.config(s, { capabilities = caps })
-	vim.lsp.enable(s)
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+for _, server in ipairs(servers) do
+	vim.lsp.config(server, { capabilities = capabilities })
+	vim.lsp.enable(server)
 end
 
 local cmp = require("cmp")
-local snip = require("luasnip")
+local snippets = require("luasnip")
 
 vim.opt.completeopt = "menu,menuone,noselect"
 vim.opt.pumheight = 10
@@ -25,7 +25,11 @@ cmp.setup({
 	preselect = cmp.PreselectMode.None,
 	performance = { max_view_entries = 10 },
 
-	snippet = { expand = function(a) snip.lsp_expand(a.body) end },
+	snippet = {
+		expand = function(args)
+			snippets.lsp_expand(args.body)
+		end,
+	},
 
 	window = {
 		completion = cmp.config.window.bordered({ scrollbar = false, max_height = 10, max_width = 48 }),
@@ -45,22 +49,22 @@ cmp.setup({
 		["<C-Space>"] = cmp.mapping.complete(),
 		["<C-e>"] = cmp.mapping.abort(),
 		["<CR>"] = cmp.mapping.confirm({ select = true }),
-		["<Tab>"] = function(f)
+		["<Tab>"] = function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			elseif snip.expand_or_jumpable() then
-				snip.expand_or_jump()
+			elseif snippets.expand_or_jumpable() then
+				snippets.expand_or_jump()
 			else
-				f()
+				fallback()
 			end
 		end,
-		["<S-Tab>"] = function(f)
+		["<S-Tab>"] = function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
-			elseif snip.jumpable(-1) then
-				snip.jump(-1)
+			elseif snippets.jumpable(-1) then
+				snippets.jump(-1)
 			else
-				f()
+				fallback()
 			end
 		end,
 	}),
@@ -77,7 +81,4 @@ require("lazydev").setup()
 
 require("nvim-autopairs").setup({ check_ts = true })
 
-local ok, ap = pcall(require, "nvim-autopairs.completion.cmp")
-if ok then
-	cmp.event:on("confirm_done", ap.on_confirm_done())
-end
+cmp.event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())

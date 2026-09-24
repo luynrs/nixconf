@@ -1,4 +1,4 @@
-_: {
+{
   flake.nixosModules.gpuAmd = {
     hardware.graphics = {
       enable = true;

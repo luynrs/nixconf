@@ -54,6 +54,7 @@
           ".local/share/nix"
           ".local/state/nix"
           ".local/state/home-manager"
+          ".local/state/nvim"
 
           # Браузер и мессенджеры
           ".config/chromium"
