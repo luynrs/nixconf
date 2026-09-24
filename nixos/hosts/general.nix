@@ -8,7 +8,6 @@
     imports = [
       inputs.home-manager.nixosModules.default
       inputs.justray.nixosModules.default
-      inputs.codex-desktop.nixosModules.default
       self.nixosModules.browser
       self.nixosModules.scheduler
     ];
@@ -18,8 +17,15 @@
 
       justray.enable = true;
 
-      codexDesktopLinux.enable = true;
     };
+
+    environment.etc."codex/config.toml".text = ''
+      model = "gpt-6-astra"
+      model_reasoning_effort = "medium"
+
+      [mcp_servers.context7]
+      url = "https://mcp.context7.com/mcp"
+    '';
 
     home-manager = {
       useGlobalPkgs = true;

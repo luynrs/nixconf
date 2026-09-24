@@ -7,6 +7,8 @@
         packages = [ pkgs.antigravity-cli ];
 
         file = {
+          ".codex/AGENTS.md".force = true;
+
           ".gemini/config/rules/AGENTS.md" = {
             source = ./work/AGENTS.md;
             force = true;
@@ -33,6 +35,29 @@
         source = ./work/AGENTS.md;
         force = true;
       };
+
+      programs.codex = {
+        enable = true;
+        package = pkgs.symlinkJoin {
+          name = "codex-${pkgs.codex.version}";
+          paths = [ pkgs.codex ];
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/codex --set HTTPS_PROXY socks5h://127.0.0.1:10808
+          '';
+        };
+        context = ./work/AGENTS.md;
+        skills = {
+          commit = ./work/command-commit.md;
+          ponytail = inputs.ponytail + "/skills/ponytail";
+          ponytail-review = inputs.ponytail + "/skills/ponytail-review";
+          ponytail-audit = inputs.ponytail + "/skills/ponytail-audit";
+          ponytail-debt = inputs.ponytail + "/skills/ponytail-debt";
+          ponytail-gain = inputs.ponytail + "/skills/ponytail-gain";
+          ponytail-help = inputs.ponytail + "/skills/ponytail-help";
+        };
+      };
+
       programs.git = {
         enable = true;
         settings = {

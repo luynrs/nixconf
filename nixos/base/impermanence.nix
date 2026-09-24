@@ -74,9 +74,7 @@
           ".config/justssh"
           ".gemini"
           ".codex"
-          ".config/codex-desktop"
           ".config/ChatGPT"
-          ".local/share/codex-desktop"
 
           # Языки и тулчейны (Go, TS/JS, C/C++)
           "go"
