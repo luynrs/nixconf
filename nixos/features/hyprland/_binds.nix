@@ -24,7 +24,10 @@ in
   (b (mod "L") ''hl.dsp.global("caelestia:lock")'' null)
   (b (mod "SHIFT + Q") ''hl.dsp.global("caelestia:session")'' null)
   (b (mod "SPACE") ''hl.dsp.window.float({ action = "toggle" })'' null)
-  (b (mod "SHIFT + R") ''hl.dsp.exec_cmd("caelestia shell -k 2>/dev/null; pkill -x .quickshell-wra 2>/dev/null; for i in $(seq 1 20); do pgrep -x .quickshell-wra >/dev/null || break; sleep 0.05; done; pkill -9 -x .quickshell-wra 2>/dev/null; caelestia shell -d")'' null)
+  (b (mod "SHIFT + R")
+    ''hl.dsp.exec_cmd("caelestia shell -k 2>/dev/null; pkill -x .quickshell-wra 2>/dev/null; for i in $(seq 1 20); do pgrep -x .quickshell-wra >/dev/null || break; sleep 0.05; done; pkill -9 -x .quickshell-wra 2>/dev/null; caelestia shell -d")''
+    null
+  )
   (b (mod "D") ''hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })'' null)
   (b (mod "F") ''hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" })'' null)
   (b (mod "S") ''hl.dsp.global("caelestia:launcher")'' null)

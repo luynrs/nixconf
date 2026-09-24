@@ -15,7 +15,7 @@ in
           hl.exec_cmd("wl-paste --watch cliphist -max-items 25 store")
 
           hl.exec_cmd(browser)
-          hl.exec_cmd("equibop")
+          hl.exec_cmd("discord")
           hl.exec_cmd("AyuGram")
           hl.exec_cmd("zeditor")
           hl.exec_cmd("steam")

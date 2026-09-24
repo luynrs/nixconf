@@ -57,7 +57,8 @@
 
           # Браузер и мессенджеры
           ".config/chromium"
-          ".config/equibop"
+          ".config/discord"
+          ".config/Vencord"
           ".local/share/AyuGramDesktop"
           ".local/share/TelegramDesktop"
 

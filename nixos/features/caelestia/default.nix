@@ -132,66 +132,6 @@
 
         utilities = {
           enabled = false;
-          maxToasts = 3;
-          quickToggles = [
-            {
-              enabled = true;
-              id = "wifi";
-            }
-            {
-              enabled = true;
-              id = "bluetooth";
-            }
-            {
-              enabled = true;
-              id = "mic";
-            }
-            {
-              enabled = true;
-              id = "settings";
-            }
-            {
-              enabled = true;
-              id = "gameMode";
-            }
-            {
-              enabled = false;
-              id = "dnd";
-            }
-            {
-              enabled = true;
-              id = "vpn";
-            }
-          ];
-          toasts = {
-            configLoaded = false;
-            dndChanged = false;
-            gameModeChanged = false;
-            kbLayoutChanged = false;
-            numLockChanged = false;
-          };
-          vpn = {
-            enabled = false;
-            provider = [
-              {
-                connectCmd = [
-                  "jray"
-                  "up"
-                  "--tun"
-                ];
-                disconnectCmd = [
-                  "jray"
-                  "up"
-                  "--proxy"
-                ];
-                displayName = "justray";
-                id = "vpn-mt4hvdiz-42oig";
-                interface = "justray";
-                name = "justray";
-              }
-            ];
-            selectedProvider = "vpn-mt4hvdiz-42oig";
-          };
         };
       };
     in

@@ -18,7 +18,7 @@
       no_initial_focus = true;
     }
     {
-      match.class = "^equibop$";
+      match.class = "^discord$";
       workspace = "2 silent";
       no_initial_focus = true;
       focus_on_activate = false;

@@ -44,6 +44,7 @@
       i18n.defaultLocale = "en_US.UTF-8";
       console.keyMap = "us";
 
+      nix.package = pkgs.lix;
       nix.settings = {
         experimental-features = [
           "nix-command"
@@ -119,7 +120,6 @@
       fonts.packages = with pkgs; [
         geist-font
         nerd-fonts.jetbrains-mono
-        jetbrains-mono
         noto-fonts
         noto-fonts-color-emoji
       ];

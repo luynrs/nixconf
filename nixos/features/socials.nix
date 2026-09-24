@@ -4,27 +4,25 @@
     {
       home.packages = [
         pkgs.ayugram-desktop
-        (pkgs.equibop.overrideAttrs (old: {
-          postFixup = old.postFixup + ''
-            wrapProgram $out/bin/equibop \
-              --add-flags "--ozone-platform-hint=wayland --disable-xcb"
-          '';
-        }))
+        (pkgs.discord.override {
+          withVencord = true;
+          withOpenASAR = true;
+        })
       ];
 
-      home.activation.seedEquibopPlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        mkdir -p "$HOME/.config/equibop/settings"
-        if [ ! -f "$HOME/.config/equibop/settings/settings.json" ]; then
-          echo '{}' > "$HOME/.config/equibop/settings/settings.json"
+      home.activation.seedVencordPlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        mkdir -p "$HOME/.config/Vencord/settings"
+        if [ ! -f "$HOME/.config/Vencord/settings/settings.json" ]; then
+          echo '{}' > "$HOME/.config/Vencord/settings/settings.json"
         fi
         ${pkgs.jq}/bin/jq \
           '.plugins.FakeNitro.enabled = true |
            .plugins.VolumeBooster.enabled = true |
            .plugins.PlatformIndicators.enabled = true' \
-          "$HOME/.config/equibop/settings/settings.json" \
-        > "$HOME/.config/equibop/settings/settings.json.tmp" \
-        && mv "$HOME/.config/equibop/settings/settings.json.tmp" \
-           "$HOME/.config/equibop/settings/settings.json"
+          "$HOME/.config/Vencord/settings/settings.json" \
+        > "$HOME/.config/Vencord/settings/settings.json.tmp" \
+        && mv "$HOME/.config/Vencord/settings/settings.json.tmp" \
+           "$HOME/.config/Vencord/settings/settings.json"
       '';
     };
 }
