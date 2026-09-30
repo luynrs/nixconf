@@ -7,6 +7,12 @@
         packages = [ pkgs.antigravity-cli ];
 
         file = {
+          "instructions" = {
+            source = ./work/instructions;
+            recursive = true;
+            force = true;
+          };
+
           ".codex/AGENTS.md".force = true;
 
           ".gemini/config/rules/AGENTS.md" = {
@@ -31,6 +37,12 @@
         };
       };
 
+      xdg.configFile."instructions" = {
+        source = ./work/instructions;
+        recursive = true;
+        force = true;
+      };
+
       xdg.configFile."zed/AGENTS.md" = {
         source = ./work/AGENTS.md;
         force = true;
@@ -39,8 +51,8 @@
       programs.codex = {
         enable = true;
         package = pkgs.symlinkJoin {
-          name = "codex-${pkgs.codex.version}";
-          paths = [ pkgs.codex ];
+          name = "codex";
+          paths = [ inputs.codex-cli.packages.${pkgs.system}.default ];
           nativeBuildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
             wrapProgram $out/bin/codex --set HTTPS_PROXY socks5h://127.0.0.1:10808

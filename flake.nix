@@ -32,6 +32,10 @@
       url = "github:DietrichGebert/ponytail";
       flake = false;
     };
+    codex-cli = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

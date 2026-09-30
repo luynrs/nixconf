@@ -10,3 +10,4 @@ opt.number = true
 opt.laststatus = 3
 opt.signcolumn = "yes"
 opt.showmode = false
+opt.clipboard = "unnamedplus"

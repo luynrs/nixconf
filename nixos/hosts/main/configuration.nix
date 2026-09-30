@@ -21,6 +21,8 @@
       self.nixosModules.bluetooth
     ];
 
+    time.hardwareClockInLocalTime = true;
+
     preferences = {
       disko.dualboot = true;
 

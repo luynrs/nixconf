@@ -8,15 +8,11 @@
     imports = [
       inputs.home-manager.nixosModules.default
       inputs.justray.nixosModules.default
-      self.nixosModules.browser
-      self.nixosModules.scheduler
     ];
 
     programs = {
       gpu-screen-recorder.enable = true;
-
       justray.enable = true;
-
     };
 
     environment.etc."codex/config.toml".text = ''
