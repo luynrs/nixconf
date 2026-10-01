@@ -13,7 +13,7 @@ in
           hl.exec_cmd(${toLua polkitAgent})
           hl.exec_cmd("wl-paste --watch cliphist -max-items 25 store")
 
-          hl.exec_cmd("sed -i -e 's/\"exit_type\":\"Crashed\"/\"exit_type\":\"Normal\"/' -e 's/\"exited_cleanly\":false/\"exited_cleanly\":true/' ~/.config/chromium/Default/Preferences 2>/dev/null; " .. browser)
+          hl.exec_cmd(browser)
           hl.exec_cmd("discord")
           hl.exec_cmd("AyuGram")
           hl.exec_cmd("zeditor")

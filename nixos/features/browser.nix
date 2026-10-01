@@ -13,6 +13,7 @@
           "--enable-zero-copy"
           "--ignore-gpu-blocklist"
           "--enable-gpu-rasterization"
+          "--disable-session-crashed-bubble"
         ];
         extensions = [
           # uBlock Origin Lite

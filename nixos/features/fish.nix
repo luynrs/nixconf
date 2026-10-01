@@ -10,15 +10,13 @@
       shellAliases = {
         clear = "printf '\\033[2J\\033[3J\\033[1;1H'";
         ls = "eza --icons=auto";
-        zeditor = "zed";
+        zed = "zeditor";
       };
 
       interactiveShellInit = ''
         if test -f "$HOME/.local/state/caelestia/sequences.txt"
             cat "$HOME/.local/state/caelestia/sequences.txt"
         end
-
-        fastfetch
 
         set fish_greeting
 

@@ -13,8 +13,6 @@
             force = true;
           };
 
-          ".codex/AGENTS.md".force = true;
-
           ".gemini/config/rules/AGENTS.md" = {
             source = ./work/AGENTS.md;
             force = true;

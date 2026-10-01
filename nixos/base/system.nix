@@ -24,7 +24,6 @@
         kernelParams = [
           "quiet"
           "splash"
-          "amdgpu.reset_method=4"
         ];
 
         plymouth = {
@@ -120,6 +119,7 @@
           "networkmanager"
           "video"
           "audio"
+          "render"
         ];
         shell = pkgs.fish;
       };
