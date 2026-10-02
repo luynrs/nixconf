@@ -43,6 +43,9 @@
         networkmanager.enable = true;
         nftables.enable = true;
         firewall.trustedInterfaces = [ "tailscale0" ];
+        hosts = {
+          "130.255.77.28" = [ "ntc.party" ];
+        };
       };
 
       services = {
