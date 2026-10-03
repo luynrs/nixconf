@@ -1,4 +1,4 @@
-{ self, ... }:
+{ self, pkgs, lib, ... }:
 {
   flake.nixosModules.base =
     {
