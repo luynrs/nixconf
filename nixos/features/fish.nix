@@ -18,6 +18,8 @@
             cat "$HOME/.local/state/caelestia/sequences.txt"
         end
 
+        fastfetch
+
         set fish_greeting
 
         function starship_transient_prompt_func

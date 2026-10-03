@@ -1,12 +1,5 @@
 local servers = {
 	"lua_ls",
-	"ts_ls",
-	"pyright",
-	"rust_analyzer",
-	"clangd",
-	"jsonls",
-	"html",
-	"cssls",
 }
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()

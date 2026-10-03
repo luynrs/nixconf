@@ -50,7 +50,7 @@
         enable = true;
         package = pkgs.symlinkJoin {
           name = "codex";
-          paths = [ inputs.codex-cli.packages.${pkgs.system}.default ];
+          paths = [ inputs.codex-cli.packages.${pkgs.stdenv.hostPlatform.system}.default ];
           nativeBuildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
             wrapProgram $out/bin/codex --set HTTPS_PROXY socks5h://127.0.0.1:10808
@@ -112,7 +112,7 @@
             default_width = 260;
           };
 
-          assistant = {
+          agent = {
             dock = "right";
             default_width = 260;
             flexible = false;
@@ -125,6 +125,24 @@
 
           outline_panel.button = false;
           collaboration_panel.button = false;
+        };
+      };
+
+      xdg.mimeApps = {
+        enable = true;
+        defaultApplications = {
+          "text/plain" = "dev.zed.Zed.desktop";
+          "text/markdown" = "dev.zed.Zed.desktop";
+          "text/x-nix" = "dev.zed.Zed.desktop";
+          "text/x-shellscript" = "dev.zed.Zed.desktop";
+          "text/x-python" = "dev.zed.Zed.desktop";
+          "text/x-rust" = "dev.zed.Zed.desktop";
+          "text/x-csrc" = "dev.zed.Zed.desktop";
+          "text/x-c++src" = "dev.zed.Zed.desktop";
+          "text/x-go" = "dev.zed.Zed.desktop";
+          "application/json" = "dev.zed.Zed.desktop";
+          "application/toml" = "dev.zed.Zed.desktop";
+          "application/x-yaml" = "dev.zed.Zed.desktop";
         };
       };
     };

@@ -8,14 +8,7 @@
         eza
         nautilus
 
-        # DEVELOPMENT
-        go
-        gopls
-        nodejs
-        bun
-        posting
         gh
-        jujutsu
 
         inputs.justssh.packages.${pkgs.stdenv.hostPlatform.system}.default
       ];

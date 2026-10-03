@@ -3,6 +3,7 @@
   flake.nixosModules.base =
     {
       pkgs,
+      config,
       ...
     }:
     {
@@ -65,7 +66,7 @@
         greetd = {
           enable = true;
           settings.default_session = {
-            command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session -u luynar --cmd start-hyprland";
+            command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session -u ${config.preferences.username} --cmd start-hyprland";
             user = "greeter";
           };
         };
@@ -83,13 +84,13 @@
             "nix-command"
             "flakes"
           ];
+          connect-timeout = 5;
+          fallback = true;
           substituters = [
             "https://cache.nixos.org"
-            "https://nix-community.cachix.org"
           ];
           trusted-public-keys = [
             "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           ];
         };
 
@@ -114,7 +115,7 @@
         ];
       };
 
-      users.users.luynar = {
+      users.users.${config.preferences.username} = {
         isNormalUser = true;
         hashedPassword = "$6$Vz0gDiMZEBwLvMEo$Woh4mJnlouv1uCPQotwxyOBGJPRPhCFTI2ijgwiRYezdzizD03xcdDghXtTUF2Rn5Jpek7gFP1vOW4Pi2LO.01";
         extraGroups = [
@@ -128,18 +129,14 @@
       };
 
       fonts.packages = with pkgs; [
-        geist-font
+        inter
         nerd-fonts.jetbrains-mono
-        noto-fonts
         noto-fonts-color-emoji
       ];
 
       fonts.fontconfig.defaultFonts = {
-        sansSerif = [
-          "Geist"
-          "Noto Sans"
-        ];
-        serif = [ "Noto Serif" ];
+        sansSerif = [ "Inter" ];
+        serif = [ "Inter" ];
         monospace = [ "JetBrainsMono Nerd Font" ];
         emoji = [ "Noto Color Emoji" ];
       };

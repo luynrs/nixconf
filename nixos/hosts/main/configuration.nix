@@ -14,14 +14,14 @@
     imports = [
       self.nixosModules.base
       self.nixosModules.general
+      self.nixosModules.scheduler
+      self.nixosModules.llama
       self.nixosModules.hyprland
       self.nixosModules.openrgb
       self.nixosModules.gpuAmd
       self.nixosModules.gaming
       self.nixosModules.bluetooth
     ];
-
-    time.hardwareClockInLocalTime = true;
 
     preferences = {
       disko.dualboot = true;

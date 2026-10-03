@@ -1,27 +1,27 @@
-{ self, ... }:
-{
-  flake.nixosModules.hyprland =
-    { config, lib, ... }:
-    let
-      monitors = lib.mapAttrsToList (name: m: {
-        output = name;
-        mode = "${toString m.width}x${toString m.height}@${toString m.refreshRate}";
-        position = "${toString m.x}x${toString m.y}";
-        scale = 1;
-      }) config.preferences.monitors;
-    in
-    {
-      programs.hyprland.enable = true;
-
-      home-manager.users.luynar.wayland.windowManager.hyprland.settings = {
-        monitor = monitors;
-      }
-      // import ./_input.nix { inherit lib; };
-    };
+_: {
+  flake.nixosModules.hyprland = {
+    programs.hyprland.enable = true;
+  };
   flake.homeModules.hyprland =
-    { pkgs, lib, ... }:
+    {
+      pkgs,
+      lib,
+      config,
+      osConfig ? { },
+      ...
+    }:
     let
-      apps = self.guiApps;
+      apps = config.preferences.defaultApps;
+      monitors =
+        if osConfig ? preferences.monitors then
+          lib.mapAttrsToList (name: m: {
+            output = name;
+            mode = "${toString m.width}x${toString m.height}@${toString m.refreshRate}";
+            position = "${toString m.x}x${toString m.y}";
+            scale = 1;
+          }) osConfig.preferences.monitors
+        else
+          [ ];
       fromScheme =
         fallback: body:
         lib.generators.mkLuaInline ''
@@ -37,6 +37,7 @@
       rules = import ./_rules.nix { inherit pkgs; };
       binds = import ./_binds.nix { inherit lib; };
       autostart = import ./_autostart.nix { inherit lib pkgs; };
+      inputSettings = import ./_input.nix { inherit lib; };
     in
     {
       home.packages = [
@@ -55,7 +56,8 @@
         enable = true;
         configType = "lua";
 
-        settings = {
+        settings = lib.recursiveUpdate inputSettings {
+          monitor = monitors;
           mainMod = {
             _var = "SUPER";
           };

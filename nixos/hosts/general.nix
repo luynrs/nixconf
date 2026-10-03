@@ -4,37 +4,40 @@
   ...
 }:
 {
-  flake.nixosModules.general = {
-    imports = [
-      inputs.home-manager.nixosModules.default
-      inputs.justray.nixosModules.default
-    ];
+  flake.nixosModules.general =
+    { config, ... }:
+    {
+      imports = [
+        inputs.home-manager.nixosModules.default
+        inputs.justray.nixosModules.default
+      ];
 
-    programs = {
-      gpu-screen-recorder.enable = true;
-      justray.enable = true;
+      programs = {
+        gpu-screen-recorder.enable = true;
+        justray.enable = true;
+      };
+
+      environment.etc."codex/config.toml".text = ''
+        model = "gpt-6-astra"
+        model_reasoning_effort = "medium"
+
+        [mcp_servers.context7]
+        url = "https://mcp.context7.com/mcp"
+      '';
+
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        users.${config.preferences.username}.imports = [ self.homeModules.general ];
+      };
     };
-
-    environment.etc."codex/config.toml".text = ''
-      model = "gpt-6-astra"
-      model_reasoning_effort = "medium"
-
-      [mcp_servers.context7]
-      url = "https://mcp.context7.com/mcp"
-    '';
-
-    home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      users.luynar.imports = [ self.homeModules.general ];
-    };
-  };
 
   flake.homeModules.general =
     { lib, ... }:
     {
       imports = [
         inputs.justray.homeManagerModules.default
+        self.homeModules.apps
         self.homeModules.hyprland
         self.homeModules.caelestia
         self.homeModules.foot

@@ -1,4 +1,4 @@
-{ inputs, self, ... }:
+{ inputs, ... }:
 {
   flake.homeModules.caelestia =
     {
@@ -9,7 +9,7 @@
     }:
     let
       inherit (pkgs.stdenv.hostPlatform) system;
-      apps = self.guiApps;
+      apps = config.preferences.defaultApps;
       upstream = inputs.caelestia-shell;
 
       alpha = 0.6;
@@ -286,17 +286,12 @@
           bright6 = {{ term14.hex }}
           bright7 = {{ term15.hex }}
         '';
-      };
 
-      home.activation.caelestiaShellConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-        target="${config.xdg.configHome}/caelestia/shell.json"
-        mkdir -p "$(dirname "$target")"
-        tmp="$(mktemp "$(dirname "$target")/.shell.json.XXXXXX")"
-        cat > "$tmp" <<'SHELL_JSON'
-        ${builtins.toJSON shellSettings}
-        SHELL_JSON
-        mv -f "$tmp" "$target"
-      '';
+        "caelestia/shell.json" = {
+          text = builtins.toJSON shellSettings;
+          force = true;
+        };
+      };
 
       home.activation.caelestiaScheme = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         cli=${config.programs.caelestia.cli.package}/bin/caelestia

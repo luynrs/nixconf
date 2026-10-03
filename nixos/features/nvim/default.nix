@@ -22,11 +22,6 @@
 
       extraPackages = with pkgs; [
         lua-language-server
-        typescript-language-server
-        pyright
-        rust-analyzer
-        clang-tools
-        vscode-langservers-extracted
         ripgrep
         fd
       ];
@@ -111,21 +106,6 @@
         "application/toml"
         "application/x-yaml"
       ];
-    };
-
-    xdg.mimeApps.defaultApplications = {
-      "text/plain" = "nvim.desktop";
-      "text/markdown" = "nvim.desktop";
-      "text/x-nix" = "nvim.desktop";
-      "text/x-shellscript" = "nvim.desktop";
-      "text/x-python" = "nvim.desktop";
-      "text/x-rust" = "nvim.desktop";
-      "text/x-csrc" = "nvim.desktop";
-      "text/x-c++src" = "nvim.desktop";
-      "text/x-go" = "nvim.desktop";
-      "application/json" = "nvim.desktop";
-      "application/toml" = "nvim.desktop";
-      "application/x-yaml" = "nvim.desktop";
     };
   };
 }

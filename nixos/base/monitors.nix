@@ -2,34 +2,42 @@
   flake.nixosModules.base =
     { lib, ... }:
     {
-      options.preferences.monitors = lib.mkOption {
-        type = lib.types.attrsOf (
-          lib.types.submodule {
-            options = {
-              width = lib.mkOption {
-                type = lib.types.int;
-                example = 1920;
+      options.preferences = {
+        username = lib.mkOption {
+          type = lib.types.str;
+          default = "luynar";
+          description = "Primary user account name";
+        };
+
+        monitors = lib.mkOption {
+          type = lib.types.attrsOf (
+            lib.types.submodule {
+              options = {
+                width = lib.mkOption {
+                  type = lib.types.int;
+                  example = 1920;
+                };
+                height = lib.mkOption {
+                  type = lib.types.int;
+                  example = 1080;
+                };
+                refreshRate = lib.mkOption {
+                  type = lib.types.number;
+                  default = 60;
+                };
+                x = lib.mkOption {
+                  type = lib.types.int;
+                  default = 0;
+                };
+                y = lib.mkOption {
+                  type = lib.types.int;
+                  default = 0;
+                };
               };
-              height = lib.mkOption {
-                type = lib.types.int;
-                example = 1080;
-              };
-              refreshRate = lib.mkOption {
-                type = lib.types.number;
-                default = 60;
-              };
-              x = lib.mkOption {
-                type = lib.types.int;
-                default = 0;
-              };
-              y = lib.mkOption {
-                type = lib.types.int;
-                default = 0;
-              };
-            };
-          }
-        );
-        default = { };
+            }
+          );
+          default = { };
+        };
       };
     };
 }

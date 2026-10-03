@@ -14,7 +14,7 @@
     gtk = {
       enable = true;
       font = {
-        name = "Geist";
+        name = "Inter";
         size = 12;
       };
       theme = {
